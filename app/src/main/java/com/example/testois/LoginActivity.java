@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (null != checkUser(user, pass)) {
             String userFromDb = checkUser(user, pass);
 
-            Intent i = new Intent(getApplicationContext(), AddInventory.class);
+            Intent i = new Intent(getApplicationContext(), ViewInventory.class);
             i.putExtra("uname", userFromDb);
             startActivity(i);
         } else {

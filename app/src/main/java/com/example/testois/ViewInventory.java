@@ -9,13 +9,15 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class ViewInventory extends AppCompatActivity {
     EditText sort;
-    Button search;
+    ImageView search, add;
     ListView lst1;
     ArrayList<String> titles = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
@@ -24,11 +26,12 @@ public class ViewInventory extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_view_inventory);
 
         SQLiteDatabase db = openOrCreateDatabase("SliteDb", Context.MODE_PRIVATE, null);
         sort = findViewById(R.id.sort);
         search = findViewById(R.id.search);
+        add = findViewById(R.id.add);
         lst1 = findViewById(R.id.lst1);
         final Cursor c = db.rawQuery("select * from records", null);
         int id = c.getColumnIndex("id");
@@ -74,6 +77,12 @@ public class ViewInventory extends AppCompatActivity {
                }
         });
 
+        add.setOnClickListener(v-> {
+            Intent i = new Intent(getApplicationContext(), AddInventory.class);
+            startActivity(i);
+            finish();
+        });
+
 
         lst1.setOnItemClickListener((parent, view, position, id1) -> {
             String aa = titles.get(position);
@@ -87,12 +96,5 @@ public class ViewInventory extends AppCompatActivity {
 
         });
 
-    }
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(), AddInventory.class);
-        startActivity(i);
-        finish();
-        //super.onBackPressed();
     }
 }

@@ -21,7 +21,7 @@ public class AddInventory extends AppCompatActivity {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_add_inventory);
 
             ed1 = findViewById(R.id.name);
             ed2 = findViewById(R.id.quantity);

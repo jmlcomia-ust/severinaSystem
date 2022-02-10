@@ -14,6 +14,7 @@
         tools:context=".view"/>
     <ImageView
         android:id="@+id/menu"
+        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_menu"
@@ -28,14 +29,24 @@
             android:textColor="@color/white"
             android:layout_margin="1sp"
             tools:ignore="MissingConstraints" />
-        <Button
+        <ImageView
             android:id="@+id/search"
-            android:layout_width="wrap_content"
+            android:clickable="true"
+            android:layout_width="80dp"
             android:layout_height="45sp"
-            android:layout_marginLeft="10sp"
+            android:layout_marginLeft="1sp"
             app:layout_constraintLeft_toRightOf="@id/sort"
-            android:background="@drawable/buttons"
+            android:src="@drawable/ic_search"
             android:text="Search"
+            tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/add"
+            android:clickable="true"
+            android:layout_marginLeft="7sp"
+            app:layout_constraintLeft_toRightOf="@id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add"
             tools:ignore="MissingConstraints" />
     <LinearLayout
         android:layout_width="match_parent"
