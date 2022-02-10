@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         String user = ed1.getText().toString();
         String pass = ed2.getText().toString();
         if (user.equals("") || pass.equals("")) {
-            Toast.makeText(this, "Username or Password blank", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Username or Password is blank", Toast.LENGTH_LONG).show();
         }
         else if (null!=checkUser(user,pass))
         {
@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(i);
         }
         else {
-            Toast.makeText(this, "Username or Password not match", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Username or Password does not match", Toast.LENGTH_LONG).show();
             ed1.setText("");
             ed2.setText("");
             ed1.requestFocus();
