@@ -36,13 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         btn2.setOnClickListener(v -> finish()); //change to reset password function
         btn1.setOnClickListener(v -> login());
         }
-    @Override
-    public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(i);
-        finish();
-        //super.onBackPressed();
-    }
+
     public  void  login()
     {
         String user = ed1.getText().toString();

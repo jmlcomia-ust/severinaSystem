@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".EditInventory">
 
     <LinearLayout
@@ -21,10 +22,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Course Registation"
-                android:textColor="@color/black"
-                android:textSize="30dp"
-
+                android:text="Edit Inventory"
+                android:textColor="@color/white"
+                android:textSize="30sp"
                 />
 
         </LinearLayout>
@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ID"
+                android:text="ID:"
                 />
 
             <EditText
@@ -46,14 +46,12 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:id="@+id/id"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:textAlignment="center"
-                android:autofillHints="" />
-
+                android:autofillHints=""
+                />
         </LinearLayout>
-
-
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
+                android:text="Item Name:"
                 />
 
             <EditText
@@ -72,24 +70,20 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:id="@+id/name"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:textAlignment="center"
-                />
+                android:autofillHints="" />
             <Button
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:id="@+id/bed2"
                 android:text="Edit"
+                android:layout_gravity="end"
                 android:textSize="10sp"
                 android:background="@color/teal_200"
                 />
         </LinearLayout>
-
-
-
-
-
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -99,7 +93,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quantity"
+                android:text="No. of Items:"
                 />
 
             <EditText
@@ -108,18 +102,21 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:id="@+id/quantity"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:textAlignment="center"
                 />
             <Button
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:id="@+id/bed3"
+                android:layout_gravity="end"
+                android:layout_marginRight="10sp"
                 android:text="Edit"
                 android:textSize="10sp"
                 android:background="@color/teal_200"
                 />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -129,7 +126,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Description"
+                android:text="Description:"
                 />
 
             <EditText
@@ -138,27 +135,25 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:id="@+id/description"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:textAlignment="center"
                 />
             <Button
                 android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:id="@+id/bed4"
+                android:layout_gravity="end"
                 android:text="Edit"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:background="@color/teal_200"
                 />
         </LinearLayout>
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-
-
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -176,7 +171,6 @@
                 android:text="Delete"
                 android:background="@color/teal_700"
                 />
-
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -185,8 +179,6 @@
                 android:text="Back"
                 android:background="@color/teal_700"
                 />
-
         </LinearLayout>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

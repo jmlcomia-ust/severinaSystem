@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,14 +24,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Severina OIS"
                 android:fontFamily="@font/barlowr"
+                android:text="Severina OIS"
                 android:textColor="@color/white"
                 android:textSize="40dp"
-                />
+                tools:ignore="TextContrastCheck" />
 
         </LinearLayout>
         <LinearLayout
@@ -51,6 +53,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/white"
                 android:ems="10"
                 android:textAlignment="center" />
         </LinearLayout>
@@ -64,12 +67,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Password"
-                />
+                tools:ignore="TextContrastCheck" />
 
             <EditText
                 android:id="@+id/pass"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:layout_weight="1"
                 android:ems="10"
                 android:password="true"
@@ -89,8 +93,9 @@
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/buttons"
+                android:text="LogIn"
                 android:textColor="@color/black"
-                android:text="LogIn" />
+                app:iconTint="@color/grey" />
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="5sp"

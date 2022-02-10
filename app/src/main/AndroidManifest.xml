@@ -8,9 +8,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ois_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TestOIS">
-        <activity android:name=".MainActivity"
-            android:exported="false"/>
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".SummaryOwner"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
         <activity
             android:name=".EditInventory"
             android:exported="false" />

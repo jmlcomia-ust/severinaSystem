@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -104,16 +105,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:id="@+id/bt1"
-                android:text="Ok"
-                android:background="@color/teal_200"
+                android:text="Add Item"
+                android:background="@color/grey"
                 />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="3sp"
                 android:layout_weight="1"
                 android:id="@+id/bt2"
-                android:text="View"
-                android:background="@color/teal_200"
+                android:text="Go Back"
+                android:background="@color/grey"
                 />
 
         </LinearLayout>
