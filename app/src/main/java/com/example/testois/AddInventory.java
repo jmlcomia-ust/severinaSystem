@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class AddInventory extends AppCompatActivity {
 
         EditText ed1,ed2,ed3;
         Button b1,b2;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             b2 = findViewById(R.id.bt2);
 
             b2.setOnClickListener(v -> {
-                Intent i = new Intent(getApplicationContext(),Dashboard.class);
+                Intent i = new Intent(getApplicationContext(), ViewInventory.class);
                 startActivity(i);
             });
             b1.setOnClickListener(v -> insert());

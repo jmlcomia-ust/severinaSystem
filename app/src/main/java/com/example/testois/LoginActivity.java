@@ -17,6 +17,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText ed1, ed2;
     Button btn1, btn2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,32 +34,33 @@ public class LoginActivity extends AppCompatActivity {
         ed2 = findViewById(R.id.pass);
         btn1 = findViewById(R.id.btn1);
         btn2 = findViewById(R.id.btn2);
-        btn2.setOnClickListener(v -> finish()); //change to reset password function
+        btn2.setOnClickListener(v -> passby()); //change to reset password function
         btn1.setOnClickListener(v -> login());
-        }
+    }
 
-    public  void  login()
-    {
+    public void login() {
         String user = ed1.getText().toString();
         String pass = ed2.getText().toString();
         if (user.equals("") || pass.equals("")) {
             Toast.makeText(this, "Username or Password is blank", Toast.LENGTH_LONG).show();
-        }
-        else if (null!=checkUser(user,pass))
-        {
-            String userFromDb=checkUser(user,pass);
+        } else if (null != checkUser(user, pass)) {
+            String userFromDb = checkUser(user, pass);
 
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            Intent i = new Intent(getApplicationContext(), AddInventory.class);
             i.putExtra("uname", userFromDb);
             startActivity(i);
-        }
-        else {
+        } else {
             Toast.makeText(this, "Username or Password does not match", Toast.LENGTH_LONG).show();
             ed1.setText("");
             ed2.setText("");
             ed1.requestFocus();
         }
     }
+
+    public  void  passby() {
+        Toast.makeText(this, "Should go to Summary of Orders seen by courier", Toast.LENGTH_SHORT).show();
+    }
+
     public String checkUser(String name, String pass)
     {
         SQLiteDatabase db = openOrCreateDatabase("oisdb", Context.MODE_PRIVATE, null);

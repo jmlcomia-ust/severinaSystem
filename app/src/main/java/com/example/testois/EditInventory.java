@@ -66,14 +66,14 @@ public class EditInventory extends AppCompatActivity {
         b2.setOnClickListener(v -> {
             Delete();
             Toast.makeText(getApplicationContext(),"Record Deleted",Toast.LENGTH_LONG).show();
-            Intent i1 = new Intent(getApplicationContext(),Dashboard.class);
+            Intent i1 = new Intent(getApplicationContext(), ViewInventory.class);
             startActivity(i1);
             finish();
         });
 
 
         b3.setOnClickListener(v -> {
-            Intent i1 = new Intent(getApplicationContext(),Dashboard.class);
+            Intent i1 = new Intent(getApplicationContext(), ViewInventory.class);
             startActivity(i1);
             finish();
         });
@@ -84,7 +84,7 @@ public class EditInventory extends AppCompatActivity {
         b1.setOnClickListener(v -> {
             Update();
             Toast.makeText(getApplicationContext(),"Record Updated",Toast.LENGTH_LONG).show();
-            Intent i1 = new Intent(getApplicationContext(),Dashboard.class);
+            Intent i1 = new Intent(getApplicationContext(), ViewInventory.class);
             startActivity(i1);
             finish();
         });
@@ -93,7 +93,7 @@ public class EditInventory extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        Intent i = new Intent(getApplicationContext(), AddInventory.class);
         startActivity(i);
         finish();
         //super.onBackPressed();

@@ -158,26 +158,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginLeft="3sp"
+                android:ems="7"
                 android:id="@+id/bt1"
                 android:text="Update"
-                android:background="@color/teal_700"
+                android:background="@color/grey"
                 />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginLeft="3sp"
+                android:ems="7"
                 android:id="@+id/bt2"
                 android:text="Delete"
-                android:background="@color/teal_700"
+                android:background="@color/grey"
                 />
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:ems="7"
+                android:layout_marginLeft="3sp"
                 android:id="@+id/bt3"
-                android:text="Back"
-                android:background="@color/teal_700"
+                android:text="Go Back"
+                android:background="@color/grey"
                 />
         </LinearLayout>
     </LinearLayout>

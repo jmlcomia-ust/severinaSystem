@@ -13,13 +13,13 @@
             android:name=".SummaryOwner"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".AddInventory"
             android:exported="false" />
         <activity
             android:name=".EditInventory"
             android:exported="false" />
         <activity
-            android:name=".Dashboard"
+            android:name=".ViewInventory"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

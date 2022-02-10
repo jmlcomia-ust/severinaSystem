@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +13,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
-public class Dashboard extends AppCompatActivity {
+public class ViewInventory extends AppCompatActivity {
     EditText sort;
     Button search;
     ListView lst1;
@@ -91,7 +90,7 @@ public class Dashboard extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        Intent i = new Intent(getApplicationContext(), AddInventory.class);
         startActivity(i);
         finish();
         //super.onBackPressed();
