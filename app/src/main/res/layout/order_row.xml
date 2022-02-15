@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="6dp"
+        app:cardBackgroundColor="@color/white"
+        android:elevation="6sp"
+        app:cardUseCompatPadding="true">
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="60sp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:padding="1sp">
+            <ImageView
+                android:id="@+id/pcinventory"
+                android:layout_width="50dp"
+                android:layout_height="80dp"
+                android:src="@drawable/petron_eleven"
+                />
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/pcinventory"
+                android:layout_marginLeft="10sp"
+                android:text="Order ID"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                />
+            <TextView
+                android:id="@+id/edtcategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/category"
+                android:layout_marginLeft="10sp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                />
+            <TextView
+                android:id="@+id/quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/category"
+                android:layout_toRightOf="@id/pcinventory"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="7dp"
+                android:textColor="@color/black"
+                android:text="Order Quantity"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/edtquant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/category"
+                android:layout_toRightOf="@id/quantity"
+                android:layout_marginLeft="10sp"
+                android:layout_marginTop="7dp"
+                android:textColor="@color/black"
+                android:text=""
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/customer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/quantity"
+                android:layout_toRightOf="@id/pcinventory"
+                android:layout_marginLeft="30sp"
+                android:textColor="@color/black"
+                android:text="Customer"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/edtcust"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/quantity"
+                android:layout_marginLeft="30sp"
+                android:layout_toRightOf="@id/customer"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/shipment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer"
+                android:layout_toRightOf="@id/pcinventory"
+                android:layout_marginLeft="30sp"
+                android:textColor="@color/black"
+                android:text="Shipment Status"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/edtshipment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/customer"
+                android:layout_toRightOf="@id/shipment"
+                android:layout_marginLeft="30sp"
+                android:textColor="@color/black"
+                android:text=""
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>

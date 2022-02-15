@@ -17,7 +17,7 @@
         android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu"
+        android:src="@drawable/menu"
         tools:ignore="MissingConstraints" />
 
         <EditText
@@ -46,7 +46,7 @@
             app:layout_constraintLeft_toRightOf="@id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/add_item"
             tools:ignore="MissingConstraints" />
     <LinearLayout
         android:layout_width="match_parent"

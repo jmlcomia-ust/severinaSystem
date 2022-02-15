@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".DashboardOrders"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardInventory"
+            android:exported="false" />
+        <activity
             android:name=".SummaryOwner"
             android:exported="false" />
         <activity

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DashboardOrders"
+    android:background="@drawable/gradient_background">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        tools:context=".dashboard_order">
+
+        <Button
+            android:id="@+id/menu"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:background="@drawable/menu"
+            android:layout_margin="20dp">
+        </Button>
+
+        <TextView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/menu"
+            android:text="Home"
+            android:textSize="50dp">
+        </TextView>
+
+        <Button
+            android:id="@+id/profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/profile"
+            android:layout_toLeftOf="@id/settings"
+            android:layout_margin="20dp">
+        </Button>
+
+        <Button
+            android:id="@+id/settings"
+            android:layout_width="10dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_setting"
+            android:layout_margin="20dp">
+        </Button>
+
+        <Button
+            android:id="@+id/add_item"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/add_item"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/settings"
+            android:layout_margin="20dp">
+        </Button>
+
+        <Button
+            android:id="@+id/search"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/search"
+            android:layout_toLeftOf="@id/add_item"
+            android:layout_below="@id/profile"
+            android:layout_margin="20dp">
+        </Button>
+
+        <Spinner
+            android:id="@+id/options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/menu"
+            android:layout_margin="20dp">
+        </Spinner>
+
+        <TextView
+            android:id="@+id/ongoing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search"
+            android:text="Ongoing Orders"
+            android:textSize="30dp"
+            android:textAlignment="center">
+        </TextView>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="350dp"
+            android:layout_below="@id/ongoing"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"></ListView>
+
+        <TextView
+            android:id="@+id/recent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/recent_orders"
+            android:text="Recent Orders"
+            android:textSize="30dp"
+            android:textAlignment="center">
+        </TextView>
+
+        <ListView
+            android:id="@+id/recent_orders"
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp">
+        </ListView>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
