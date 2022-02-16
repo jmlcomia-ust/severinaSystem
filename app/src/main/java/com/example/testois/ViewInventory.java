@@ -6,19 +6,25 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 
 public class ViewInventory extends AppCompatActivity {
     EditText sort;
     ImageView search, add;
-    ListView lst1;
+    RecyclerView rvstocks;
     ArrayList<String> titles = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
 
@@ -32,7 +38,7 @@ public class ViewInventory extends AppCompatActivity {
         sort = findViewById(R.id.sort);
         search = findViewById(R.id.search);
         add = findViewById(R.id.add);
-        lst1 = findViewById(R.id.lst1);
+        rvstocks = findViewById(R.id.inventoryRV);
         final Cursor c = db.rawQuery("select * from records", null);
         int id = c.getColumnIndex("id");
         int name = c.getColumnIndex("name");
@@ -41,8 +47,24 @@ public class ViewInventory extends AppCompatActivity {
         titles.clear();
 
 
-        arrayAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, titles);
-        lst1.setAdapter(arrayAdapter);
+       RecyclerView.Adapter arrayAdapter = new RecyclerView.Adapter<InventoryAdapter>(this, R.layout.support_simple_spinner_dropdown_item, titles) {
+           @NonNull
+           @Override
+           public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+           }
+
+           @Override
+           public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+           }
+
+           @Override
+           public int getItemCount() {
+               return 0;
+           }
+       };
+        rvstocks.setAdapter(arrayAdapter);
 
         final ArrayList<Inventory> inv = new ArrayList<Inventory>();
 
@@ -60,7 +82,7 @@ public class ViewInventory extends AppCompatActivity {
 
             } while (c.moveToNext());
             arrayAdapter.notifyDataSetChanged();
-            lst1.invalidateViews();
+            rvstocks.invalidateViews();
 
 
         }

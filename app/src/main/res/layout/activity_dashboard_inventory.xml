@@ -27,26 +27,29 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/menu"
             android:text="Home"
-            android:textSize="50sp">
-        </TextView>
+            android:textSize="50sp"></TextView>
 
         <Button
             android:id="@+id/profile"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/profile"
+            android:layout_marginStart="20sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginEnd="20sp"
+            android:layout_marginBottom="20sp"
             android:layout_toLeftOf="@id/settings"
-            android:layout_margin="20sp">
-        </Button>
+            android:background="@drawable/profile"></Button>
 
         <Button
             android:id="@+id/settings"
             android:layout_width="10dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/ic_setting"
-            android:layout_margin="20sp">
-        </Button>
+            android:layout_marginStart="20sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginEnd="20sp"
+            android:layout_marginBottom="20sp"
+            android:background="@drawable/ic_setting"></Button>
 
         <Button
             android:id="@+id/add_item"
@@ -76,11 +79,9 @@
             android:layout_margin="20dp">
         </Spinner>
 
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_below="@id/search"
-            android:layout_margin="20dp">
-        </ListView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/inventoryRV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

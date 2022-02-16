@@ -16,9 +16,6 @@
             android:name=".DashboardInventory"
             android:exported="false" />
         <activity
-            android:name=".SummaryOwner"
-            android:exported="false" />
-        <activity
             android:name=".AddInventory"
             android:exported="false" />
         <activity

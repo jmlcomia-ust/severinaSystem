@@ -105,5 +105,13 @@
                 android:text=""
                 android:textSize="14sp" />
 
+            <Button
+                android:id="@+id/settings"
+                android:layout_width="10dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:backgroundTint="@color/black"
+                android:background="@drawable/ic_setting"></Button>
+
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
