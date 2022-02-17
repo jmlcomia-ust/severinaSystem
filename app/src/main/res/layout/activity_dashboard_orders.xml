@@ -7,6 +7,7 @@
     tools:context=".DashboardOrders"
     android:background="@drawable/gradient_background">
     <RelativeLayout
+        android:id="@+id/layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
@@ -14,70 +15,67 @@
 
         <Button
             android:id="@+id/menu"
-            android:layout_width="50dp"
+            android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/menu"></Button>
+            android:layout_margin="10sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="10sp"
+            android:layout_marginEnd="10sp"
+            android:layout_marginBottom="10sp"
+            android:background="@drawable/menu" />
 
-        <TextView
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/menu"
-            android:text="Home"
-            android:textSize="50dp">
-        </TextView>
-
+            <TextView
+                android:id="@+id/home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10sp"
+                android:layout_toRightOf="@id/menu"
+                android:text="Home"
+                android:textSize="30dp"/>
         <Button
             android:id="@+id/profile"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_margin="10sp"
             android:background="@drawable/profile"
-            android:layout_toLeftOf="@id/settings"
-            android:layout_margin="20dp">
-        </Button>
+            android:backgroundTint="@color/white"
+            android:layout_toStartOf="@id/settings"/>
 
-        <Button
-            android:id="@+id/settings"
-            android:layout_width="10dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/ic_setting"></Button>
+            <Button
+                android:id="@+id/settings"
+                android:layout_width="10dp"
+                android:layout_height="50dp"
+                android:layout_margin="10sp"
+                android:background="@drawable/ic_setting"
+                android:layout_alignParentEnd="true" />
 
         <Button
             android:id="@+id/add_item"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/add_item"
+            android:backgroundTint="@color/white"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/settings"
-            android:layout_margin="20dp">
+            android:layout_margin="10dp">
         </Button>
 
         <Button
             android:id="@+id/search"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/search"
-            android:layout_toLeftOf="@id/add_item"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_below="@id/profile"
-            android:layout_margin="20dp">
-        </Button>
+            android:layout_margin="10sp"
+            android:layout_toLeftOf="@id/add_item"
+            android:background="@drawable/search"
+            android:backgroundTint="@color/white" />
 
         <Spinner
             android:id="@+id/options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="230sp"
+            android:layout_height="50sp"
             android:layout_below="@id/menu"
-            android:layout_margin="20dp">
-        </Spinner>
+            android:layout_margin="10sp" />
 
         <TextView
             android:id="@+id/ongoing"
@@ -86,7 +84,7 @@
             android:layout_below="@id/search"
             android:text="Ongoing Orders"
             android:textAlignment="center"
-            android:textSize="30dp"></TextView>
+            android:textSize="30dp"/>
 
         <ListView
             android:layout_width="wrap_content"
@@ -95,7 +93,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"></ListView>
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/recent"

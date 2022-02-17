@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (null != checkUser(user, pass)) {
             String userFromDb = checkUser(user, pass);
 
-            Intent i = new Intent(getApplicationContext(), ViewInventory.class);
+            Intent i = new Intent(getApplicationContext(), DashboardInventory.class);
             i.putExtra("uname", userFromDb);
             startActivity(i);
         } else {
@@ -58,7 +58,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public  void  passby() {
-        Toast.makeText(this, "Should go to Summary of Orders seen by courier", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(getApplicationContext(), DashboardOrders.class);
+        startActivity(i);
     }
 
     public String checkUser(String name, String pass)

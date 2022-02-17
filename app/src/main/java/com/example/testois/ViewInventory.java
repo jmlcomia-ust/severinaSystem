@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class ViewInventory extends AppCompatActivity {
     EditText sort;
     ImageView search, add;
-    RecyclerView rvstocks;
+    ListView lst1;
     ArrayList<String> titles = new ArrayList<String>();
     ArrayAdapter arrayAdapter;
 
@@ -38,7 +38,7 @@ public class ViewInventory extends AppCompatActivity {
         sort = findViewById(R.id.sort);
         search = findViewById(R.id.search);
         add = findViewById(R.id.add);
-        rvstocks = findViewById(R.id.inventoryRV);
+        lst1 = findViewById(R.id.lstInventory);
         final Cursor c = db.rawQuery("select * from records", null);
         int id = c.getColumnIndex("id");
         int name = c.getColumnIndex("name");
@@ -47,24 +47,8 @@ public class ViewInventory extends AppCompatActivity {
         titles.clear();
 
 
-       RecyclerView.Adapter arrayAdapter = new RecyclerView.Adapter<InventoryAdapter>(this, R.layout.support_simple_spinner_dropdown_item, titles) {
-           @NonNull
-           @Override
-           public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-           }
-
-           @Override
-           public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-           }
-
-           @Override
-           public int getItemCount() {
-               return 0;
-           }
-       };
-        rvstocks.setAdapter(arrayAdapter);
+        arrayAdapter = new ArrayAdapter(this, R.layout.spinner_dropdown_list, titles);
+        lst1.setAdapter(arrayAdapter);
 
         final ArrayList<Inventory> inv = new ArrayList<Inventory>();
 
@@ -82,7 +66,7 @@ public class ViewInventory extends AppCompatActivity {
 
             } while (c.moveToNext());
             arrayAdapter.notifyDataSetChanged();
-            rvstocks.invalidateViews();
+            lst1.invalidateViews();
 
 
         }
@@ -91,12 +75,12 @@ public class ViewInventory extends AppCompatActivity {
             if (sort!=null) {
                 String keyword = sort.getText().toString();
                 SQLiteDatabase dbase = openOrCreateDatabase("SliteDb", Context.MODE_PRIVATE, null);
-                String sql = "select * ,order by" + " " + keyword + " asc";
+                String sql = "select * from records,order by" + " " + keyword + " asc";
                 SQLiteStatement statement = dbase.compileStatement(sql);
                 statement.execute();
                 arrayAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, titles);
                 lst1.setAdapter(arrayAdapter);
-               }
+            }
         });
 
         add.setOnClickListener(v-> {
