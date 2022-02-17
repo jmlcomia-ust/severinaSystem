@@ -49,4 +49,3 @@ public class DashboardInventory extends AppCompatActivity {
         return inventoryArrayList;
     }
 */
-}
