@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class DashboardInventory extends AppCompatActivity {
     SQLiteDatabase db;
-    ArrayList<Inventory>invArrayList;
+    ArrayList<Inventory> invArrayList;
     InventoryAdapter invAdapter;
     RecyclerView recyclerView;
 
@@ -49,3 +49,5 @@ public class DashboardInventory extends AppCompatActivity {
         return inventoryArrayList;
     }
 */
+    }
+}

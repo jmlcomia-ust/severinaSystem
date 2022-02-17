@@ -1,4 +1,4 @@
-packagecom.example.testois;
+package com.example.testois;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,20 +9,22 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+/*
 public class DBInventory extends SQLiteOpenHelper {
-    private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "severinadb";
-    private static final String TABLE_Inventory = "inventory";
-    private static final String KEY_ID = "id";
-    private static final String KEY_ITEM_ID = "1011";            //needs a way to randomize or classify each product in unique ids
-    private static final String KEY_NAME = "itemname";
-    private static final String KEY_Quantity = "quantity";
-    private static final String KEY_DESC = "description";
+        private static final int DB_VERSION = 1;
+        private static final String DB_NAME = "severinadb";
+        private static final String TABLE_Inventory = "inventory";
+        private static final String KEY_ID = "id";
+        private static final String KEY_ITEM_ID = "1011";            //needs a way to randomize or classify each product in unique ids
+        private static final String KEY_NAME = "itemname";
+        private static final String KEY_Quantity = "quantity";
+        private static final String KEY_DESC = "description";
 
-    public DBInventory(Context context){
-        super(context,DB_NAME, null, DB_VERSION);
+        public DBInventory(Context context) {
+                super(context, DB_NAME, null, DB_VERSION);
         }
+}
+
 @Override
 public void onCreate(SQLiteDatabase TABLE_Inventory){
         String CREATE_TABLE = "CREATE TABLE " + TABLE_Inventory + "("
