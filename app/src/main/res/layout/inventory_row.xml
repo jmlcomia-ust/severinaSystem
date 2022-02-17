@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="6dp"
+    app:cardBackgroundColor="@color/white"
+    android:elevation="6dp"
+    app:cardUseCompatPadding="true">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/imgstock"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/petron_fifty" />
+
+        <TextView
+            android:id="@+id/txtname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gas"
+            android:layout_toEndOf="@id/imgstock"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:padding="5dp">
+        </TextView>
+        <TextView
+            android:id="@+id/quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtname"
+            android:layout_toEndOf="@id/imgstock"
+            android:text="Quantity : "
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            />
+        <TextView
+            android:id="@+id/txtquant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txtname"
+            android:layout_toEndOf="@id/quantity"
+            android:text="__"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            >
+        </TextView>
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/edit"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
