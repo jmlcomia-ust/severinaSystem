@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
+            android:name=".NavHeader"
+            android:exported="false" />
+        <activity
+            android:name=".ViewOrder"
+            android:exported="false" />
+        <activity
             android:name=".DashboardOrders"
             android:exported="false" />
         <activity

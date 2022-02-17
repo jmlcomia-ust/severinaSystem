@@ -1,28 +1,22 @@
 package com.example.testois;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-
 import java.util.ArrayList;
 
-public class ViewInventory extends AppCompatActivity {
+public class ViewOrder extends AppCompatActivity {
     EditText sort;
     ImageView search, add, menu;
     ListView lst1;
@@ -33,7 +27,7 @@ public class ViewInventory extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_inventory);
+        setContentView(R.layout.activity_view_order);
         menu = findViewById(R.id.menu);
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,14 +35,13 @@ public class ViewInventory extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), NavHeader.class);
                 startActivity(i);
             }
-            });
-
+        });
 
         SQLiteDatabase db = openOrCreateDatabase("SliteDb", Context.MODE_PRIVATE, null);
         sort = findViewById(R.id.sort);
         search = findViewById(R.id.search);
         add = findViewById(R.id.add);
-        lst1 = findViewById(R.id.lstInventory);
+        lst1 = findViewById(R.id.lst1);
         final Cursor c = db.rawQuery("select * from records", null);
         int id = c.getColumnIndex("id");
         int name = c.getColumnIndex("name");
@@ -57,7 +50,7 @@ public class ViewInventory extends AppCompatActivity {
         titles.clear();
 
 
-        arrayAdapter = new ArrayAdapter(this, R.layout.spinner_dropdown_list, titles);
+        arrayAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, titles);
         lst1.setAdapter(arrayAdapter);
 
         final ArrayList<Inventory> inv = new ArrayList<Inventory>();
@@ -82,10 +75,10 @@ public class ViewInventory extends AppCompatActivity {
         }
 
         search.setOnClickListener(v -> {
-            if (sort!=null) {
+            if (sort != null) {
                 String keyword = sort.getText().toString();
                 SQLiteDatabase dbase = openOrCreateDatabase("SliteDb", Context.MODE_PRIVATE, null);
-                String sql = "select * from records,order by" + " " + keyword + " asc";
+                String sql = "select * ,order by" + " " + keyword + " asc";
                 SQLiteStatement statement = dbase.compileStatement(sql);
                 statement.execute();
                 arrayAdapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, titles);
@@ -93,7 +86,7 @@ public class ViewInventory extends AppCompatActivity {
             }
         });
 
-        add.setOnClickListener(v-> {
+        add.setOnClickListener(v -> {
             Intent i = new Intent(getApplicationContext(), AddInventory.class);
             startActivity(i);
             finish();
