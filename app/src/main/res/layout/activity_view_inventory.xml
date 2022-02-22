@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/gradient_background"
     tools:context=".ViewInventory">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/layout1"
@@ -19,7 +18,7 @@
         android:clickable="true"
         android:layout_width="40sp"
         android:layout_height="40sp"
-        android:layout_marginStart="300dp"
+        android:layout_margin="20dp"
         android:src="@drawable/menu"
         tools:ignore="MissingConstraints" />
 
@@ -72,5 +71,4 @@
             />
         </ScrollView>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

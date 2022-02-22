@@ -32,7 +32,7 @@ public class ViewOrder extends AppCompatActivity {
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), NavHeader.class);
+                Intent i = new Intent(getApplicationContext(), ViewInventory.class);
                 startActivity(i);
             }
         });

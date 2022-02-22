@@ -8,7 +8,7 @@
     android:background="@drawable/gradient_background">
 
     <RelativeLayout
-        android:id="@+id/layout1"
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
@@ -16,76 +16,317 @@
 
         <Button
             android:id="@+id/menu"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="40dp"
-            android:layout_margin="10sp"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10sp"
-            android:layout_marginEnd="10sp"
-            android:layout_marginBottom="10sp"
-            android:background="@drawable/menu" />
+            android:layout_margin="20dp"
+            android:background="@drawable/menu"></Button>
 
         <TextView
             android:id="@+id/home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:layout_toEndOf="@id/menu"
+            android:layout_toRightOf="@id/menu"
             android:text="Home"
-            android:textSize="30dp"/>
+            android:textSize="50sp" />
+
         <Button
             android:id="@+id/profile"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="10sp"
-            android:background="@drawable/profile"
-            android:backgroundTint="@color/white"
-            android:layout_toStartOf="@id/settings"/>
+            android:layout_marginStart="20sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginEnd="20sp"
+            android:layout_marginBottom="20sp"
+            android:layout_toLeftOf="@id/settings"
+            android:background="@drawable/profile" />
 
         <Button
             android:id="@+id/settings"
             android:layout_width="10dp"
             android:layout_height="50dp"
-            android:layout_margin="10sp"
-            android:background="@drawable/ic_setting"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="20sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginEnd="20sp"
+            android:layout_marginBottom="20sp"
+            android:background="@drawable/ic_setting" />
 
         <Button
             android:id="@+id/add_item"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/add_item"
-            android:backgroundTint="@color/white"
-            android:layout_alignParentEnd="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@id/settings"
-            android:layout_margin="10dp">
-        </Button>
+            android:layout_alignParentEnd="true"
+            android:layout_margin="20sp"
+            android:background="@drawable/add_item"></Button>
 
         <Button
             android:id="@+id/search"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_below="@id/profile"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:layout_toLeftOf="@id/add_item"
-            android:background="@drawable/search"
-            android:backgroundTint="@color/white"/>
+            android:background="@drawable/search"></Button>
 
         <Spinner
             android:id="@+id/options"
-            android:layout_width="230sp"
-            android:layout_height="50sp"
-            android:layout_below="@id/menu"
-            android:layout_margin="10dp">
-        </Spinner>
-        <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/options">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/inventoryRV"
+            android:layout_below="@id/menu"
+            android:layout_margin="20dp"></Spinner>
+
+        <ListView
+            android:id="@+id/lstDashboard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/options"
+            android:paddingTop="10dp"
+
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="Solane Gas"/>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview1"
+                    android:layout_width="365dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardPreventCornerOverlap="true"
+                    tools:layout_editor_absoluteX="10dp">
+
+
+                    <ImageView
+                        android:id="@+id/img1"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="10dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/solane_mini" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="Stock Qty: "
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/stockqty1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="250dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="Gasul"/>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview2"
+                    android:layout_width="365dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardPreventCornerOverlap="true"
+
+                    tools:layout_editor_absoluteX="10dp">
+
+                    <ImageView
+                        android:id="@+id/img2"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="10dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/petron_eleven" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:text="Stock Qty: "
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/stockqty2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="250dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="Superkalan"/>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview3"
+                    android:layout_width="365dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardPreventCornerOverlap="true"
+
+                    tools:layout_editor_absoluteX="10dp">
+
+                    <ImageView
+                        android:id="@+id/img3"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="10dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/superkalan" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:text="Stock Qty: "
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/stockqty3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="250dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="Petron 50"/>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview4"
+                    android:layout_width="365dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardPreventCornerOverlap="true"
+                    tools:layout_editor_absoluteX="10dp">
+
+                    <ImageView
+                        android:id="@+id/img4"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="10dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/petron_fifty" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:text="Stock Qty: "
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/stockqty4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="250dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
         </ScrollView>
     </RelativeLayout>
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
