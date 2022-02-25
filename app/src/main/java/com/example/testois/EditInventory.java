@@ -52,6 +52,11 @@ public class EditInventory extends AppCompatActivity {
         bed2.setOnClickListener(v -> {
             ed2.setEnabled(true);ed1.setEnabled(false);ed3.setEnabled(false); ed4.setEnabled(false);
             ed2.requestFocus();
+            severinaDB severinadb = new severinaDB(this);
+            String name = ed2.getText().toString().trim();
+            int quantity = Integer.parseInt(ed3.getText().toString().trim());
+            String description = ed4.getText().toString().trim();
+            severinadb.updateInventory(ed1.getText().toString(),name, quantity, description);
         });
 
         bed3.setOnClickListener(v -> {

@@ -4,6 +4,7 @@ package com.example.testois;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,6 +18,8 @@ public class AddInventory extends AppCompatActivity {
 
         EditText ed1,ed2,ed3;
         Button b1,b2;
+        severinaDB severinadb;
+        SQLiteDatabase db;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,7 @@ public class AddInventory extends AppCompatActivity {
             b2 = findViewById(R.id.bt2);
 
             b2.setOnClickListener(v -> {
-                Intent i = new Intent(getApplicationContext(), ViewInventory.class);
+                Intent i = new Intent(getApplicationContext(), DashboardInventory.class);
                 startActivity(i);
             });
             b1.setOnClickListener(v -> insert());
@@ -44,27 +47,11 @@ public class AddInventory extends AppCompatActivity {
 
         public void insert()
         {
-            try
-            {
-                String name = ed1.getText().toString();
-                String quantity = ed2.getText().toString();
-                String description = ed3.getText().toString();
-
-                SQLiteDatabase db = openOrCreateDatabase("SliteDb", Context.MODE_PRIVATE,null);
-                db.execSQL("CREATE TABLE IF NOT EXISTS records(id INTEGER PRIMARY KEY AUTOINCREMENT,name VARCHAR,quantity VARCHAR,description VARCHAR)");
-
-                String sql = "insert into records(name,quantity,description)values(?,?,?)";
-                SQLiteStatement statement = db.compileStatement(sql);
-                statement.bindString(1,name);
-                statement.bindString(2,quantity);
-                statement.bindString(3,description);
-                statement.execute();
-                Toast.makeText(this,"Record added",Toast.LENGTH_LONG).show();
-
-                ed1.setText("");
-                ed2.setText("");
-                ed3.setText("");
-                ed1.requestFocus();
+            try {
+                 severinadb = new severinaDB(AddInventory.this);
+                severinadb.addInventory(ed1.getText().toString().trim(),
+                        Integer.parseInt(ed2.getText().toString().trim()),
+                        ed3.getText().toString().trim());
             }
             catch (Exception ex)
             {

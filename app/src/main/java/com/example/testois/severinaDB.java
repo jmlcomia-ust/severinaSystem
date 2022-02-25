@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -85,7 +86,7 @@ public class severinaDB extends SQLiteOpenHelper {
         values.put("password", "owner.severina");
         long newRowId = db.insert(TBL_1_NAME, null, values);
 
-        db.execSQL("create table " + TBL_2_NAME + "(id integer primary key, name text, quantity text, description text)");
+        db.execSQL("create table " + TBL_2_NAME + "(id integer primary key, name text, quantity integer, description text)");
         db.execSQL("create table " + TBL_3_NAME + "(id integer primary key, name text, subject text)");
     }
 
@@ -116,9 +117,83 @@ public class severinaDB extends SQLiteOpenHelper {
         int count = cursor.getCount();
 
         cursor.close();
-       db.close();
+        db.close();
 
-       return count > 0;
+        return count > 0;
+    }
+
+    //Operation for Inventory
+    public static boolean checkInventory(String name, int quantity, String description){
+        String[] columns = {"name"};
+        SQLiteDatabase db = openDatabase();
+
+        String selection = "name=? , quantity=? and description = ?";
+        String quant = String.valueOf(quantity);
+        String[] selectionArgs = {name, quant, description};
+
+        Cursor cursor = db.query(TBL_2_NAME, columns, selection, selectionArgs, null, null, null);
+        int count = cursor.getCount();
+
+        cursor.close();
+        db.close();
+
+        return count > 0;
+    }
+    void addInventory(String name, int quantity, String description){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("name", name);
+        values.put("quantity", quantity);
+        values.put("description", description);
+        long result = db.insert(TBL_2_NAME,null, values);
+        if(result == -1){
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Product Added Successfully!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    Cursor readAllInventory(){
+        String query = "SELECT * FROM " + TBL_2_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        if(db != null){
+            cursor = db.rawQuery(query, null);
+        }
+        return cursor;
+    }
+
+    void updateInventory(String row_id, String name, int quantity, String description){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", name);
+        values.put("quantity", quantity);
+        values.put("description", description);
+
+        long result = db.update(TBL_2_NAME, values, "_id=?", new String[]{row_id});
+        if(result == -1){
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    void deleteOneRow(String row_id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TBL_2_NAME, "_id=?", new String[]{row_id});
+        if(result == -1){
+            Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    void deleteAllData(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TBL_2_NAME);
     }
 
 }

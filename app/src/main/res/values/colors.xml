@@ -8,4 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="grey">#7c7d6d</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dividerColor">#80CBC4</color>
+    <color name="list_item_title">#AAAAAA</color>
+    <color name="list_group_title">#808080</color>
+    <color name="color1">#5C9942</color>
+    <color name="color2">#57A378</color>
+    <color name="color3">#598F70</color>
+    <color name="color4">#42EA7E</color>
+    <color name="color5">#38F7CA</color>
 </resources>
