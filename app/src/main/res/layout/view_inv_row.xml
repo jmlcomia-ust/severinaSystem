@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="horizontal"
+android:gravity="center"
+android:padding="10dp">
+
+<ImageView
+    android:id="@+id/inv_img"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_gravity="center"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="5dp"
+    android:src="@drawable/solane_mini"
+    android:padding="5dp"></ImageView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_toRightOf="@id/inv_img">
+
+        <TextView
+            android:id="@+id/inv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Solane 50kg"
+            android:textColor="@color/black"
+            android:textSize="30dp"/>
+
+        <TextView
+            android:id="@+id/inv_qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inv_name"
+            android:text="6 in stock"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/inv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inv_name"
+            android:layout_toRightOf="@id/inv_qty"
+            android:layout_alignBaseline="@id/inv_qty"
+            android:layout_marginLeft="20sp"
+            android:text="Note: none"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+    </RelativeLayout>
+</LinearLayout>

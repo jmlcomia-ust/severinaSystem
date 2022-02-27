@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="grey">#7c7d6d</color>
     <color name="white">#FFFFFFFF</color>
-
+    <color name="teal">#CCD6DD</color>
     <color name="dividerColor">#80CBC4</color>
     <color name="list_item_title">#AAAAAA</color>
     <color name="list_group_title">#808080</color>

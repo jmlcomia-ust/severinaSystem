@@ -14,7 +14,7 @@
         android:orientation="horizontal"
         tools:context=".view"/>
     <ImageView
-        android:id="@+id/menu"
+        android:id="@+id/view_inv_menu"
         android:clickable="true"
         android:layout_width="40sp"
         android:layout_height="40sp"
@@ -25,29 +25,29 @@
         <EditText
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/menu"
+            app:layout_constraintLeft_toRightOf="@id/view_inv_menu"
             android:hint="Sort by item id or name"
-            android:id="@+id/sort"
+            android:id="@+id/sort_inv"
             android:textColor="@color/white"
             android:layout_margin="1sp"
             tools:ignore="MissingConstraints" />
         <ImageView
-            android:id="@+id/search"
+            android:id="@+id/search_inv"
             android:clickable="true"
             android:layout_width="80dp"
             android:layout_height="45sp"
             android:layout_marginLeft="1sp"
-            app:layout_constraintLeft_toRightOf="@id/sort"
+            app:layout_constraintLeft_toRightOf="@id/sort_inv"
             android:src="@drawable/ic_search"
             android:text="Search"
             tools:ignore="MissingConstraints" />
         <ImageView
-            android:id="@+id/add"
+            android:id="@+id/add_inv"
             android:clickable="true"
             app:tint="@color/white"
             android:layout_marginStart="7sp"
             android:layout_marginTop="10sp"
-            app:layout_constraintLeft_toRightOf="@id/search"
+            app:layout_constraintLeft_toRightOf="@id/search_inv"
             android:layout_width="40sp"
             android:layout_height="40sp"
             android:src="@drawable/add_item"
@@ -65,10 +65,9 @@
             android:layout_height="match_parent"
             >
         <ListView
-            android:id="@+id/lstInventory"
+            android:id="@+id/lst1_inv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent"/>
         </ScrollView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

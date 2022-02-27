@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@color/teal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/gas_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="5dp"></ImageView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="50dp"
+        android:layout_toRightOf="@id/gas_icon">
+
+        <TextView
+            android:id="@+id/gas_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Solane 50kg"
+            android:textSize="30dp">
+        </TextView>
+        
+        <TextView
+            android:id="@+id/gas_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gas_desc"
+            android:text="6 in stock"
+            android:textSize="20dp">
+        </TextView>
+        
+        <Button
+            android:id="@id/add_item"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/add_item"
+            android:layout_toLeftOf="@id/edit_item">
+        </Button>
+
+        <Button
+            android:id="@+id/edit_item"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/edit_item"
+            android:layout_toLeftOf="@id/delete_item">
+        </Button>
+
+        <Button
+            android:id="@+id/delete_item"
+            android:layout_width="55dp"
+            android:layout_height="60dp"
+            android:background="@drawable/delete"
+            android:layout_alignParentEnd="true">
+        </Button>
+
+    </RelativeLayout>
+</LinearLayout>

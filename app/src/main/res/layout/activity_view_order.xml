@@ -15,7 +15,7 @@
             android:orientation="horizontal"
             tools:context=".view"/>
         <ImageView
-            android:id="@+id/menu"
+            android:id="@+id/menu_ord"
             android:clickable="true"
             android:layout_width="40sp"
             android:layout_height="40sp"
@@ -26,14 +26,14 @@
         <EditText
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/menu"
+            app:layout_constraintLeft_toRightOf="@id/menu_ord"
             android:hint="Sort by item id or name"
             android:id="@+id/sort"
             android:textColor="@color/white"
             android:layout_margin="1sp"
             tools:ignore="MissingConstraints" />
         <ImageView
-            android:id="@+id/search"
+            android:id="@+id/search_ord"
             android:clickable="true"
             android:layout_width="80dp"
             android:layout_height="45sp"
@@ -43,12 +43,12 @@
             android:text="Search"
             tools:ignore="MissingConstraints" />
         <ImageView
-            android:id="@+id/add"
+            android:id="@+id/add_ord"
             android:clickable="true"
             app:tint="@color/white"
             android:layout_marginStart="7sp"
             android:layout_marginTop="10sp"
-            app:layout_constraintLeft_toRightOf="@id/search"
+            app:layout_constraintLeft_toRightOf="@id/search_ord"
             android:layout_width="40sp"
             android:layout_height="40sp"
             android:src="@drawable/add_item"
@@ -65,11 +65,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-                <ListView
-                    android:id="@+id/lst1"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/lst1_ord"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    />
+                    android:layout_height="match_parent"/>
             </ScrollView>
         </LinearLayout>
 

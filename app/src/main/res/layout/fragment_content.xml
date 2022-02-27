@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragments.FragmentContent"
+    android:background="@drawable/gradient_background">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+        <ImageView
+            android:src="@drawable/ic_baseline_laptop_chromebook_24"
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ImageView>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Content"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textColor="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </TextView>
+
+</LinearLayout>

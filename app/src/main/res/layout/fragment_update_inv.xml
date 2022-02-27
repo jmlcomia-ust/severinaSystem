@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UpdateInvFrag">
+
+    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:background="@color/white">
+
+        <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:padding="5dp"
+            android:text="Item Name:"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/item_des"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_name"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            android:text="Description:"
+            android:textSize="20dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/item_desc"
+            android:layout_width="220dp"
+            android:layout_height="120dp"
+            android:layout_below="@id/item_des"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:padding="5dp"
+            android:text="Text Text Text"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/item_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_desc"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:padding="5dp"
+            android:text="Quantity:"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
+
+        <Button
+            android:id="@+id/decrement"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignBaseline="@id/item_count"
+            android:layout_toRightOf="@id/item_count"
+            android:text="-"
+            android:textColor="@color/black">
+        </Button>
+
+        <TextView
+            android:id="@+id/item_qt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/decrement"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_toRightOf="@id/decrement"
+            android:outlineSpotShadowColor="@color/black"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
+
+        <Button
+            android:id="@+id/increment"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignBaseline="@id/item_count"
+            android:layout_toRightOf="@id/item_qt"
+            android:text="+"
+            android:textColor="@color/black"/>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/buttons"
+                android:layout_below="@id/increment"
+                android:layout_centerHorizontal="true"
+                >
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/increment"
+            android:layout_centerHorizontal="true"
+            android:text="Update"
+            android:textColor="@color/black"/>
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/increment"
+            android:layout_toRightOf="@id/btn_update"
+            android:layout_centerInParent="true"
+            android:text="Back"
+            android:textColor="@color/black"/>
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="1sp"
+            >
+
+            <TextView
+                android:id="@+id/picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+
+                android:padding="5dp"
+                android:layout_margin="5dp"
+                android:text="Photo of Item:"
+                android:textSize="20dp"
+                android:textColor="@color/black">
+            </TextView>
+
+            <ImageView
+                android:id="@+id/img_item"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="20dp"
+                android:padding="5dp"
+                android:textColor="@color/black"/>
+
+            <Button
+                android:id="@+id/insert_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Insert Image"
+                android:textColor="@color/black">
+
+            </Button>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</FrameLayout>

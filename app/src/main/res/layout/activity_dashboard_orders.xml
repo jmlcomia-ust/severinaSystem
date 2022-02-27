@@ -7,75 +7,91 @@
     tools:context=".DashboardOrders"
     android:background="@drawable/gradient_background">
     <RelativeLayout
-        android:id="@+id/layout1"
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
-        tools:context=".dashboard_order">
+        tools:context=".DashboardOrders">
 
         <Button
-            android:id="@+id/menu"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="10sp"
+            android:id="@+id/dashboard_ord_menu"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginStart="10sp"
             android:layout_marginTop="10sp"
-            android:layout_marginEnd="10sp"
-            android:layout_marginBottom="10sp"
-            android:background="@drawable/menu" />
+            android:background="@drawable/menu"
+            tools:ignore="MissingConstraints" />
 
-            <TextView
-                android:id="@+id/home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10sp"
-                android:layout_toRightOf="@id/menu"
-                android:text="Home"
-                android:textSize="30dp"/>
+        <TextView
+            android:id="@+id/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="-5dp"
+            android:layout_toRightOf="@id/dashboard_ord_menu"
+            android:gravity="center_vertical"
+            android:text="Home"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            tools:ignore="MissingConstraints" />
+
         <Button
             android:id="@+id/profile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10sp"
-            android:background="@drawable/profile"
-            android:backgroundTint="@color/white"
-            android:layout_toStartOf="@id/settings"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toLeftOf="@id/settings"
+            android:layout_marginRight="20sp"
+            android:background="@drawable/profile" />
 
-            <Button
-                android:id="@+id/settings"
-                android:layout_width="10dp"
-                android:layout_height="50dp"
-                android:layout_margin="10sp"
-                android:background="@drawable/ic_setting"
-                android:layout_alignParentEnd="true" />
+        <Button
+            android:id="@+id/settings"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_setting" />
 
         <Button
             android:id="@+id/add_item"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_below="@id/dashboard_ord_menu"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/add_item"
             android:backgroundTint="@color/white"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/settings"
-            android:layout_margin="10dp">
-        </Button>
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="347dp"
+            tools:layout_editor_absoluteY="59dp" />
 
         <Button
             android:id="@+id/search"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_below="@id/profile"
-            android:layout_margin="10sp"
+            android:layout_below="@id/dashboard_ord_menu"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
             android:layout_toLeftOf="@id/add_item"
             android:background="@drawable/search"
-            android:backgroundTint="@color/white" />
+            android:backgroundTint="@color/white"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="292dp"
+            tools:layout_editor_absoluteY="59dp" />
 
         <Spinner
             android:id="@+id/options"
-            android:layout_width="230sp"
-            android:layout_height="50sp"
-            android:layout_below="@id/menu"
-            android:layout_margin="10sp" />
+            android:layout_width="240sp"
+            android:layout_height="40sp"
+            android:layout_below="@id/dashboard_ord_menu"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="10sp"
+            android:layout_marginEnd="10sp"
+            android:layout_marginBottom="10sp"
+            android:background="@color/white"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="28dp"
+            tools:layout_editor_absoluteY="59dp" />
 
         <TextView
             android:id="@+id/ongoing"
@@ -83,35 +99,85 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/search"
             android:text="Ongoing Orders"
+            android:textColor="@color/black"
             android:textAlignment="center"
-            android:textSize="30dp"/>
+            android:textSize="30dp" />
 
-        <ListView
+        <ScrollView
+            android:id="@+id/scroll1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ongoing"
+            android:layout_marginTop="10dp"
+            android:paddingTop="10dp"
+            tools:ignore="MissingConstraints,NotSibling">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_current"
+                android:layout_width="match_parent"
+                android:layout_height="729dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="?attr/actionBarSize"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </ScrollView>
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="350dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/ongoing"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"/>
+            android:text="No Ongoing Orders"
+            android:textSize="20sp"
+            android:textColor="@color/grey"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible"
+            android:layout_marginTop="30sp"
+            android:id="@+id/emptyRv1"/>
 
         <TextView
             android:id="@+id/recent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/recent_orders"
+            android:layout_below="@id/scroll1"
+            android:layout_marginTop="20sp"
             android:text="Recent Orders"
-            android:textSize="30dp"
-            android:textAlignment="center">
-        </TextView>
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:textSize="30dp"/>
 
-        <ListView
-            android:id="@+id/recent_orders"
+        <ScrollView
+            android:id="@+id/scroll2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recent"
+            android:layout_marginTop="10dp"
+            android:paddingTop="10dp"
+            tools:ignore="MissingConstraints,NotSibling">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recent"
+                android:layout_width="match_parent"
+                android:layout_height="729dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="?attr/actionBarSize"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </ScrollView>
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="250dp"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="20dp">
-        </ListView>
-
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recent"
+            android:visibility="visible"
+            android:text="No Recent Orders"
+            android:textSize="20sp"
+            android:textColor="@color/grey"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30sp"
+            android:id="@+id/emptyRv2"/>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

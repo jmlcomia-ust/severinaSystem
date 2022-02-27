@@ -32,7 +32,7 @@
                 android:textSize="17sp"
                 />
             <TextView
-                android:id="@+id/edtcategory"
+                android:id="@+id/ord_id_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/category"
@@ -41,19 +41,20 @@
                 android:textColor="@color/black"
                 android:textSize="17sp"
                 />
+
             <TextView
                 android:id="@+id/quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/category"
-                android:layout_toRightOf="@id/pcinventory"
                 android:layout_marginLeft="10sp"
                 android:layout_marginTop="7dp"
-                android:textColor="@color/black"
+                android:layout_toRightOf="@id/pcinventory"
                 android:text="Order Quantity"
+                android:textColor="@color/black"
                 android:textSize="14sp" />
             <TextView
-                android:id="@+id/edtquant"
+                android:id="@+id/ord_qty_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/category"
@@ -75,7 +76,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/edtcust"
+                android:id="@+id/ord_name_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/quantity"
@@ -95,7 +96,7 @@
                 android:text="Shipment Status"
                 android:textSize="14sp" />
             <TextView
-                android:id="@+id/edtshipment"
+                android:id="@+id/ord_stat_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/customer"

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+        
+        <ImageView
+            android:id="@+id/avatar"
+            android:src="@drawable/ic_baseline_account_circle_24"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+        </ImageView>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="left|start"
+        android:text="Username"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <TextView
+        android:id="@+id/contactNumber"
+        android:layout_marginLeft="20dp"
+
+        android:layout_gravity="left|start"
+        android:text="contact number"
+        android:textColor="@android:color/white"
+        android:textSize="13sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </TextView>
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="left|start"
+        android:text="email"
+        android:textColor="@android:color/white"
+        android:textSize="13sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </TextView>
+
+</LinearLayout>

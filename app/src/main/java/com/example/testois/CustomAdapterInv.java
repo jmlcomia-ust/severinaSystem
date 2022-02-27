@@ -7,26 +7,22 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
+public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyViewHolder> {
 
     private Context context;
     private Activity activity;
     private ArrayList inv_id, inv_name, inv_qty, inv_desc;
 
-    CustomAdapter(Activity activity, Context context, ArrayList inv_id, ArrayList inv_name, ArrayList inv_qty,
-                  ArrayList inv_desc){
+    CustomAdapterInv(Activity activity, Context context, ArrayList inv_id, ArrayList inv_name, ArrayList inv_qty, ArrayList inv_desc){
         this.activity = activity;
         this.context = context;
         this.inv_id = inv_id;
@@ -39,7 +35,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.my_row, parent, false);
+        View view = inflater.inflate(R.layout.dashboard_inv_row, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -56,9 +52,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             public void onClick(View view) {
                 Intent intent = new Intent(context, EditInventory.class);
                 intent.putExtra("id", String.valueOf(inv_id.get(position)));
-                intent.putExtra("title", String.valueOf(inv_name.get(position)));
-                intent.putExtra("author", String.valueOf(inv_qty.get(position)));
-                intent.putExtra("pages", String.valueOf(inv_desc.get(position)));
+                intent.putExtra("name", String.valueOf(inv_name.get(position)));
+                intent.putExtra("quantity", String.valueOf(inv_qty.get(position)));
+                intent.putExtra("description", String.valueOf(inv_desc.get(position)));
                 activity.startActivityForResult(intent, 1);
             }
         });
@@ -71,7 +67,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         return inv_id.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView inv_id_txt, inv_name_txt, inv_qty_txt, inv_desc_txt;
         LinearLayout mainLayout;
@@ -83,9 +79,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             inv_qty_txt = itemView.findViewById(R.id.inv_qty_txt);
             inv_desc_txt = itemView.findViewById(R.id.inv_desc_txt);
             mainLayout = itemView.findViewById(R.id.mainLayout);
-            //Animate Recyclerview
-            Animation translate_anim = AnimationUtils.loadAnimation(context, R.anim.translate_anim);
-            mainLayout.setAnimation(translate_anim);
         }
 
     }

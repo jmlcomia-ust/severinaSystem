@@ -19,9 +19,6 @@
             android:name=".DashboardInventory"
             android:exported="false" />
         <activity
-            android:name=".AddInventory"
-            android:exported="false" />
-        <activity
             android:name=".EditInventory"
             android:exported="false" />
         <activity
