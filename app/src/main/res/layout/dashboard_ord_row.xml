@@ -34,7 +34,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+
             android:padding="1dp" />
 
         <Button
@@ -47,42 +47,82 @@
         </Button>
 
         <TextView
-            android:id="@+id/ord_id_txt"
+            android:id="@+id/id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/ord_img"
-            android:text="Order ID: ___"
+            android:text="Order ID:"
             android:textColor="@color/black"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/ord_id_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/id"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18dp"/>
 
+        <TextView
+            android:id="@+id/qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ord_id_txt"
+            android:layout_toRightOf="@id/ord_img"
+            android:text="Order Quantity:"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/ord_qty_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ord_id_txt"
-            android:layout_toRightOf="@id/ord_img"
-            android:text="Order Quantity: ___"
+            android:layout_toRightOf="@id/qty"
+            android:text=""
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
+
         <TextView
-            android:id="@+id/ord_name_txt"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/ord_img"
             android:layout_below="@id/ord_qty_txt"
-            android:text="Customer: ___"
+            android:text="Customer:"
             android:textSize="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/ord_name_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/name"
+            android:layout_below="@id/ord_qty_txt"
+            android:text=""
+            android:textSize="18dp"
             android:textColor="@color/black"/>
 
         <TextView
-            android:id="@+id/ord_stat_txt"
+            android:id="@+id/stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/ord_img"
             android:layout_below="@id/ord_name_txt"
-            android:text="Shipment Status: ___"
+            android:text="Order Status:"
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/ord_stat_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/stat"
+            android:layout_below="@id/ord_name_txt"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18dp" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
     </LinearLayout>
