@@ -98,7 +98,7 @@ public class EditInventory extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(getApplicationContext(), AddInventory.class);
+        Intent i = new Intent(getApplicationContext(), AddInventoryDiaFragment.class);
         startActivity(i);
         finish();
         //super.onBackPressed();

@@ -49,7 +49,7 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
         holder.ord_qty_txt.setText(String.valueOf(ord_qty.get(position)));
         holder.ord_stat_txt.setText(String.valueOf(ord_stat.get(position)));
         //Recyclerview onClickListener
-        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+        holder.order_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, EditInventory.class);
@@ -70,7 +70,7 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView ord_id_txt, ord_name_txt, ord_qty_txt,ord_stat_txt;
-        LinearLayout mainLayout;
+        LinearLayout order_list;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,10 +78,10 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
             ord_name_txt = itemView.findViewById(R.id.ord_name_txt);
             ord_qty_txt = itemView.findViewById(R.id.ord_qty_txt);
             ord_stat_txt = itemView.findViewById(R.id.ord_stat_txt);
-            mainLayout = itemView.findViewById(R.id.mainLayout);
+            order_list = itemView.findViewById(R.id.order_list);
             //Animate Recyclerview
             Animation translate_anim = AnimationUtils.loadAnimation(context, R.anim.translate_anim);
-            mainLayout.setAnimation(translate_anim);
+            order_list.setAnimation(translate_anim);
         }
 
     }

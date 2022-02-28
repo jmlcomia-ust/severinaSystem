@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:id="@+id/mainLayout">
+    android:id="@+id/inv_list">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
             android:padding="12dp">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardview1"
+                android:id="@+id/cardview_inv_list"
                 android:layout_width="370sp"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -100,12 +100,12 @@
                     />
 
                 <ImageView
-                    android:id="@+id/image_product"
+                    android:id="@+id/inv_img"
                     android:layout_width="100dp"
                     android:layout_height="150dp"
                     android:layout_margin="10dp"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/solane_mini" />
+                    android:src="@drawable/ic_default_img" />
 
                 <TextView
                     android:layout_width="wrap_content"

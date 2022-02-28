@@ -59,16 +59,9 @@ public class ViewOrder extends AppCompatActivity {
 
     }
     void storeDataInArrays() {
+        severinaDB db = new severinaDB(this);
         Cursor cursor = db.readAllOrders();
         if (!((cursor.getCount()) == 0)) {
-            while (cursor.moveToNext()) {
-                ord_id.add(cursor.getString(0));
-                ord_name.add(cursor.getString(1));
-                ord_qty.add(cursor.getString(2));
-                ord_stat.add(cursor.getString(3));
-            }
-        }
-        if (!(cursor.getCount() == 0)) {
             while (cursor.moveToNext()) {
                 ord_id.add(cursor.getString(0));
                 ord_name.add(cursor.getString(1));

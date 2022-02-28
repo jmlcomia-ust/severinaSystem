@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ViewInventory extends AppCompatActivity implements AddInventoryDiaFragment.AddInventoryDiaListener {
+public class ViewInventory extends AppCompatActivity{
     EditText sort;
     ImageView search, add, menu;
     ListView lst1;
@@ -45,16 +45,13 @@ public class ViewInventory extends AppCompatActivity implements AddInventoryDiaF
         search = findViewById(R.id.search_inv);
         add = findViewById(R.id.add_inv);
         menu = findViewById(R.id.view_inv_menu);
-        menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ViewInventory.class);
-                startActivity(i);
-            }
+        menu.setOnClickListener(view -> {
+            Intent i = new Intent(getApplicationContext(), ViewInventory.class);
+            startActivity(i);
         });
 
         add.setOnClickListener(view -> {
-            showEditDialog();
+
         });
 
         search.setOnClickListener(v -> {
@@ -72,15 +69,10 @@ public class ViewInventory extends AppCompatActivity implements AddInventoryDiaF
 
         ArrayList<HashMap<String, String>> userList = db.GetInventory();
         ListView lv = findViewById(R.id.lst1_inv);
-        ListAdapter adapter = new SimpleAdapter(this, userList, R.layout.view_inv_row,new String[]{"name","designation","location"}, new int[]{R.id.inv_name, R.id.inv_qty_txt, R.id.inv_desc_txt});
+        ListAdapter adapter = new SimpleAdapter(this, userList, R.layout.view_inv_row,new String[]{"name","quantity","description"}, new int[]{R.id.inv_name, R.id.inv_qty_txt, R.id.inv_desc_txt});
         lv.setAdapter(adapter);
     }
 
-    private void showEditDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        AddInventoryDiaFragment editNameDialogFragment = AddInventoryDiaFragment.newInstance("name", "quantity", "description");
-        editNameDialogFragment.show(fm, "fragment_edit_name");
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -99,25 +91,6 @@ public class ViewInventory extends AppCompatActivity implements AddInventoryDiaF
                 inv_qty.add(cursor.getString(2));
                 inv_desc.add(cursor.getString(3));
             }
-        }
-        if (!(cursor.getCount() == 0)) {
-            while (cursor.moveToNext()) {
-                inv_id.add(cursor.getString(0));
-                inv_name.add(cursor.getString(1));
-                inv_qty.add(cursor.getString(2));
-                inv_desc.add(cursor.getString(3));
-            }
-        }
-    }
-
-    @Override
-    public void onFinishEditDialog(String input1, String input2, String input3) {
-        try {
-            db = new severinaDB(ViewInventory.this);
-            db.addInventory(input1.trim(), Integer.parseInt(input2.trim()), input3.trim());
-            Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
-        } catch (Exception ex) {
-            Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
     }
 }

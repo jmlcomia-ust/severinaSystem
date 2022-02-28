@@ -4,6 +4,7 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="horizontal"
 android:gravity="center"
+android:background="@drawable/gradient_background"
 android:padding="10dp">
 
 <ImageView
@@ -13,8 +14,8 @@ android:padding="10dp">
     android:layout_gravity="center"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="5dp"
-    android:src="@drawable/solane_mini"
-    android:padding="5dp"></ImageView>
+    android:src="@drawable/ic_default_img"
+    android:padding="5dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

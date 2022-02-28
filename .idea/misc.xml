@@ -30,10 +30,12 @@
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/activity_view_order.xml" value="0.2484375" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/app_bar_view_inv.xml" value="0.5" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/content_view_inv.xml" value="0.359375" />
-        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/dashboard_ord_row.xml" value="0.19947916666666668" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/dashboard_inv_row.xml" value="0.33" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/dashboard_ord_row.xml" value="0.33" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_add_inventory.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_add_inventory_dia.xml" value="0.1" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_add_inventory_dia.xml" value="0.33" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_add_order.xml" value="0.2520833333333333" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_add_order_dia.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_content.xml" value="0.1" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_gallery.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
@@ -45,7 +47,7 @@
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/my_row.xml" value="0.25" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/nav_header.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/nav_header_view_inv.xml" value="0.359375" />
-        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/order_list.xml" value="0.20260416666666667" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/order_list.xml" value="0.5" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/order_row.xml" value="0.5547576301615799" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/search_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/spinner_dropdown_list.xml" value="0.2368659420289855" />
@@ -53,6 +55,7 @@
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/view_inv_details.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/view_inv_row.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/view_inventory_row.xml" value="0.5" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/view_ord_row.xml" value="0.3546195652173913" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/menu/activity_main_drawer.xml" value="0.24947916666666667" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
       </map>

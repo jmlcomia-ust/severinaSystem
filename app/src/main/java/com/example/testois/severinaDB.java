@@ -1,3 +1,5 @@
+//Reference: https://www.techypid.com/sqlite-crud-operation-with-example-in-android/
+
 package com.example.testois;
 
 import android.annotation.SuppressLint;
@@ -91,7 +93,7 @@ public class severinaDB extends SQLiteOpenHelper {
         long newRowId = db.insert(TBL_1_NAME, null, values);
 
         db.execSQL("create table " + TBL_2_NAME + "(id integer primary key, name text, quantity integer, description text)");
-        db.execSQL("create table " + TBL_3_NAME + "(id integer primary key, quantity integer, description text, status text)");
+        db.execSQL("create table " + TBL_3_NAME + "(id integer primary key, name text, quantity integer, status text)");
     }
 
     @Override
@@ -250,19 +252,18 @@ public class severinaDB extends SQLiteOpenHelper {
 
         return count > 0;
     }
-    void addOrder(String name, int quantity, String description, String status){
+    void addOrder(String name, int quantity , String status){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put("name", name);
         values.put("quantity", quantity);
-        values.put("description", description);
         values.put("status", status);
         long result = db.insert(TBL_3_NAME,null, values);
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(context, "Product Added Successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
     Cursor readAllOrders(){
@@ -275,12 +276,11 @@ public class severinaDB extends SQLiteOpenHelper {
         }
         return cursor;
     }
-    void updateOrder(String row_id, String name, int quantity, String description, String status){
+    void updateOrder(String row_id, String name, int quantity, String status){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", name);
         values.put("quantity", quantity);
-        values.put("description", description);
         values.put("status", status);
 
         long result = db.update(TBL_3_NAME, values, "_id=?", new String[]{row_id});

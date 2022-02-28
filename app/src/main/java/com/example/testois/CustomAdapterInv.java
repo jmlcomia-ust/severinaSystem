@@ -47,7 +47,7 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
         holder.inv_qty_txt.setText(String.valueOf(inv_qty.get(position)));
         holder.inv_desc_txt.setText(String.valueOf(inv_desc.get(position)));
         //Recyclerview onClickListener
-        holder.mainLayout.setOnClickListener(new View.OnClickListener() {
+        holder.inv_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, EditInventory.class);
@@ -70,7 +70,7 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView inv_id_txt, inv_name_txt, inv_qty_txt, inv_desc_txt;
-        LinearLayout mainLayout;
+        LinearLayout inv_list;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,7 +78,7 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
             inv_name_txt = itemView.findViewById(R.id.inv_name_txt);
             inv_qty_txt = itemView.findViewById(R.id.inv_qty_txt);
             inv_desc_txt = itemView.findViewById(R.id.inv_desc_txt);
-            mainLayout = itemView.findViewById(R.id.mainLayout);
+            inv_list = itemView.findViewById(R.id.inv_list);
         }
 
     }
