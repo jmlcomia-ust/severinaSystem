@@ -106,16 +106,15 @@
         <ScrollView
             android:id="@+id/scroll1"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="400dp"
             android:layout_below="@+id/ongoing"
-            android:layout_marginTop="10dp"
             android:paddingTop="10dp"
             tools:ignore="MissingConstraints,NotSibling">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_current"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingTop="?attr/actionBarSize"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -151,18 +150,16 @@
         <ScrollView
             android:id="@+id/scroll2"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="400dp"
             android:layout_below="@+id/recent"
-            android:layout_marginTop="10dp"
             android:paddingTop="10dp"
             tools:ignore="MissingConstraints,NotSibling">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_recent"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:paddingTop="?attr/actionBarSize"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

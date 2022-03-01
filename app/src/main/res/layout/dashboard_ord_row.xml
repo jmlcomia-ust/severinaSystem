@@ -9,7 +9,7 @@
     android:id="@+id/order_list">
 <androidx.cardview.widget.CardView
     android:id="@+id/cardview_ord_list"
-    android:layout_width="370sp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:layout_gravity="center_horizontal"
@@ -34,7 +34,6 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-
             android:padding="1dp" />
 
         <Button

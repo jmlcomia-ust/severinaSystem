@@ -15,7 +15,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardview_inv_list"
-                android:layout_width="370sp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_gravity="center_horizontal"
