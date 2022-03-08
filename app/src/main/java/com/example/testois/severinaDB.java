@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,12 +20,30 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class severinaDB extends SQLiteOpenHelper {
+
     private static final String DB_NAME="severinadb";
-    private static final String TBL_1_NAME="user_db";
-    private static final String TBL_2_NAME="inventory_db";
-    private static final String TBL_3_NAME="orders_db";
+    private static final String TBL_1_NAME="db_user";
+    public static final String USR_ID = "id";
+    public static final String USR_NAME = "username";
+    public static final String USR_PWRD = "password";
+
+
+    private static final String TBL_2_NAME="db_inventory";
+    public static final String INV_ID = "id";
+    public static final String INV_NAME = "name";
+    public static final String INV_QTY = "quantity";
+    public static final String INV_DESC = "description";
+
+
+    private static final String TBL_3_NAME="db_order";
+    public static final String ORD_ID ="id";
+    public static final String ORD_NAME = "name";
+    public static final String ORD_QTY = "quantity";
+    public static final String ORD_STAT = "status";
+
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER=1;
     private final Context context;
@@ -33,75 +52,25 @@ public class severinaDB extends SQLiteOpenHelper {
     public severinaDB(Context context) {
         super(context, DB_NAME, null, VER);
         this.context = context;
-        createDb();
-    }
-    private void createDb() {
-        boolean dbExist = checkDbExist();
-        if(!dbExist){
-            this.getReadableDatabase();
-            copyDatabase();
-        }
-    }
-
-    private void copyDatabase() {
-        try {
-            InputStream inputStream = context.getAssets().open(DB_NAME);
-
-            String outFileName = DB_PATH + DB_NAME;
-
-            OutputStream outputStream = new FileOutputStream(outFileName);
-
-            byte[] b = new byte[1024];
-            int length;
-
-            while ((length = inputStream.read(b)) > 0){
-                outputStream.write(b, 0, length);
-            }
-
-            outputStream.flush();
-            outputStream.close();
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private boolean checkDbExist() {
-        SQLiteDatabase sqLiteDatabase = null;
-
-        try{
-            String path = DB_PATH + DB_NAME;
-            sqLiteDatabase = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READONLY);
-        } catch (Exception ex){
-        }
-
-        if(sqLiteDatabase != null){
-            sqLiteDatabase.close();
-            return true;
-        }
-
-        return false;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TBL_1_NAME + "(id integer primary key, username text, password text)");
-        ContentValues values = new ContentValues();
-        values.put("username","owner.severina@gmail.com" );
-        values.put("password", "owner.severina");
-        long newRowId = db.insert(TBL_1_NAME, null, values);
+        String q1 = "create table " + TBL_1_NAME + " (" + USR_ID + " integer primary key, " + USR_NAME + " text, " + USR_PWRD + " text) ";
+        String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text) ";
+        String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_STAT + " text) ";
+        db.execSQL(q1);
+        db.execSQL(q2);
+        db.execSQL(q3);
 
-        db.execSQL("create table " + TBL_2_NAME + "(id integer primary key, name text, quantity integer, description text)");
-        db.execSQL("create table " + TBL_3_NAME + "(id integer primary key, name text, quantity integer, status text)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-            createDb();
             db.execSQL("drop table if exists " + TBL_1_NAME + "");
             db.execSQL("drop table if exists " + TBL_2_NAME + "");
             db.execSQL("drop table if exists " + TBL_3_NAME + "");
+            onCreate(db);
 
     }
 
@@ -110,115 +79,83 @@ public class severinaDB extends SQLiteOpenHelper {
         db = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
         return db;
     }
-
-    //Operations for Users
-   public static boolean checkUser(String username, String password){
-        String[] columns = {"username"};
-        SQLiteDatabase db = openDatabase();
-
-        String selection = "username=? and password = ?";
-        String[] selectionArgs = {username, password};
-
-        Cursor cursor = db.query(TBL_1_NAME, columns, selection, selectionArgs, null, null, null);
-        int count = cursor.getCount();
-
-        cursor.close();
-        db.close();
-
-        return count > 0;
+    //Add User
+    void addUser(String name, String password){
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.USR_NAME,name);
+        cv.put(severinaDB.USR_PWRD, password);
+        db = this.getWritableDatabase();
+        db.insert(severinaDB.TBL_1_NAME, null,cv);
     }
 
-    //Operation for Inventory
-    public static boolean checkInventory(String name, int quantity, String description){
-        String[] columns = {"name"};
-        SQLiteDatabase db = openDatabase();
-
-        String selection = "name=? , quantity=? and description = ?";
-        String quant = String.valueOf(quantity);
-        String[] selectionArgs = {name, quant, description};
-
-        Cursor cursor = db.query(TBL_2_NAME, columns, selection, selectionArgs, null, null, null);
-        int count = cursor.getCount();
-
-        cursor.close();
-        db.close();
-
-        return count > 0;
-    }
-    void addInventory(String name, int quantity, String description){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put("name", name);
-        values.put("quantity", quantity);
-        values.put("description", description);
-        long result = db.insert(TBL_2_NAME,null, values);
+    //ADD INVENTORY ITEM
+    void addItem(Inventory inventory){
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.INV_NAME, inventory.getName());
+        cv.put(severinaDB.INV_QTY, inventory.getQuantity());
+        cv.put(severinaDB.INV_DESC, inventory.getDescription());
+        db = this.getWritableDatabase();
+        long result = db.insert(severinaDB.TBL_2_NAME, null,cv);
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(context, "Product Added Successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Item Added Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    Cursor readAllInventory(){
-        String query = "SELECT * FROM " + TBL_2_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = null;
-        if(db != null){
-            cursor = db.rawQuery(query, null);
+    //READ INVENTORY ITEMS
+    public List<Inventory> getitemsList(){
+        String query="SELECT * FROM " + TBL_2_NAME;
+        db = this.getReadableDatabase();
+        List<Inventory> items = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query,null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = Integer.parseInt(cursor.getString(0));
+                String name = cursor.getString(1);
+                String quantity = cursor.getString(2);
+                String desc = cursor.getString(3);
+                items.add(new Inventory(String.valueOf(id),name,quantity, desc));
+            }while(cursor.moveToNext());
         }
-        return cursor;
+        cursor.close();
+        return items;
     }
 
-    void updateInventory(String row_id, String name, int quantity, String description){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("quantity", quantity);
-        values.put("description", description);
+    //SELECTIVE READING INVENTORY ITEMS
+    public List<Inventory> getitemsByName(String searchname){
+        String query="SELECT * FROM " + TBL_2_NAME + "WHERE " + INV_NAME + " LIKE '%" + searchname +"%'";
+        db = this.getReadableDatabase();
+        List<Inventory> searcheditems = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query,null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = Integer.parseInt(cursor.getString(0));
+                String name = cursor.getString(1);
+                String quantity = cursor.getString(2);
+                String desc = cursor.getString(3);
+                searcheditems.add(new Inventory(String.valueOf(id),name,quantity, desc));
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return searcheditems;
+    }
 
-        long result = db.update(TBL_2_NAME, values, "_id=?", new String[]{row_id});
+    public void updateItem(Inventory inventory){
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.INV_NAME,inventory.getName());
+        cv.put(severinaDB.INV_QTY,inventory.getQuantity());
+        cv.put(severinaDB.INV_DESC,inventory.getDescription());
+        db= this.getWritableDatabase();
+        long result = db.update(TBL_2_NAME,cv,INV_ID + " = ?" , new String[] {String.valueOf(inventory.getId())});
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Item Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     //search
-    @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> GetInventory(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<HashMap<String, String>> invlist = new ArrayList<>();
-        String query = "SELECT name, quantity, description FROM "+ TBL_2_NAME;
-        Cursor cursor = db.rawQuery(query,null);
-        while (cursor.moveToNext()){
-            HashMap<String,String> user = new HashMap<>();
-            user.put("name",cursor.getString(cursor.getColumnIndex("name")));
-            user.put("quantity",cursor.getString(cursor.getColumnIndex("quantity")));
-            user.put("description",cursor.getString(cursor.getColumnIndex("description")));
-            invlist.add(user);
-        }
-        return  invlist;
-    }
-    // Get User Details based on userid
-    @SuppressLint("Range")
-    public ArrayList<HashMap<String, String>> GetInventoryById(int invid){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<HashMap<String, String>> invlist = new ArrayList<>();
-        String query = "SELECT name, quantity, description FROM "+ TBL_2_NAME;
-        Cursor cursor = db.query(TBL_2_NAME, new String[]{"name", "quantity", "description"}, "id"+ "=?",new String[]{String.valueOf(invid)},null, null, null, null);
-        if (cursor.moveToNext()){
-            HashMap<String,String> item = new HashMap<>();
-            item.put("name",cursor.getString(cursor.getColumnIndex("name")));
-            item.put("quantity",cursor.getString(cursor.getColumnIndex("quantity")));
-            item.put("description",cursor.getString(cursor.getColumnIndex("description")));
-            invlist.add(item);
-        }
-        return  invlist;
-    }
 
     void deleteOneRow(String row_id){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -252,44 +189,52 @@ public class severinaDB extends SQLiteOpenHelper {
 
         return count > 0;
     }
-    void addOrder(String name, int quantity , String status){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        values.put("name", name);
-        values.put("quantity", quantity);
-        values.put("status", status);
-        long result = db.insert(TBL_3_NAME,null, values);
+    void addOrder(Orders order){
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.ORD_NAME, order.getName());
+        cv.put(severinaDB.ORD_QTY, order.getQuantity());
+        cv.put(severinaDB.ORD_STAT, order.getStatus());
+        db = this.getWritableDatabase();
+        long result = db.insert(severinaDB.TBL_3_NAME, null,cv);
         if(result == -1){
-            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Adding Orders Failed", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
-    Cursor readAllOrders(){
-        String query = "SELECT * FROM " + TBL_3_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = null;
-        if(db != null){
-            cursor = db.rawQuery(query, null);
+    //READ INVENTORY ITEMS
+    public List<Orders> getOrderList(){
+        String query="SELECT * FROM " + TBL_3_NAME;
+        db = this.getReadableDatabase();
+        List<Orders> orders = new ArrayList<>();
+        Cursor cursor = db.rawQuery(query,null);
+        if(cursor.moveToFirst()){
+            do{
+                int id = Integer.parseInt(cursor.getString(0));
+                String name = cursor.getString(1);
+                String quantity = cursor.getString(2);
+                String stat = cursor.getString(3);
+                orders.add(new Orders(String.valueOf(id),name,quantity, stat));
+            }while(cursor.moveToNext());
         }
-        return cursor;
+        cursor.close();
+        return orders;
     }
-    void updateOrder(String row_id, String name, int quantity, String status){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("quantity", quantity);
-        values.put("status", status);
-
-        long result = db.update(TBL_3_NAME, values, "_id=?", new String[]{row_id});
+    public void updateOrder(Orders orders){
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.ORD_NAME,orders.getName());
+        cv.put(severinaDB.ORD_QTY,orders.getQuantity());
+        cv.put(severinaDB.ORD_STAT,orders.getStatus());
+        db = this.getWritableDatabase();
+        long result = db.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(orders.getId())});
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
+
     void deleteOneRowOrder(String row_id){
         SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(TBL_3_NAME, "_id=?", new String[]{row_id});

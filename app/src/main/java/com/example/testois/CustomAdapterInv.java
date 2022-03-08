@@ -1,86 +1,97 @@
 package com.example.testois;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.example.testois.fragments.AddInventoryDiaFragment;
+import com.example.testois.fragments.UpdateInventoryDiaFragment;
 
-public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyViewHolder> {
+import java.util.List;
 
-    private Context context;
-    private Activity activity;
-    private ArrayList inv_id, inv_name, inv_qty, inv_desc;
+public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyViewHolder>{
+    private static final String TAG = "CustomAdapterInv";
+    Activity context;
+    List<Inventory> items;
+    severinaDB sev;
 
-    CustomAdapterInv(Activity activity, Context context, ArrayList inv_id, ArrayList inv_name, ArrayList inv_qty, ArrayList inv_desc){
-        this.activity = activity;
+    CustomAdapterInv(List<Inventory> items, Activity context){
+        this.items = items;
         this.context = context;
-        this.inv_id = inv_id;
-        this.inv_name = inv_name;
-        this.inv_qty = inv_qty;
-        this.inv_desc = inv_desc;
+        sev = new severinaDB(context);
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.dashboard_inv_row, parent, false);
-        return new MyViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.view_inv_row, parent, false);
+        MyViewHolder myViewHolder = new MyViewHolder(view);
+        return myViewHolder;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.inv_id_txt.setText(String.valueOf(inv_id.get(position)));
-        holder.inv_name_txt.setText(String.valueOf(inv_name.get(position)));
-        holder.inv_qty_txt.setText(String.valueOf(inv_qty.get(position)));
-        holder.inv_desc_txt.setText(String.valueOf(inv_desc.get(position)));
+        final Inventory inventory = items.get(position);
+
+        holder.id.setText(inventory.getId());
+        holder.name.setText(inventory.getName());
+        holder.qty.setText(inventory.getQuantity());
+        holder.desc.setText(inventory.getDescription());
         //Recyclerview onClickListener
-        holder.inv_list.setOnClickListener(new View.OnClickListener() {
+        holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, EditInventory.class);
-                intent.putExtra("id", String.valueOf(inv_id.get(position)));
-                intent.putExtra("name", String.valueOf(inv_name.get(position)));
-                intent.putExtra("quantity", String.valueOf(inv_qty.get(position)));
-                intent.putExtra("description", String.valueOf(inv_desc.get(position)));
-                activity.startActivityForResult(intent, 1);
+                Log.d(TAG, "onClick: opening dialog.");
+                String name = holder.name.getText().toString();
+                String qty = holder.qty.getText().toString();
+                String desc = holder.desc.getText().toString();
+
+                UpdateInventoryDiaFragment fragment = new UpdateInventoryDiaFragment();
+                Bundle args = new Bundle();
+                args.putString("name", name);
+                args.putString("qty", qty);
+                args.putString("desc", desc);
+                fragment.setArguments(args);
+                AppCompatActivity act = new AppCompatActivity();
+               // fragment.show(act.getFragmentManager().beginTransaction().add(R.id.fragment_update_inv, fragment).commit());
+                sev.updateItem(new Inventory(inventory.getId(), inventory.getName(), inventory.getQuantity(), inventory.getDescription()));
             }
         });
-
-
     }
 
     @Override
     public int getItemCount() {
-        return inv_id.size();
+        if (items != null){
+            return items.size();
+        }
+        else
+            return 0;
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView inv_id_txt, inv_name_txt, inv_qty_txt, inv_desc_txt;
-        LinearLayout inv_list;
+        TextView id, name, qty, desc;
+        Button btn_edit;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            inv_id_txt = itemView.findViewById(R.id.inv_id_txt);
-            inv_name_txt = itemView.findViewById(R.id.inv_name_txt);
-            inv_qty_txt = itemView.findViewById(R.id.inv_qty_txt);
-            inv_desc_txt = itemView.findViewById(R.id.inv_desc_txt);
-            inv_list = itemView.findViewById(R.id.inv_list);
+            id = itemView.findViewById(R.id.inv_id_txtv);
+            name = itemView.findViewById(R.id.inv_name_txtv);
+            qty = itemView.findViewById(R.id.inv_qty_txtv);
+            desc = itemView.findViewById(R.id.inv_desc_txtv);
+            btn_edit = itemView.findViewById(R.id.edit_item);
         }
-
     }
-
 }

@@ -1,6 +1,6 @@
 //Reference: https://github.com/mitchtabian/DialogFragmentToActivity
 
-package com.example.testois;
+package com.example.testois.fragments;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,17 +14,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-    public class AddInventoryDiaFragment extends DialogFragment {
+import com.example.testois.R;
+import com.example.testois.severinaDB;
+
+public class AddInventoryDiaFragment extends DialogFragment {
 
     private static final String TAG = "AddInventoryDiaFragment";
 
-        public interface OnInputListener {
+    public interface OnInputListener {
         void sendInput(String name, String qty, String desc);
     }
     public OnInputListener fraglisten;
 
     private EditText inv_name_txt, inv_qty_txt, inv_desc_txt;
-    private Button btn_add, btn_back;
+    private Button btn_add, btn_back, increment, decrement;
     private severinaDB severinadb;
     private SQLiteDatabase db;
 
@@ -39,6 +42,20 @@ import android.widget.EditText;
 
         btn_add = view.findViewById(R.id.btn_add_inv);
         btn_back = view.findViewById(R.id.btn_back_inv);
+        increment = view.findViewById(R.id.increment);
+        decrement = view.findViewById(R.id.decrement);
+
+        increment.setOnClickListener(v -> {
+            int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
+            quantity++;
+            inv_qty_txt.setText(String.valueOf(quantity));
+
+        });
+        decrement.setOnClickListener(v -> {
+            int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
+            quantity--;
+            inv_qty_txt.setText(String.valueOf(quantity));
+        });
 
         btn_back.setOnClickListener(v -> {
             Log.d(TAG, "onClick: closing dialog");
@@ -51,6 +68,8 @@ import android.widget.EditText;
             String desc = inv_desc_txt.getText().toString();
             fraglisten.sendInput(name, qty, desc);
             getDialog().dismiss();
+            getActivity().recreate();
+
         });
         return view;
     }
@@ -64,4 +83,4 @@ import android.widget.EditText;
             Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
         }
     }
-    }
+}

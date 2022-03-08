@@ -1,24 +1,26 @@
 package com.example.testois;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.testois.fragments.UpdateInventoryDiaFragment;
 
 import java.util.ArrayList;
 
-    public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.MyViewHolder> {
+    public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.MyViewHolder>{
 
         private  Context context;
         private Activity activity;
@@ -37,7 +39,7 @@ import java.util.ArrayList;
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(context);
-            View view = inflater.inflate(R.layout.spinner_dropdown_list, parent, false);
+            View view = inflater.inflate(R.layout.view_inv_row, parent, false);
             return new MyViewHolder(view);
         }
         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -51,14 +53,7 @@ import java.util.ArrayList;
             //Recyclerview onClickListener
             holder.inv_list.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, EditInventory.class);
-                    intent.putExtra("id", String.valueOf(inv_id.get(position)));
-                    intent.putExtra("name", String.valueOf(inv_name.get(position)));
-                    intent.putExtra("quantity", String.valueOf(inv_qty.get(position)));
-                    intent.putExtra("description", String.valueOf(inv_desc.get(position)));
-                    activity.startActivityForResult(intent, 1);
-                }
+                public void onClick(View view) { showDialogFragment(view);}
             });
         }
 
@@ -74,14 +69,19 @@ import java.util.ArrayList;
 
             MyViewHolder(@NonNull View itemView) {
                 super(itemView);
-                inv_id_txt = itemView.findViewById(R.id.inv_id_txt);
-                inv_name_txt = itemView.findViewById(R.id.inv_name_txt);
-                inv_qty_txt = itemView.findViewById(R.id.inv_qty_txt);
-                inv_desc_txt = itemView.findViewById(R.id.inv_desc_txt);
+                inv_id_txt = itemView.findViewById(R.id.inv_id_txtv);
+                inv_name_txt = itemView.findViewById(R.id.inv_name_txtv);
+                inv_qty_txt = itemView.findViewById(R.id.inv_qty_txtv);
+                inv_desc_txt = itemView.findViewById(R.id.inv_desc_txtv);
                 inv_list = itemView.findViewById(R.id.inv_list);
 
             }
 
+        }
+        public void showDialogFragment(View view){
+            UpdateInventoryDiaFragment dialog = new UpdateInventoryDiaFragment();
+            AppCompatActivity activity = ((AppCompatActivity)view.getContext());
+            dialog.show(activity.getSupportFragmentManager(),null);
         }
 
     }

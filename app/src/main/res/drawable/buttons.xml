@@ -4,12 +4,12 @@
     <item><shape>
         <corners android:radius="20dp"/>
         <stroke android:width="2dp"
-                android:color="@color/grey" />
+                android:color="@color/color3" />
 
-        <solid android:color="@color/grey" />
+        <solid android:color="@color/color3" />
 
         <size
-            android:width="100dp"
+            android:width="320dp"
             android:height="60dp"/>
     </shape></item>
 

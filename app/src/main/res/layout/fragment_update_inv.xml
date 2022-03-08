@@ -1,70 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/fragment_update_inv"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UpdateInvFrag">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/gradient_background"
+    tools:context=".fragments.UpdateInventoryDiaFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <RelativeLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_height="400dp"
         android:layout_margin="10dp"
-        android:background="@color/white">
+        android:padding="10dp">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
             android:padding="5dp"
             android:text="Item Name:"
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            app:layout_constraintRight_toLeftOf="@id/inv_name_txtu"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="1dp" />
+
+        <EditText
+            android:id="@+id/inv_name_txtu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/name"
+            android:ems="9"
+            android:padding="5dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:layout_constraintLeft_toLeftOf="@id/name"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="118dp"
+            tools:layout_editor_absoluteY="-1dp" />
 
         <TextView
             android:id="@+id/item_des"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_name"
             android:padding="5dp"
-            android:layout_margin="5dp"
             android:text="Description:"
+            android:textColor="@color/black"
             android:textSize="20dp"
-            android:textColor="@color/black"/>
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="58dp" />
 
         <EditText
-            android:id="@+id/item_desc"
-            android:layout_width="220dp"
-            android:layout_height="120dp"
-            android:layout_below="@id/item_des"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
+            android:id="@+id/inv_desc_txtu"
+            android:layout_width="150dp"
+            android:layout_height="100sp"
             android:padding="5dp"
-            android:text="Text Text Text"
+            android:text=""
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            app:layout_constraintBottom_toTopOf="@id/item_count"
+            app:layout_constraintTop_toBottomOf="@id/item_des"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="10dp" />
 
         <TextView
             android:id="@+id/item_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_desc"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
             android:padding="5dp"
             android:text="Quantity:"
             android:textColor="@color/black"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            app:layout_constraintTop_toBottomOf="@id/inv_desc_txtu"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="3dp"
+            tools:layout_editor_absoluteY="226dp" />
 
         <Button
             android:id="@+id/decrement"
@@ -73,99 +91,98 @@
             android:layout_alignBaseline="@id/item_count"
             android:layout_toRightOf="@id/item_count"
             android:text="-"
-            android:textColor="@color/black">
-        </Button>
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/item_count"
+            tools:layout_editor_absoluteX="10dp"
+            tools:layout_editor_absoluteY="270dp" />
 
-        <TextView
-            android:id="@+id/item_qt"
+        <EditText
+            android:id="@+id/inv_qty_txtu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/decrement"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_toRightOf="@id/decrement"
+            android:layout_marginStart="10sp"
             android:outlineSpotShadowColor="@color/black"
             android:text="0"
             android:textColor="@color/black"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            app:layout_constraintLeft_toRightOf="@id/decrement"
+            app:layout_constraintTop_toBottomOf="@id/item_count"
+            tools:layout_editor_absoluteX="68dp"
+            tools:layout_editor_absoluteY="262dp" />
 
         <Button
             android:id="@+id/increment"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignBaseline="@id/item_count"
-            android:layout_toRightOf="@id/item_qt"
+            android:layout_marginStart="10sp"
             android:text="+"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toRightOf="@id/inv_qty_txtu"
+            app:layout_constraintTop_toBottomOf="@id/item_count"
+            tools:layout_editor_absoluteX="108dp"
+            tools:layout_editor_absoluteY="261dp" />
 
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/buttons"
-                android:layout_below="@id/increment"
-                android:layout_centerHorizontal="true"
-                >
+        <TextView
+            android:id="@+id/picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="80dp"
+            android:text="Photo of Item:"
+
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/inv_imgu"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/inv_imgu"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="40dp"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="67dp" />
+
+        <Button
+            android:id="@+id/insert_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="84dp"
+            android:layout_marginTop="12dp"
+            android:text="Pick Image"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@+id/inv_desc_txtu"
+            app:layout_constraintTop_toBottomOf="@+id/inv_imgu"
+            tools:ignore="MissingConstraints" />
+
         <Button
             android:id="@+id/btn_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/increment"
-            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20sp"
             android:text="Update"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/increment"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="70dp" />
+
         <Button
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/increment"
-            android:layout_toRightOf="@id/btn_update"
             android:layout_centerInParent="true"
+            android:layout_marginStart="20sp"
             android:text="Back"
-            android:textColor="@color/black"/>
-            </LinearLayout>
+            android:textColor="@color/black"
+            app:layout_constraintBaseline_toBaselineOf="@id/btn_update"
+            app:layout_constraintStart_toEndOf="@+id/btn_update" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="1sp"
-            >
-
-            <TextView
-                android:id="@+id/picture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-
-                android:padding="5dp"
-                android:layout_margin="5dp"
-                android:text="Photo of Item:"
-                android:textSize="20dp"
-                android:textColor="@color/black">
-            </TextView>
-
-            <ImageView
-                android:id="@+id/img_item"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="20dp"
-                android:padding="5dp"
-                android:textColor="@color/black"/>
-
-            <Button
-                android:id="@+id/insert_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Insert Image"
-                android:textColor="@color/black">
-
-            </Button>
-        </LinearLayout>
-
-
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

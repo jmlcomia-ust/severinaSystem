@@ -21,25 +21,29 @@ public class LoginActivity extends AppCompatActivity {
     severinaDB severinadb;
     int id = 0;
     SQLiteDatabase db;
+    User user = new User();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         severinadb = new severinaDB(LoginActivity.this);
+        severinadb.addUser(user.getName(), user.getPassword());
+
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
         edtuname = (EditText) findViewById(R.id.user);
         edtpword = (EditText) findViewById(R.id.pass);
 
         btn1.setOnClickListener(v -> {
-            boolean isExist;
-            isExist = severinaDB.checkUser(edtuname.getText().toString(), edtpword.getText().toString());
-
-            if(isExist){
-                Intent intent = new Intent(LoginActivity.this, DashboardInventory.class);
+            String name = edtuname.getText().toString();
+            String password = edtpword.getText().toString();
+            if (name.equals(user.getName()) && password.equals(user.getPassword())) {
+                Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, ViewInventory.class);
                 intent.putExtra("username", edtuname.getText().toString());
                 startActivity(intent);
+
             } else {
                 edtpword.setText(null);
                 Toast.makeText(LoginActivity.this, "Login failed. Invalid username or password.", Toast.LENGTH_SHORT).show();

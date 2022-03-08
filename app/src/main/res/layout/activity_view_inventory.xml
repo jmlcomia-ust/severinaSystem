@@ -19,39 +19,39 @@
         android:layout_width="40sp"
         android:layout_height="40sp"
         android:layout_margin="20dp"
-        android:src="@drawable/menu"
+        android:src="@drawable/ic_menu"
         tools:ignore="MissingConstraints" />
 
-        <EditText
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/view_inv_menu"
-            android:hint="Sort by item id or name"
-            android:id="@+id/sort_inv"
-            android:textColor="@color/white"
-            android:layout_margin="1sp"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/search_inv"
-            android:clickable="true"
-            android:layout_width="80dp"
-            android:layout_height="45sp"
-            android:layout_marginLeft="1sp"
-            app:layout_constraintLeft_toRightOf="@id/sort_inv"
-            android:src="@drawable/ic_search"
-            android:text="Search"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/add_inv"
-            android:clickable="true"
-            app:tint="@color/white"
-            android:layout_marginStart="7sp"
-            android:layout_marginTop="10sp"
-            app:layout_constraintLeft_toRightOf="@id/search_inv"
-            android:layout_width="40sp"
-            android:layout_height="40sp"
-            android:src="@drawable/add_item"
-            tools:ignore="MissingConstraints" />
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/view_inv_menu"
+        android:hint="Sort by item id or name"
+        android:id="@+id/sort_inv"
+        android:textColor="@color/white"
+        android:layout_margin="1sp"
+        tools:ignore="MissingConstraints" />
+    <ImageView
+        android:id="@+id/search_inv"
+        android:clickable="true"
+        android:layout_width="80dp"
+        android:layout_height="45sp"
+        android:layout_marginLeft="1sp"
+        app:layout_constraintLeft_toRightOf="@id/sort_inv"
+        android:src="@drawable/ic_search"
+        android:text="Search"
+        tools:ignore="MissingConstraints" />
+    <ImageView
+        android:id="@+id/add_inv"
+        android:clickable="true"
+        app:tint="@color/white"
+        android:layout_marginStart="7sp"
+        android:layout_marginTop="10sp"
+        app:layout_constraintLeft_toRightOf="@id/search_inv"
+        android:layout_width="40sp"
+        android:layout_height="40sp"
+        android:src="@drawable/add_item"
+        tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,10 +64,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
-        <ListView
-            android:id="@+id/lst1_inv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView4"
+                android:layout_width="match_parent"
+                android:layout_height="729dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="?attr/actionBarSize"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </ScrollView>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

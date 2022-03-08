@@ -2,40 +2,28 @@ package com.example.testois;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.example.testois.fragments.AddOrderDiaFragment;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFragment.OnInputListener{
+public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFragment.OnInputListener {
     private static final String TAG = "DashboardOrders";
 
-    @Override
-    public void sendInput(String name, String qty, String stat) {
-        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
-
-//        mInputDisplay.setText(input);
-        frag_name = name;   frag_qty=qty;   frag_stat=stat;
-        setInputToListView();
-    }
     Button dash_menu, add_item;
     severinaDB db;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView imageview;
-    ArrayList<String> ord_id, ord_name, ord_qty, ord_stat;
     String frag_name, frag_qty, frag_stat;
 
     @Override
@@ -44,11 +32,8 @@ public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFra
         setContentView(R.layout.activity_dashboard_orders);
 
         db = new severinaDB(DashboardOrders.this);
+        List<Orders> orders = db.getOrderList();
 
-        ord_id = new ArrayList<>();
-        ord_name = new ArrayList<>();
-        ord_qty = new ArrayList<>();
-        ord_stat = new ArrayList<>();
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
         dash_menu = findViewById(R.id.dash_ord_menu);
@@ -57,9 +42,7 @@ public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFra
         rv_current = findViewById(R.id.rv_current);
         rv_recent = findViewById(R.id.rv_recent);
 
-        storeDataInArrays();
-
-        CustomAdapterOrd customAdapterOrd = new CustomAdapterOrd(DashboardOrders.this, this, ord_id, ord_name, ord_qty, ord_stat);
+        CustomAdapterOrd customAdapterOrd = new CustomAdapterOrd(orders, this);
         rv_current.setAdapter(customAdapterOrd);
         rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
 
@@ -72,6 +55,7 @@ public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFra
                 AddOrderDiaFragment dialog = new AddOrderDiaFragment();
                 dialog.show(getSupportFragmentManager(), "AddOrderDiaFragment");
         });
+        ;
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -80,31 +64,22 @@ public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFra
             recreate();
         }
     }
+    @Override
+    public void sendInput(String name, String qty, String stat) {
+        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
+
+//        mInputDisplay.setText(input);
+        frag_name = name;   frag_qty=qty;   frag_stat=stat;
+        setInputToListView();
+    }
     private void setInputToListView(){
         try {
             db = new severinaDB(DashboardOrders.this);
-            db.addOrder(frag_name, Integer.parseInt(frag_qty), frag_stat);
-            storeDataInArrays();
+            Orders orders = new Orders (frag_name, frag_qty, frag_stat);
+            db.addOrder(orders);
             Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
-        }
-    }
-    void storeDataInArrays(){
-        Cursor cursor = db.readAllOrders();
-        if (!(cursor.getCount() == 0)){
-            emptyfield1.setVisibility(View.INVISIBLE);
-            emptyfield2.setVisibility(View.INVISIBLE);
-            while (cursor.moveToNext()) {
-                ord_id.add(cursor.getString(0));
-                ord_name.add(cursor.getString(1));
-                ord_qty.add(cursor.getString(2));
-                ord_stat.add(cursor.getString(3));
-            }
-        }
-        else{
-            emptyfield1.setVisibility(View.VISIBLE);
-            emptyfield2.setVisibility(View.VISIBLE);
         }
     }
 }

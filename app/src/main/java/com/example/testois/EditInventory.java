@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.testois.fragments.AddInventoryDiaFragment;
+
 public class EditInventory extends AppCompatActivity {
 
     EditText ed1,ed2,ed3,ed4;
@@ -21,7 +23,7 @@ public class EditInventory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_inventory);
 
-
+/*
         ed1 = findViewById(R.id.id); ed1.setEnabled(false);
         ed2 = findViewById(R.id.name);ed2.setEnabled(false);
         ed3 = findViewById(R.id.quantity);ed3.setEnabled(false);
@@ -35,7 +37,7 @@ public class EditInventory extends AppCompatActivity {
         b2 = findViewById(R.id.bt2);
         b3 = findViewById(R.id.bt3);
 
-
+*/
         Intent i = getIntent();
 
         String t1 = i.getStringExtra("id");
@@ -56,7 +58,7 @@ public class EditInventory extends AppCompatActivity {
             String name = ed2.getText().toString().trim();
             int quantity = Integer.parseInt(ed3.getText().toString().trim());
             String description = ed4.getText().toString().trim();
-            severinadb.updateInventory(ed1.getText().toString(),name, quantity, description);
+           // severinadb.updateInventory(ed1.getText().toString(),name, quantity, description);
         });
 
         bed3.setOnClickListener(v -> {

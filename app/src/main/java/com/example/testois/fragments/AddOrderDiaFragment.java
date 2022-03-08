@@ -1,6 +1,6 @@
 //Reference: https://github.com/mitchtabian/DialogFragmentToActivity
 
-package com.example.testois;
+package com.example.testois.fragments;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.testois.R;
+import com.example.testois.severinaDB;
 
 
 public class AddOrderDiaFragment extends DialogFragment {
@@ -64,6 +66,7 @@ public class AddOrderDiaFragment extends DialogFragment {
             String stat = ord_stat_txt.getText().toString();
             fraglisten.sendInput(name, qty, stat);
             getDialog().dismiss();
+            getActivity().recreate();
         });
         return view;
     }

@@ -1,76 +1,74 @@
 package com.example.testois;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteStatement;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.example.testois.fragments.AddInventoryDiaFragment;
+import com.example.testois.fragments.UpdateInventoryDiaFragment;
 
-public class ViewInventory extends AppCompatActivity{
-    EditText sort;
-    ImageView search, add, menu;
-    ListView lst1;
-    ArrayList<String> inv_id, inv_name, inv_qty, inv_desc;
+import java.util.List;
+
+public class ViewInventory extends AppCompatActivity implements AddInventoryDiaFragment.OnInputListener, UpdateInventoryDiaFragment.OnInputListener {
+    private static final String TAG = "ViewInventory";
+
+    @Override
+    public void sendInput(String name, String qty, String desc) {
+        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
+        frag_name = name;
+        frag_qty = qty;
+        frag_desc = desc;
+        setInputToListView();
+    }
+    @Override
+    public void UpdateInput(String name, String qty, String desc) {
+        Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
+        frag_name = name;
+        frag_qty = qty;
+        frag_desc = desc;
+        setUpdatesToListView();
+    }
+
+    Button menu, update_item, search;
     severinaDB db;
-    SQLiteDatabase sq;
+    TextView emptyfield;
+    RecyclerView recyclerView;
+    ImageView imageview, add_item;
+    String frag_name, frag_qty, frag_desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_inventory);
+        search = findViewById(R.id.search);
 
-        sort = findViewById(R.id.sort_inv);
-        search = findViewById(R.id.search_inv);
-        add = findViewById(R.id.add_inv);
-        menu = findViewById(R.id.view_inv_menu);
-        menu.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(), ViewInventory.class);
-            startActivity(i);
+        db = new severinaDB(this);
+        List<Inventory> items = db.getitemsList();
+
+
+        add_item = findViewById(R.id.add_inv);
+        //update_item=findViewById(R.id.update_item);
+        imageview = findViewById(R.id.inv_img);
+        recyclerView = findViewById(R.id.recyclerView4);
+
+        CustomAdapterInv customAdapterInv = new CustomAdapterInv(items, this);
+        recyclerView.setAdapter(customAdapterInv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        add_item.setOnClickListener(view -> {
+            Log.d(TAG, "onClick: opening dialog.");
+            AddInventoryDiaFragment dialog = new AddInventoryDiaFragment();
+            dialog.show(getSupportFragmentManager(), "AddInventoryDiaFragment");
         });
 
-        add.setOnClickListener(view -> {
-
-        });
-
-        search.setOnClickListener(v -> {
-            if (sort != null) {
-
-            }
-        });
-
-        db = new severinaDB(ViewInventory.this);
-        inv_id = new ArrayList<>();
-        inv_name = new ArrayList<>();
-        inv_qty = new ArrayList<>();
-        inv_desc = new ArrayList<>();
-        storeDataInArrays();
-
-        ArrayList<HashMap<String, String>> userList = db.GetInventory();
-        ListView lv = findViewById(R.id.lst1_inv);
-        ListAdapter adapter = new SimpleAdapter(this, userList, R.layout.view_inv_row,new String[]{"name","quantity","description"}, new int[]{R.id.inv_name, R.id.inv_qty_txt, R.id.inv_desc_txt});
-        lv.setAdapter(adapter);
     }
 
     @Override
@@ -82,15 +80,25 @@ public class ViewInventory extends AppCompatActivity{
 
     }
 
-    void storeDataInArrays() {
-        Cursor cursor = db.readAllInventory();
-        if (!((cursor.getCount()) == 0)) {
-            while (cursor.moveToNext()) {
-                inv_id.add(cursor.getString(0));
-                inv_name.add(cursor.getString(1));
-                inv_qty.add(cursor.getString(2));
-                inv_desc.add(cursor.getString(3));
-            }
+    private void setInputToListView() {
+        try {
+            db = new severinaDB(ViewInventory.this);
+            Inventory inventory = new Inventory(frag_name,frag_qty, frag_desc);
+            db.addItem(inventory);
+            Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setUpdatesToListView(){
+        try {
+            db = new severinaDB(ViewInventory.this);
+            Inventory items = new Inventory (frag_name, frag_qty, frag_desc);
+            db.updateItem(items);
+            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
     }
 }

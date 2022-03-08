@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -7,121 +7,122 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:id="@+id/order_list">
-<androidx.cardview.widget.CardView
-    android:id="@+id/cardview_ord_list"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:layout_gravity="center_horizontal"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="10dp"
-    app:cardMaxElevation="12dp"
-    app:cardPreventCornerOverlap="true"
-    tools:layout_editor_absoluteX="10dp"
-    tools:ignore="MissingConstraints">
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_ord_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:layout_gravity="center_horizontal"
-        android:padding="12dp"
-        android:orientation="horizontal">
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        tools:layout_editor_absoluteX="10dp"
+        tools:ignore="MissingConstraints">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="12dp"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/ord_img"
-            android:src="@drawable/ic_default_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:padding="1dp" />
+            <ImageView
+                android:id="@+id/ord_img"
+                android:src="@drawable/ic_default_img"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
 
-        <Button
-            android:layout_width="10dp"
-            android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:layout_marginStart="-30dp"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/edit_info">
-        </Button>
+                android:padding="1dp" />
 
-        <TextView
-            android:id="@+id/id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ord_img"
-            android:text="Order ID:"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/ord_id_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/id"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="18dp"/>
+            <Button
+                android:layout_width="10dp"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginStart="-30dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/edit_info">
+            </Button>
 
-        <TextView
-            android:id="@+id/qty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ord_id_txt"
-            android:layout_toRightOf="@id/ord_img"
-            android:text="Order Quantity:"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/ord_qty_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ord_id_txt"
-            android:layout_toRightOf="@id/qty"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="18dp" />
+            <TextView
+                android:id="@+id/id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/ord_img"
+                android:text="Order ID:"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/ord_id_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/id"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="18dp"/>
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ord_img"
-            android:layout_below="@id/ord_qty_txt"
-            android:text="Customer:"
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/ord_name_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/name"
-            android:layout_below="@id/ord_qty_txt"
-            android:text=""
-            android:textSize="18dp"
-            android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/qty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ord_id_txt"
+                android:layout_toRightOf="@id/ord_img"
+                android:text="Order Quantity:"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/ord_qty_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ord_id_txt"
+                android:layout_toRightOf="@id/qty"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="18dp" />
 
-        <TextView
-            android:id="@+id/stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/ord_img"
-            android:layout_below="@id/ord_name_txt"
-            android:text="Order Status:"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
-        <TextView
-            android:id="@+id/ord_stat_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/stat"
-            android:layout_below="@id/ord_name_txt"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="18dp" />
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/ord_img"
+                android:layout_below="@id/ord_qty_txt"
+                android:text="Customer:"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/ord_name_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/name"
+                android:layout_below="@id/ord_qty_txt"
+                android:text=""
+                android:textSize="18dp"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/ord_img"
+                android:layout_below="@id/ord_name_txt"
+                android:text="Order Status:"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/ord_stat_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/stat"
+                android:layout_below="@id/ord_name_txt"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

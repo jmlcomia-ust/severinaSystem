@@ -9,15 +9,30 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.example.testois.fragments.AddOrderDiaFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ViewOrder extends AppCompatActivity {
+public class ViewOrder extends AppCompatActivity implements AddOrderDiaFragment.OnInputListener{
+    private static final String TAG = "ViewOrder";
+
+   @Override
+    public void sendInput(String name, String qty, String stat) {
+        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
+
+//        mInputDisplay.setText(input);
+        frag_name = name;   frag_qty=qty;   frag_stat=stat;
+        setInputToListView();
+    }
     EditText sort;
     ImageView search, add, menu;
-    ArrayList<String> ord_id, ord_name, ord_qty, ord_stat;
+    String frag_name, frag_qty, frag_stat;
     RecyclerView lst1;
     severinaDB db;
     SQLiteDatabase sq;
@@ -26,6 +41,8 @@ public class ViewOrder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_order);
+        db = new severinaDB(this);
+        List<Orders> orders = db.getOrderList();
         menu = findViewById(R.id.menu_ord);
         menu.setOnClickListener(view -> {
             Intent i = new Intent(getApplicationContext(), ViewOrder.class);
@@ -43,10 +60,9 @@ public class ViewOrder extends AppCompatActivity {
 
             }
         });
-        storeDataInArrays();
-        CustomViewAdapOrd customAdapter = new CustomViewAdapOrd(ViewOrder.this, this, ord_id, ord_name, ord_qty, ord_stat);
-        lst1 = findViewById(R.id.lst1_ord);
-        lst1.setAdapter(customAdapter);
+
+        CustomAdapterOrd customAdapterOrd = new CustomAdapterOrd(orders, this);
+        lst1.setAdapter(customAdapterOrd);
         lst1.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
         }
 
@@ -56,18 +72,15 @@ public class ViewOrder extends AppCompatActivity {
         if (requestCode == 1) {
             recreate();
         }
-
     }
-    void storeDataInArrays() {
-        severinaDB db = new severinaDB(this);
-        Cursor cursor = db.readAllOrders();
-        if (!((cursor.getCount()) == 0)) {
-            while (cursor.moveToNext()) {
-                ord_id.add(cursor.getString(0));
-                ord_name.add(cursor.getString(1));
-                ord_qty.add(cursor.getString(2));
-                ord_stat.add(cursor.getString(3));
-            }
+    private void setInputToListView(){
+        try {
+            db = new severinaDB(ViewOrder.this);
+            Orders orders = new Orders (frag_name, frag_qty, frag_stat);
+            db.addOrder(orders);
+            Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
     }
 }

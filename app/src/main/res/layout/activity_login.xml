@@ -14,8 +14,8 @@
         android:orientation="vertical"
         tools:context=".login">
         <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
             android:layout_gravity="center"
             android:src="@drawable/severina"
             android:layout_marginTop="40dp"/>
@@ -31,7 +31,7 @@
                 android:fontFamily="@font/barlowr"
                 android:text="Severina OIS"
                 android:textColor="@color/white"
-                android:textSize="40dp"
+                android:textSize="60dp"
                 tools:ignore="TextContrastCheck" />
 
         </LinearLayout>
@@ -45,15 +45,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:textSize="25sp"
+                android:textStyle="bold"
                 android:text="User"
                 />
 
             <EditText
                 android:id="@+id/user"
-                android:layout_width="300dp"
+                android:layout_width="500dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/white"
+                android:textSize="30sp"
                 android:ems="10"
                 android:textAlignment="center" />
         </LinearLayout>
@@ -67,16 +70,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Password"
+                android:textSize="25sp"
+                android:textStyle="bold"
                 tools:ignore="TextContrastCheck" />
 
             <EditText
                 android:id="@+id/pass"
-                android:layout_width="300dp"
+                android:layout_width="500dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:layout_weight="1"
                 android:ems="10"
-                android:password="true"
+                android:textSize="30sp"
+                android:inputType="textPassword"
                 android:textAlignment="center" />
         </LinearLayout>
         <LinearLayout

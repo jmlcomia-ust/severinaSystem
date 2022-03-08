@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,70 +19,72 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyViewHolder> {
 
-    private Context context;
-    private Activity activity;
-    private ArrayList ord_id, ord_name, ord_qty, ord_stat;
+    Context context;
+    List<Orders> orders;
+    severinaDB sev;
 
-    CustomAdapterOrd(Activity activity, Context context, ArrayList ord_id, ArrayList ord_name, ArrayList ord_qty, ArrayList ord_stat){
-        this.activity = activity;
+    CustomAdapterOrd(List<Orders> orders, Context context){
+        this.orders = orders;
         this.context = context;
-        this.ord_id = ord_id;
-        this.ord_name = ord_name;
-        this.ord_qty = ord_qty;
-        this.ord_stat = ord_stat;
+        sev = new severinaDB(context);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.dashboard_ord_row, parent, false);
-        return new MyViewHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.view_ord_row, parent, false);
+        MyViewHolder myViewHolder = new MyViewHolder(view);
+        return myViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.ord_id_txt.setText(String.valueOf(ord_id.get(position)));
-        holder.ord_name_txt.setText(String.valueOf(ord_name.get(position)));
-        holder.ord_qty_txt.setText(String.valueOf(ord_qty.get(position)));
-        holder.ord_stat_txt.setText(String.valueOf(ord_stat.get(position)));
+        final Orders order = orders.get(position);
+
+        holder.ord_id_txt.setText(String.valueOf(order.getId()));
+        holder.ord_name_txt.setText(String.valueOf(order.getName()));
+        holder.ord_qty_txt.setText(String.valueOf(order.getQuantity()));
+        holder.ord_stat_txt.setText(String.valueOf(order.getStatus()));
         //Recyclerview onClickListener
-        holder.order_list.setOnClickListener(new View.OnClickListener() {
+        holder.btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, EditInventory.class);
-                intent.putExtra("id", String.valueOf(ord_id.get(position)));
-                intent.putExtra("name", String.valueOf(ord_name.get(position)));
-                intent.putExtra("quantity", String.valueOf(ord_qty.get(position)));
-                intent.putExtra("status", String.valueOf(ord_stat.get(position)));
-                activity.startActivityForResult(intent, 1);
+                String name = holder.ord_name_txt.getText().toString();
+                String qty = holder.ord_qty_txt.getText().toString();
+                String desc = holder.ord_stat_txt.getText().toString();
+
+                sev.updateItem(new Inventory(order.getId(), order.getName(), order.getQuantity(), order.getStatus()));
+                notifyDataSetChanged();
+                ((Activity) context).finish();
+                context.startActivity(((Activity) context).getIntent());
             }
         });
+
     }
 
     @Override
     public int getItemCount() {
-        return ord_id.size();
+        return orders.size();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView ord_id_txt, ord_name_txt, ord_qty_txt,ord_stat_txt;
-        LinearLayout order_list;
+        Button btn_edit;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            ord_id_txt = itemView.findViewById(R.id.ord_id_txt);
-            ord_name_txt = itemView.findViewById(R.id.ord_name_txt);
-            ord_qty_txt = itemView.findViewById(R.id.ord_qty_txt);
-            ord_stat_txt = itemView.findViewById(R.id.ord_stat_txt);
-            order_list = itemView.findViewById(R.id.order_list);
-            //Animate Recyclerview
-            Animation translate_anim = AnimationUtils.loadAnimation(context, R.anim.translate_anim);
-            order_list.setAnimation(translate_anim);
+            ord_id_txt = itemView.findViewById(R.id.view_ord_id);
+            ord_name_txt = itemView.findViewById(R.id.view_ord_name);
+            ord_qty_txt = itemView.findViewById(R.id.view_ord_qty);
+            ord_stat_txt = itemView.findViewById(R.id.view_ord_stat);
+            btn_edit = itemView.findViewById(R.id.edit_ord);
         }
 
     }
