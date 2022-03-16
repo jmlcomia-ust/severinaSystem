@@ -5,91 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashboardOrders"
-    android:background="@drawable/gradient_background">
+    android:background="@drawable/greendient_background">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/content_layout"
+        />
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_marginTop="140sp"
         android:padding="10dp"
         tools:context=".DashboardOrders">
 
-        <Button
-            android:id="@+id/dash_ord_menu"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10sp"
-            android:background="@drawable/ic_menu"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_toRightOf="@id/dash_ord_menu"
-            android:gravity="center_vertical"
-            android:text="Home"
-            android:textColor="@color/black"
-            android:textSize="40sp"
-            tools:ignore="MissingConstraints" />
-
-        <Button
-            android:id="@+id/profile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20sp"
-            android:layout_toStartOf="@id/settings"
-            android:background="@drawable/profile" />
-
-        <Button
-            android:id="@+id/settings"
-            android:layout_width="10dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10sp"
-            android:layout_marginEnd="20dp"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/ic_setting" />
-
-        <Button
+        <ImageButton
             android:id="@+id/add_item"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/dash_ord_menu"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/add_item"
-            android:backgroundTint="@color/white"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="347dp"
-            tools:layout_editor_absoluteY="59dp" />
+            android:layout_margin="10sp"
+            android:background="@drawable/add_btn"/>
 
-        <Button
-            android:id="@+id/search"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/dash_ord_menu"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:layout_toStartOf="@id/add_item"
-            android:background="@drawable/search"
-            android:backgroundTint="@color/white"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="292dp"
-            tools:layout_editor_absoluteY="59dp" />
-
-        <Spinner
-            android:id="@+id/options"
-            android:layout_width="600sp"
-            android:layout_height="50sp"
-            android:layout_below="@id/dash_ord_menu"
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_ord"
+            android:layout_width="660sp"
+            android:layout_height="80sp"
             android:layout_marginStart="10sp"
-            android:layout_marginTop="10sp"
-            android:layout_marginEnd="10sp"
-            android:layout_marginBottom="10sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="-120dp"
             android:background="@color/white"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="28dp"
@@ -99,17 +43,17 @@
             android:id="@+id/ongoing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search"
+            android:layout_below="@id/search_ord"
             android:layout_marginTop="10sp"
             android:text="Ongoing Orders"
             android:textAlignment="center"
-            android:textColor="@color/black"
+
             android:textSize="40sp" />
 
         <ScrollView
             android:id="@+id/scroll1"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="400dp"
             android:layout_below="@+id/ongoing"
             android:layout_marginTop="10dp"
             android:paddingTop="10dp"
@@ -118,7 +62,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_current"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingTop="?attr/actionBarSize"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -148,13 +92,13 @@
             android:layout_marginTop="10sp"
             android:text="Recent Orders"
             android:textAlignment="center"
-            android:textColor="@color/black"
+
             android:textSize="40sp" />
 
         <ScrollView
             android:id="@+id/scroll2"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="400dp"
             android:layout_below="@+id/recent"
             android:layout_marginTop="10dp"
             android:paddingTop="10dp"
@@ -163,7 +107,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_recent"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingTop="?attr/actionBarSize"
                 app:layout_constraintBottom_toBottomOf="parent"

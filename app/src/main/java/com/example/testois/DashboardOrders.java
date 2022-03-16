@@ -1,29 +1,38 @@
 package com.example.testois;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.testois.adapter.CustomAdapterOrd;
 import com.example.testois.fragments.AddOrderDiaFragment;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
-public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFragment.OnInputListener {
+public class DashboardOrders extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AddOrderDiaFragment.OnInputListener {
     private static final String TAG = "DashboardOrders";
 
-    Button dash_menu, add_item;
+    Button dash_menu;
     severinaDB db;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
-    ImageView imageview;
+    ImageView imageview, add_item;
     String frag_name, frag_qty, frag_stat;
 
     @Override
@@ -35,8 +44,7 @@ public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFra
         List<Orders> orders = db.getOrderList();
 
         emptyfield1 = findViewById(R.id.emptyRv1);
-        emptyfield2 = findViewById(R.id.emptyRv2);
-        dash_menu = findViewById(R.id.dash_ord_menu);
+        emptyfield2 = findViewById(R.id.emptyRv2);;
         add_item = findViewById(R.id.add_item);
         imageview = findViewById(R.id.ord_img);
         rv_current = findViewById(R.id.rv_current);
@@ -80,6 +88,14 @@ public class DashboardOrders extends AppCompatActivity implements AddOrderDiaFra
             Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
+        }
+    }
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) { return false; }
+
+    protected void allocatedActivityTitle(String titleString) {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(titleString);
         }
     }
 }

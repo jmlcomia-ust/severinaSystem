@@ -43,7 +43,7 @@
                 android:layout_gravity="end"
                 android:layout_marginStart="-30dp"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/edit_info">
+                android:background="@drawable/more">
             </Button>
 
             <TextView

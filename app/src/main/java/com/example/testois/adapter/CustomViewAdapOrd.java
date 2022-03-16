@@ -1,4 +1,4 @@
-package com.example.testois;
+package com.example.testois.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -7,13 +7,15 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.testois.EditInventory;
+import com.example.testois.R;
+
 import java.util.ArrayList;
 
     public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.MyViewHolder> {

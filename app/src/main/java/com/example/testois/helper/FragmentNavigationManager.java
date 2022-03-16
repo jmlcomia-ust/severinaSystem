@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.testois.BuildConfig;
 import com.example.testois.DashboardInventory;
+import com.example.testois.DashboardOrders;
 import com.example.testois.R;
 import com.example.testois.fragments.FragmentContent;
 import com.example.testois.theinterface.NavigationManager;
@@ -15,17 +16,28 @@ public class FragmentNavigationManager implements NavigationManager{
     private FragmentManager mFragmentManager;
     private DashboardInventory dashboardInventory;
 
-    public static FragmentNavigationManager getmInstance(DashboardInventory dashboardInventory)
+    public static FragmentNavigationManager getmInstanceInv(DashboardInventory dashboardInventory)
     {
         if(mInstance == null)
             mInstance = new FragmentNavigationManager();
-        mInstance.configure(dashboardInventory);
+        mInstance.configureInv(dashboardInventory);
+        return mInstance;
+    }
+    public static FragmentNavigationManager getmInstanceOrd(DashboardOrders dashboardOrders)
+    {
+        if(mInstance == null)
+            mInstance = new FragmentNavigationManager();
+        mInstance.configureOrd(dashboardOrders);
         return mInstance;
     }
 
-    private void configure(DashboardInventory dashboardInventory) {
+    private void configureInv(DashboardInventory dashboardInventory) {
         dashboardInventory = dashboardInventory;
         mFragmentManager = dashboardInventory.getSupportFragmentManager();
+    }
+    private void configureOrd(DashboardOrders dashboardOrders) {
+        dashboardOrders = dashboardOrders;
+        mFragmentManager = dashboardOrders.getSupportFragmentManager();
     }
 
     @Override

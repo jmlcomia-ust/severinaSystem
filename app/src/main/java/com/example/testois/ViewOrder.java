@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.testois.adapter.CustomAdapterOrd;
 import com.example.testois.fragments.AddOrderDiaFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ViewOrder extends AppCompatActivity implements AddOrderDiaFragment.OnInputListener{

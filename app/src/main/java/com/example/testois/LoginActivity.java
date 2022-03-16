@@ -1,5 +1,6 @@
 package com.example.testois;
-
+// PATH: LOGIN > VPTUTORIAL > DBINVENTORY > SEARCHINV > ADDINV OR UPDATEINV OR DELETEINV > DBORDER > SEARCHORD > ADDORD OR UPDATEORD OR DELETEORD > TRACKORD > SHIPSTAT
+// ALT: LOGIN > VPTUTORIAL > TRACK ORD > SHIPSTAT > SETTINGS
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
             String password = edtpword.getText().toString();
             if (name.equals(user.getName()) && password.equals(user.getPassword())) {
                 Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, ViewInventory.class);
+                Intent intent = new Intent(LoginActivity.this, DashboardInventory.class);
                 intent.putExtra("username", edtuname.getText().toString());
                 startActivity(intent);
 

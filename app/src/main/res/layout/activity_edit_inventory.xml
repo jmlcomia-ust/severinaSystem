@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
+
     tools:context=".EditInventory">
 
     <RelativeLayout
-        android:layout_width="500dp"
-        android:layout_height="wrap_content"
+        android:layout_width="600dp"
+        android:layout_height="480dp"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="125dp"
-        tools:layout_editor_absoluteY="16dp">
+        android:background="@drawable/gradient_background"
+        tools:layout_editor_absoluteX="90dp"
+        tools:layout_editor_absoluteY="206dp">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView
@@ -24,10 +25,34 @@
             android:textSize="30dp" />
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/item_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragmentname"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:padding="1sp"
+            android:text="Item ID:"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/inv_id_txtu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragmentname"
+            android:layout_toRightOf="@id/item_name"
+            android:layout_weight="1"
+            android:ems="5"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_id"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
@@ -41,7 +66,7 @@
             android:id="@+id/inv_name_txtu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/fragmentname"
+            android:layout_below="@id/inv_id_txtu"
             android:layout_toRightOf="@id/item_name"
             android:layout_weight="1"
             android:ems="5"
@@ -131,22 +156,25 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_Upupdate"
+                android:id="@+id/btnUpdate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/increment"
-                android:layout_centerHorizontal="true"
                 android:text="Update Item"
                 android:textColor="@color/black" />
-
             <Button
-                android:id="@+id/btn_Upback"
+                android:id="@+id/btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/increment"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20sp"
-                android:layout_toRightOf="@id/btn_update"
+                android:layout_marginStart="20sp"
+                android:layout_toRightOf="@id/btnUpdate"
+                android:text="Delete Item"
+                android:textColor="@color/black" />
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20sp"
+                android:layout_toRightOf="@id/btnDelete"
                 android:text="Go Back"
                 android:textColor="@color/black" />
         </LinearLayout>
@@ -191,4 +219,4 @@
 
 
     </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

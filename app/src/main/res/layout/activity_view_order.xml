@@ -39,7 +39,7 @@
         android:layout_height="45sp"
         android:layout_marginLeft="1sp"
         app:layout_constraintLeft_toRightOf="@id/sort"
-        android:src="@drawable/ic_search"
+        android:src="@drawable/search"
         android:text="Search"
         tools:ignore="MissingConstraints" />
     <ImageView
@@ -51,7 +51,7 @@
         app:layout_constraintLeft_toRightOf="@id/search_ord"
         android:layout_width="40sp"
         android:layout_height="40sp"
-        android:src="@drawable/add_item"
+        android:src="@drawable/add_btn"
         tools:ignore="MissingConstraints" />
 
     <LinearLayout

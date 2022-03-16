@@ -1,24 +1,24 @@
-package com.example.testois;
+package com.example.testois.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.example.testois.Inventory;
+import com.example.testois.Orders;
+import com.example.testois.R;
+import com.example.testois.severinaDB;
+
 import java.util.List;
 
 public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyViewHolder> {
@@ -27,7 +27,7 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
     List<Orders> orders;
     severinaDB sev;
 
-    CustomAdapterOrd(List<Orders> orders, Context context){
+    public CustomAdapterOrd(List<Orders> orders, Context context){
         this.orders = orders;
         this.context = context;
         sev = new severinaDB(context);
@@ -59,7 +59,7 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
                 String qty = holder.ord_qty_txt.getText().toString();
                 String desc = holder.ord_stat_txt.getText().toString();
 
-                sev.updateItem(new Inventory(order.getId(), order.getName(), order.getQuantity(), order.getStatus()));
+                sev.updateOrder(new Orders(order.getId(), order.getName(), order.getQuantity(), order.getStatus()));
                 notifyDataSetChanged();
                 ((Activity) context).finish();
                 context.startActivity(((Activity) context).getIntent());

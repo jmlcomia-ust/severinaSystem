@@ -4,4 +4,12 @@
 
     <string name="open">Open</string>
     <string name="close">Close</string>
+
+    <string name="menu_drawer_open">Drawer Open</string>
+    <string name="menu_drawer_close">Drawer Close</string>
+
+    <string name="warning_title">Warning Title</string>
+    <string name="dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

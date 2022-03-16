@@ -46,7 +46,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginRight="15dp"
-            android:background="@drawable/add_item"
+            android:background="@drawable/add_btn"
             android:layout_toLeftOf="@id/edit_item">
         </Button>
 
@@ -55,7 +55,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginRight="15dp"
-            android:background="@drawable/edit_item"
+            android:background="@drawable/edit"
             android:layout_toLeftOf="@id/delete_item">
         </Button>
 

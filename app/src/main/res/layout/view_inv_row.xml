@@ -75,12 +75,12 @@
             android:textSize="20sp"/>
 
                 <Button
-                    android:id="@+id/edit_item"
+                    android:id="@+id/update_item"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginEnd="30dp"
                     android:layout_toStartOf="@id/delete_item"
-                    android:background="@drawable/edit_item"></Button>
+                    android:background="@drawable/edit" />
 
                 <Button
                     android:id="@+id/delete_item"
@@ -88,7 +88,6 @@
                     android:layout_height="60dp"
                     android:layout_marginEnd="50sp"
                     android:background="@drawable/delete"
-                    android:layout_alignParentEnd="true">
-                </Button>
+                    android:layout_alignParentEnd="true"/>
         </RelativeLayout>
 </LinearLayout>

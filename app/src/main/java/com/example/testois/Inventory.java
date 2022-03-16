@@ -1,27 +1,48 @@
 package com.example.testois;
 
-public class Inventory {
+import android.graphics.Bitmap;
+
+import java.io.Serializable;
+
+public class Inventory implements Serializable {
         private String id;
         private String name;
         private String quantity;
-
-        public Inventory(String name, String quantity, String description) {
+        private String description;
+        private byte[] image;
+/*
+        public Inventory(String name, String quantity, String description, byte[] image) {
                 this.name = name;
                 this.quantity = quantity;
                 this.description = description;
+                this.image = image;
         }
-        public Inventory(String id, String name, String quantity, String description) {
+        public Inventory(String id, String name, String quantity, String description, byte[] image) {
                 this.id = id;
                 this.name = name;
                 this.quantity = quantity;
                 this.description = description;
+                this.image = image;
         }
+
+ */
+    public Inventory(String id, String name, String quantity, String description) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.description = description;
+    }
+    public Inventory(String name, String quantity, String description) {
+        this.name = name;
+        this.quantity = quantity;
+        this.description = description;
+    }
 
     public Inventory() {
 
     }
 
-    public String getId() { return id; }
+        public String getId() { return id; }
         public void setId(String id) {
                 this.id = id;
         }
@@ -50,5 +71,7 @@ public class Inventory {
                 this.description = description;
         }
 
-        private String description;
+        public byte[] getImage() { return image; }
+
+        public void setImage(byte[] image) { this.image = image; }
 }

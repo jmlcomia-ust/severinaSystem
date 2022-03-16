@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/add_dialogfrag"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:context=".fragments.AddInventoryDiaFragment"
-    android:background="@drawable/gradient_background">
-
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
+        android:id="@+id/add_dialogfrag"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="500dp"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+    android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
+        tools:context=".fragments.AddInventoryDiaFragment"
+        android:background="@color/light_green">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView
@@ -181,14 +178,10 @@
                 android:textColor="@color/black" />
 
             <Button
-                android:id="@+id/insert_photo"
+                android:id="@+id/insert_img_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Insert Image"
                 android:textColor="@color/black" />
         </LinearLayout>
-
-
     </RelativeLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>

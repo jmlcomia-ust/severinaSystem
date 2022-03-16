@@ -29,7 +29,7 @@
         android:layout_gravity="end"
         android:layout_marginStart="-30dp"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/edit_info">
+        android:background="@drawable/more">
         </Button>
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_marginStart="80sp"
             android:layout_marginLeft="74dp"
             android:layout_toRightOf="@id/view_ord_id"
-            android:background="@drawable/editt" />
+            android:background="@drawable/edit" />
 
         <TextView
             android:id="@+id/view_ord_qty"

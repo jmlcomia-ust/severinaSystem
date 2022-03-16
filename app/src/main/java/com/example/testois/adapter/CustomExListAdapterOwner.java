@@ -1,5 +1,4 @@
 package com.example.testois.adapter;
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
