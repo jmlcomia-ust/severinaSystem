@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal|center_vertical"
-    android:background="@drawable/gradient_background"
+    android:background="#8DE34F"
+    android:padding="1dp"
     android:id="@+id/view_ord_list">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,30 +15,101 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/view_ord_img"
+            android:id="@+id/view_img"
             android:src="@drawable/ic_default_img"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:padding="1dp" />
 
-        <Button
-        android:layout_width="10dp"
-        android:layout_height="40dp"
-        android:layout_gravity="end"
-        android:layout_marginStart="-30dp"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/more">
-        </Button>
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/view_img"
+            android:text="Order ID:"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/view_ord_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/view_ord_img"
-            android:text="Order ID: ___"
+            android:layout_toRightOf="@id/id"
+            android:layout_marginStart="10sp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/id"
+            android:layout_marginTop="40sp"
+            android:layout_toEndOf="@id/view_img"
+            android:text="Quantity:"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/view_ord_qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="40sp"
+            android:layout_marginStart="10sp"
+            android:layout_toRightOf="@id/qty"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100sp"
+            android:layout_toEndOf="@id/view_ord_id"
+            android:text="Customer:"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/view_ord_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/name"
+            android:text=""
+            android:layout_marginStart="10sp"
+            android:textColor="@color/black"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_alignStart="@id/name"
+            android:layout_marginTop="15sp"
+            android:layout_toRightOf="@id/view_ord_qty"
+            android:text="Order Status:"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/view_ord_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_marginTop="15sp"
+            android:layout_marginStart="10sp"
+            android:layout_toRightOf="@id/stat"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="20dp" />
 
@@ -47,37 +119,17 @@
             android:layout_height="100dp"
             android:layout_gravity="center"
             android:layout_marginStart="80sp"
-            android:layout_marginLeft="74dp"
-            android:layout_toRightOf="@id/view_ord_id"
+            android:layout_marginRight="10sp"
+            android:layout_toLeftOf="@id/delete_ord"
             android:background="@drawable/edit" />
 
-        <TextView
-            android:id="@+id/view_ord_qty"
+        <Button
+            android:id="@+id/delete_ord"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/view_ord_img"
-            android:layout_below="@id/view_ord_id"
-            android:text="Order Quantity: ___"
-            android:textSize="20dp"
-            android:textColor="@color/black"/>
-        <TextView
-            android:id="@+id/view_ord_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/view_ord_img"
-            android:layout_below="@id/view_ord_qty"
-            android:text="Customer: ___"
-            android:textSize="20dp"
-            android:textColor="@color/black"/>
+            android:layout_height="99dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="14dp"
+            android:background="@drawable/delete" />
 
-        <TextView
-            android:id="@+id/view_ord_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/view_ord_img"
-            android:layout_below="@id/view_ord_name"
-            android:text="Shipment Status: ___"
-            android:textColor="@color/black"
-            android:textSize="20dp" />
     </RelativeLayout>
 </LinearLayout>

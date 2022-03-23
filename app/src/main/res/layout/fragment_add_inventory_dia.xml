@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <!-- TODO: Update blank fragment layout -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/add_dialogfrag"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/light_green"
+    tools:context=".fragments.AddInventoryDiaFragment"
+    android:theme="@style/Theme.AppCompat.Light.Dialog.Alert">
     <RelativeLayout
-        android:id="@+id/add_dialogfrag"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="500dp"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints"
-    android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"
-        tools:context=".fragments.AddInventoryDiaFragment"
-        android:background="@color/light_green">
+        android:layout_width="700sp"
+        android:layout_height="500dp"
+        tools:ignore="MissingConstraints">
 
         <!-- TODO: Update blank fragment layout -->
         <TextView
@@ -20,13 +23,14 @@
             android:layout_centerHorizontal="true"
             android:textColor="@color/black"
             android:textSize="30dp" />
+
         <TextView
             android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
             android:layout_below="@id/frag_name"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="40dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:padding="1sp"
@@ -38,10 +42,11 @@
             android:id="@+id/inv_name_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/item_name"
             android:layout_below="@id/frag_name"
+            android:layout_toEndOf="@id/item_name"
+            android:layout_alignBaseline="@id/item_name"
             android:layout_weight="1"
-            android:ems="5"
+            android:ems="9"
             android:textAlignment="center"
             android:textColor="@color/black" />
 
@@ -50,7 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/item_name"
-            android:layout_marginStart="10dp"
+            android:layout_alignStart="@id/item_name"
+
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
@@ -65,6 +71,7 @@
             android:layout_height="90dp"
             android:layout_below="@id/item_des"
             android:layout_marginStart="10dp"
+            android:layout_alignStart="@id/item_des"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
@@ -92,69 +99,84 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_below="@id/item_count"
-            android:layout_marginStart="45dp"
-
+            android:layout_alignBaseline="@id/inv_qty_txt"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/green"
             android:text="-"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:layout_editor_absoluteY="270dp" />
 
         <EditText
             android:id="@+id/inv_qty_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/decrement"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_toRightOf="@id/decrement"
+            android:layout_below="@id/item_count"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/decrement"
             android:outlineSpotShadowColor="@color/black"
             android:text="0"
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="20dp"
+            tools:layout_editor_absoluteX="68dp"
+            tools:layout_editor_absoluteY="262dp" />
 
-        <Button
-            android:id="@+id/increment"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/item_count"
-            android:layout_toRightOf="@id/inv_qty_txt"
-            android:text="+"
-            android:textColor="@color/black" />
+    <Button
+        android:id="@+id/increment"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/item_count"
+        android:layout_alignBaseline="@id/inv_qty_txt"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="18dp"
+        android:layout_toEndOf="@id/inv_qty_txt"
+        android:background="@color/green"
+        android:text="+"
+        android:textColor="@color/black"
+        tools:layout_editor_absoluteX="108dp"
+        tools:layout_editor_absoluteY="261dp" />
+
+
 
         <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
             android:layout_below="@id/increment"
-            android:layout_centerHorizontal="true"
-            >
+            android:layout_marginTop="80sp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
             <Button
                 android:id="@+id/btn_add_inv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/increment"
-                android:layout_centerHorizontal="true"
+                android:layout_width="100sp"
+                android:layout_height="40sp"
+                android:layout_marginEnd="32dp"
+                android:background="@color/green"
+                android:padding="1sp"
                 android:text="Add Item"
-                android:textColor="@color/black"/>
-            <Button
-                android:id="@+id/btn_back_inv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20sp"
-                android:layout_below="@id/increment"
-                android:layout_toRightOf="@id/btn_update"
-                android:layout_centerInParent="true"
-                android:text="Go Back"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                tools:ignore="MissingConstraints" />
+        <Button
+            android:id="@+id/btn_back_inv"
+            android:layout_width="100sp"
+            android:layout_height="40sp"
+            android:padding="1sp"
+            android:background="@color/green"
+            android:layout_marginStart="32dp"
+            android:text="Back"
+            android:textColor="@color/black" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="205sp"
-            android:layout_marginTop="50sp"
+            android:layout_width="200dp"
+            android:layout_height="320dp"
             android:layout_alignParentEnd="true"
+            android:layout_marginStart="205sp"
+            android:layout_marginTop="80sp"
             android:layout_marginEnd="25sp"
             android:layout_marginBottom="1sp"
+            android:background="@drawable/border"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -171,17 +193,20 @@
 
             <ImageView
                 android:id="@+id/img_item"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="20dp"
+                android:layout_width="180dp"
+                android:layout_height="190dp"
+                android:layout_margin="10dp"
                 android:padding="5dp"
                 android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/insert_img_item"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="120sp"
+                android:layout_height="30sp"
+                android:background="@color/green"
+                android:padding="1sp"
                 android:text="Insert Image"
                 android:textColor="@color/black" />
         </LinearLayout>
     </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

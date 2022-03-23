@@ -5,70 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DashboardOrders"
-    android:background="@drawable/greendient_background">
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/content_layout"
-        />
+    android:background="@color/color3">
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        android:layout_marginTop="140sp"
         android:padding="10dp"
-        tools:context=".DashboardOrders">
-
-        <ImageButton
-            android:id="@+id/add_item"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10sp"
-            android:background="@drawable/add_btn"/>
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_ord"
-            android:layout_width="660sp"
-            android:layout_height="80sp"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="-120dp"
-            android:background="@color/white"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="28dp"
-            tools:layout_editor_absoluteY="59dp" />
+        tools:context=".DashboardOrders"
+        android:background="@drawable/ab">
 
         <TextView
             android:id="@+id/ongoing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_ord"
             android:layout_marginTop="10sp"
             android:text="Ongoing Orders"
             android:textAlignment="center"
-
             android:textSize="40sp" />
 
         <ScrollView
             android:id="@+id/scroll1"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="500dp"
             android:layout_below="@+id/ongoing"
-            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
             android:paddingTop="10dp"
             tools:ignore="MissingConstraints,NotSibling">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_current"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingTop="?attr/actionBarSize"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="500dp"
+                android:layout_gravity="center_horizontal" />
 
         </ScrollView>
 
@@ -80,7 +50,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90sp"
             android:text="No Ongoing Orders"
-            android:textColor="@color/grey"
+            android:textColor="@color/light_green"
             android:textSize="30sp"
             android:visibility="visible" />
 
@@ -98,7 +68,7 @@
         <ScrollView
             android:id="@+id/scroll2"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="500dp"
             android:layout_below="@+id/recent"
             android:layout_marginTop="10dp"
             android:paddingTop="10dp"
@@ -107,9 +77,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_recent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="500dp"
                 android:layout_gravity="center_horizontal"
-                android:paddingTop="?attr/actionBarSize"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -125,7 +94,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60sp"
             android:text="No Recent Orders"
-            android:textColor="@color/grey"
+            android:textColor="@color/light_green"
             android:textSize="30sp"
             android:visibility="visible" />
     </RelativeLayout>

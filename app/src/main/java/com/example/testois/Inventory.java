@@ -9,15 +9,15 @@ public class Inventory implements Serializable {
         private String name;
         private String quantity;
         private String description;
-        private byte[] image;
-/*
-        public Inventory(String name, String quantity, String description, byte[] image) {
+        private Bitmap image;
+
+        public Inventory(String name, String quantity, String description, Bitmap image) {
                 this.name = name;
                 this.quantity = quantity;
                 this.description = description;
                 this.image = image;
         }
-        public Inventory(String id, String name, String quantity, String description, byte[] image) {
+        public Inventory(String id, String name, String quantity, String description, Bitmap image) {
                 this.id = id;
                 this.name = name;
                 this.quantity = quantity;
@@ -25,7 +25,7 @@ public class Inventory implements Serializable {
                 this.image = image;
         }
 
- */
+ /*
     public Inventory(String id, String name, String quantity, String description) {
         this.id = id;
         this.name = name;
@@ -37,7 +37,7 @@ public class Inventory implements Serializable {
         this.quantity = quantity;
         this.description = description;
     }
-
+*/
     public Inventory() {
 
     }
@@ -71,7 +71,7 @@ public class Inventory implements Serializable {
                 this.description = description;
         }
 
-        public byte[] getImage() { return image; }
+        public Bitmap getImage() { return image; }
 
-        public void setImage(byte[] image) { this.image = image; }
+        public void setImage(Bitmap image) { this.image = image; }
 }

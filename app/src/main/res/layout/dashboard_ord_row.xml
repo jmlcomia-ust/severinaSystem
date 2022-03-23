@@ -38,13 +38,11 @@
                 android:padding="1dp" />
 
             <Button
-                android:layout_width="10dp"
+                android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginStart="-30dp"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/more">
-            </Button>
+                android:layout_gravity="end"
+                android:background="@drawable/more"/>
 
             <TextView
                 android:id="@+id/id"
@@ -55,30 +53,36 @@
                 android:textColor="@color/black"
                 android:textSize="20dp"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/ord_id_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/id"
+                android:layout_marginStart="10sp"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="18dp"/>
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/qty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ord_id_txt"
-                android:layout_toRightOf="@id/ord_img"
-                android:text="Order Quantity:"
+                android:layout_marginTop="40sp"
+                android:layout_toEndOf="@id/ord_img"
+                android:layout_alignStart="@id/id"
+                android:text="Quantity:"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/ord_qty_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ord_id_txt"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="40sp"
+                android:layout_marginStart="10sp"
                 android:layout_toRightOf="@id/qty"
                 android:text=""
                 android:textColor="@color/black"
@@ -88,41 +92,47 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/ord_img"
-                android:layout_below="@id/ord_qty_txt"
+                android:layout_marginStart="200sp"
+                android:layout_toEndOf="@id/ord_id_txt"
                 android:text="Customer:"
-                android:textSize="20dp"
                 android:textColor="@color/black"
-                android:textStyle="bold"/>
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/ord_name_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/name"
-                android:layout_below="@id/ord_qty_txt"
                 android:text=""
-                android:textSize="18dp"
-                android:textColor="@color/black"/>
+                android:layout_marginStart="10sp"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/ord_img"
-                android:layout_below="@id/ord_name_txt"
+                android:layout_below="@id/name"
+                android:layout_alignStart="@id/name"
+                android:layout_marginTop="15sp"
+                android:layout_toRightOf="@id/ord_qty_txt"
                 android:text="Order Status:"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/ord_stat_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_marginTop="15sp"
+                android:layout_marginStart="10sp"
                 android:layout_toRightOf="@id/stat"
-                android:layout_below="@id/ord_name_txt"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="20dp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

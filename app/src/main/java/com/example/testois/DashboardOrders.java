@@ -2,69 +2,44 @@ package com.example.testois;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.testois.adapter.CustomAdapterOrd;
-import com.example.testois.fragments.AddOrderDiaFragment;
+import com.example.testois.databinding.ActivityDashboardOrdersBinding;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Collections;
 import java.util.List;
 
-public class DashboardOrders extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, AddOrderDiaFragment.OnInputListener {
+public class DashboardOrders extends DrawerBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "DashboardOrders";
 
-    Button dash_menu;
-    severinaDB db;
+    ActivityDashboardOrdersBinding activityDashboardOrdersBinding;
+    private Toolbar toolbar;
+    private severinaDB db;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
-    ImageView imageview, add_item;
-    String frag_name, frag_qty, frag_stat;
+    CustomAdapterOrd curr_customAdapterOrd, recent_customAdapterOrd;
+    List<Orders> curr_orders;
+    List<Orders> recnt_orders;{
+        try{
+            {
+                recnt_orders = db.getRecntOrdList();
+                if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); }
+            }
+        }catch(Exception e){Log.e(TAG, "Error on Null");}}
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard_orders);
-
-        db = new severinaDB(DashboardOrders.this);
-        List<Orders> orders = db.getOrderList();
-
-        emptyfield1 = findViewById(R.id.emptyRv1);
-        emptyfield2 = findViewById(R.id.emptyRv2);;
-        add_item = findViewById(R.id.add_item);
-        imageview = findViewById(R.id.ord_img);
-        rv_current = findViewById(R.id.rv_current);
-        rv_recent = findViewById(R.id.rv_recent);
-
-        CustomAdapterOrd customAdapterOrd = new CustomAdapterOrd(orders, this);
-        rv_current.setAdapter(customAdapterOrd);
-        rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
-
-        dash_menu.setOnClickListener(view -> {
-            Intent i = new Intent(this, ViewOrder.class);
-            startActivity(i);
-        });
-        add_item.setOnClickListener(view ->{
-                Log.d(TAG, "onClick: opening dialog.");
-                AddOrderDiaFragment dialog = new AddOrderDiaFragment();
-                dialog.show(getSupportFragmentManager(), "AddOrderDiaFragment");
-        });
-        ;
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -72,30 +47,114 @@ public class DashboardOrders extends AppCompatActivity implements NavigationView
             recreate();
         }
     }
-    @Override
-    public void sendInput(String name, String qty, String stat) {
-        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
 
-//        mInputDisplay.setText(input);
-        frag_name = name;   frag_qty=qty;   frag_stat=stat;
-        setInputToListView();
-    }
-    private void setInputToListView(){
-        try {
-            db = new severinaDB(DashboardOrders.this);
-            Orders orders = new Orders (frag_name, frag_qty, frag_stat);
-            db.addOrder(orders);
-            Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
-        } catch (Exception ex) {
-            Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.nav_search);
+        SearchView searchView =
+                (SearchView) searchItem.getActionView();
+
+        getMenuInflater().inflate(R.menu.dash_options, menu);
+
+        // Configure the search info and add any event listeners...
+
+        return super.onCreateOptionsMenu(menu);
     }
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) { return false; }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sort_id:
+                // User chose the "Settings" item, show the app settings UI...
+                Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
+                curr_customAdapterOrd = new CustomAdapterOrd(curr_orders, DashboardOrders.this);
+                rv_current.setAdapter(curr_customAdapterOrd);
+                rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_current.getAdapter().notifyDataSetChanged();
 
-    protected void allocatedActivityTitle(String titleString) {
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(titleString);
+                Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
+                recent_customAdapterOrd = new CustomAdapterOrd(recnt_orders, DashboardOrders.this);
+                rv_recent.setAdapter(recent_customAdapterOrd);
+                rv_recent.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_recent.getAdapter().notifyDataSetChanged();
+                return true;
+
+            case R.id.sort_name:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+                Collections.reverse(curr_orders);
+                curr_customAdapterOrd = new CustomAdapterOrd(curr_orders, DashboardOrders.this);
+                rv_current.setAdapter(curr_customAdapterOrd);
+                rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_current.getAdapter().notifyDataSetChanged();
+
+                Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+                Collections.reverse(recnt_orders);
+                recent_customAdapterOrd = new CustomAdapterOrd(recnt_orders, DashboardOrders.this);
+                rv_recent.setAdapter(recent_customAdapterOrd);
+                rv_recent.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_recent.getAdapter().notifyDataSetChanged();
+
+            case R.id.sort_stocks:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
+                Collections.reverse(curr_orders);
+                curr_customAdapterOrd = new CustomAdapterOrd(curr_orders, DashboardOrders.this);
+                rv_current.setAdapter(curr_customAdapterOrd);
+                rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_current.getAdapter().notifyDataSetChanged();
+
+                Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
+                Collections.reverse(recnt_orders);
+                recent_customAdapterOrd = new CustomAdapterOrd(recnt_orders, DashboardOrders.this);
+                rv_recent.setAdapter(recent_customAdapterOrd);
+                rv_recent.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_recent.getAdapter().notifyDataSetChanged();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activityDashboardOrdersBinding = ActivityDashboardOrdersBinding.inflate(getLayoutInflater());
+        setContentView(activityDashboardOrdersBinding.getRoot());
+        allocatedActivityTitle("Dashboard Orders");
+
+        db = new severinaDB(DashboardOrders.this);
+        curr_orders = db.getCurrOrdList();
+        {
+                curr_orders = db.getCurrOrdList();
+                if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); }
+        }
+        recnt_orders = db.getRecntOrdList();
+        {
+                recnt_orders = db.getRecntOrdList();
+                if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); }
+        }
+
+        emptyfield1 = findViewById(R.id.emptyRv1);
+        emptyfield2 = findViewById(R.id.emptyRv2);
+        rv_current = findViewById(R.id.rv_current);
+        rv_recent = findViewById(R.id.rv_recent);
+
+            recent_customAdapterOrd = new CustomAdapterOrd(recnt_orders, this);
+            rv_recent.setAdapter(recent_customAdapterOrd);
+            rv_recent.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+            if (recent_customAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE);}
+
+            curr_customAdapterOrd = new CustomAdapterOrd(curr_orders, this);
+            rv_current.setAdapter(curr_customAdapterOrd);
+            rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+            if (curr_customAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
     }
 }

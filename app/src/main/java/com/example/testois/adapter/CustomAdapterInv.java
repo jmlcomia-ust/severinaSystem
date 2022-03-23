@@ -1,6 +1,7 @@
 package com.example.testois.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,20 +29,14 @@ import java.util.List;
 
 public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyViewHolder>{
     private static final String TAG = "CustomAdapterInv";
-    Activity context;
+    Context context;
     List<Inventory> items;
-    List<Inventory> filtereditem;
-    List<Inventory> allItems = new ArrayList<>();
     severinaDB sev;
 
-    public CustomAdapterInv(List<Inventory> items, Activity context){
+    public CustomAdapterInv(List<Inventory> items, Context context){
         this.items = items;
         this.context = context;
         sev = new severinaDB(context);
-    }
-    public void CustomViewAdapInv(List<Inventory> filtereditem){
-        this.filtereditem=filtereditem;
-        this.allItems=new ArrayList<>(filtereditem);
     }
 
     @NonNull
@@ -67,18 +62,11 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
 
 
     @Override
-    public int getItemCount() {
-        if (items != null){
-            return items.size();
-        }
-        else
-            return 0;
-    }
+    public int getItemCount() { return items.size(); }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView id, name, qty, desc;
-        Button btn_edit;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);

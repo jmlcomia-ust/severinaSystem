@@ -13,5 +13,9 @@
         android:title="profile"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_accnt"/>
-
+    <item
+        android:id="@+id/nav_settings"
+        android:title="settings"
+        android:icon="@drawable/more"
+        />
 </menu>

@@ -40,15 +40,6 @@
             android:text="6 in stock"
             android:textSize="20dp">
         </TextView>
-        
-        <Button
-            android:id="@id/add_item"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/add_btn"
-            android:layout_toLeftOf="@id/edit_item">
-        </Button>
 
         <Button
             android:id="@+id/edit_item"

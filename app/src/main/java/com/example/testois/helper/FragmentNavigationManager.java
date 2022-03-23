@@ -15,6 +15,7 @@ public class FragmentNavigationManager implements NavigationManager{
 
     private FragmentManager mFragmentManager;
     private DashboardInventory dashboardInventory;
+    //private DashboardOrders dashboardOrders;
 
     public static FragmentNavigationManager getmInstanceInv(DashboardInventory dashboardInventory)
     {
@@ -23,6 +24,7 @@ public class FragmentNavigationManager implements NavigationManager{
         mInstance.configureInv(dashboardInventory);
         return mInstance;
     }
+    /*
     public static FragmentNavigationManager getmInstanceOrd(DashboardOrders dashboardOrders)
     {
         if(mInstance == null)
@@ -31,14 +33,19 @@ public class FragmentNavigationManager implements NavigationManager{
         return mInstance;
     }
 
+     */
+
     private void configureInv(DashboardInventory dashboardInventory) {
         dashboardInventory = dashboardInventory;
         mFragmentManager = dashboardInventory.getSupportFragmentManager();
     }
+    /*
     private void configureOrd(DashboardOrders dashboardOrders) {
         dashboardOrders = dashboardOrders;
         mFragmentManager = dashboardOrders.getSupportFragmentManager();
     }
+
+     */
 
     @Override
     public void showFragment(String title) {
