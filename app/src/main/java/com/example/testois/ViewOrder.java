@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,24 +19,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.adapter.CustomAdapterOrd;
+import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.databinding.ActivityDashboardInventoryBinding;
 import com.example.testois.databinding.ActivityViewInventoryBinding;
 import com.example.testois.databinding.ActivityViewOrderBinding;
+import com.example.testois.fragments.AddInventoryDiaFragment;
 import com.example.testois.fragments.AddOrderDiaFragment;
+import com.example.testois.fragments.DeleteInventoryDiagFragment;
+import com.example.testois.fragments.DeleteOrderDiaFragment;
+import com.example.testois.fragments.UpdateInventoryDiaFragment;
+import com.example.testois.fragments.UpdateOrderDiaFragment;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ViewOrder extends DrawerBaseActivity{
+public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.OrderRecyclerListener, AddOrderDiaFragment.OnInputListener, UpdateOrderDiaFragment.OnInputListener, DeleteOrderDiaFragment.OnInputListener{
     private static final String TAG = "ViewOrders";
     ActivityViewOrderBinding activityViewOrderBinding;
-    private Toolbar toolbar;
     private severinaDB db;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView add_btn;
     String frag_name, frag_qty, frag_stat;
+    CustomViewAdapOrd.OrderRecyclerListener nListener;
     CustomViewAdapOrd curr_customViewAdapterOrd, recent_customViewAdapterOrd;
     List<Orders> curr_orders;{
         try{
@@ -62,37 +69,20 @@ public class ViewOrder extends DrawerBaseActivity{
             recreate();
         }
     }
-    //public void sendInput(String name, String qty, String desc, byte[] bytesImage)
-    public void sendInput(String name, String qty, String stat){
-        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
-        frag_name = name;
-        frag_qty = qty;
-        frag_stat = stat;
-        setInputToListView();
-    }
-
-    //public void UpdateInput(String name, String qty, String desc, byte[] image) {
-    public void UpdateInput(String name, String qty, String stat) {
-        Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
-        frag_name = name;
-        frag_qty = qty;
-        frag_stat = stat;
-        setUpdatesToListView();
-    }
     private void setInputToListView(){
         try {
             db = new severinaDB(ViewOrder.this);
             Orders orders = new Orders (frag_name, frag_qty, frag_stat);
             db.addOrder(orders);
             if (frag_stat.equalsIgnoreCase("delivered")){
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this);
+                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this, nListener);
                 rv_recent.setAdapter(recent_customViewAdapterOrd);
                 rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 if (recent_customViewAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE);}
                 Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
             }
             else if (frag_stat.equalsIgnoreCase("today")){
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, this);
+                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, this, nListener);
                 rv_current.setAdapter(curr_customViewAdapterOrd);
                 rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 if (curr_customViewAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
@@ -118,31 +108,29 @@ public class ViewOrder extends DrawerBaseActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.nav_search);
-        SearchView searchView =
-                (SearchView) searchItem.getActionView();
-
-        getMenuInflater().inflate(R.menu.dash_options, menu);
-
-        // Configure the search info and add any event listeners...
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.dash_options, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_profile:
+                //Intent i = new Intent(this, ProfileSettings.class);
+                Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.sort_id:
                 // User chose the "Settings" item, show the app settings UI...
                 Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this);
+                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this, nListener);
                 rv_current.setAdapter(curr_customViewAdapterOrd);
                 rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
 
                 Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this);
+                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this, nListener);
                 rv_recent.setAdapter(recent_customViewAdapterOrd);
                 rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_recent.getAdapter().notifyDataSetChanged();
@@ -153,14 +141,14 @@ public class ViewOrder extends DrawerBaseActivity{
                 // as a favorite...
                 Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
                 Collections.reverse(curr_orders);
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this);
+                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this, nListener);
                 rv_current.setAdapter(curr_customViewAdapterOrd);
                 rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
 
                 Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
                 Collections.reverse(recnt_orders);
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this);
+                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this, nListener);
                 rv_recent.setAdapter(recent_customViewAdapterOrd);
                 rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_recent.getAdapter().notifyDataSetChanged();
@@ -170,31 +158,31 @@ public class ViewOrder extends DrawerBaseActivity{
                 // as a favorite...
                 Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
                 Collections.reverse(curr_orders);
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this);
+                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this, nListener);
                 rv_current.setAdapter(curr_customViewAdapterOrd);
                 rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
 
                 Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
                 Collections.reverse(recnt_orders);
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this);
+                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this, nListener);
                 rv_recent.setAdapter(recent_customViewAdapterOrd);
                 rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_recent.getAdapter().notifyDataSetChanged();
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityViewOrderBinding = ActivityViewOrderBinding.inflate(getLayoutInflater());
         setContentView(activityViewOrderBinding.getRoot());
-        allocatedActivityTitle("View Order");
+        allocatedActivityTitle("Manage Order");
 
 
         db = new severinaDB(ViewOrder.this);
@@ -217,12 +205,12 @@ public class ViewOrder extends DrawerBaseActivity{
 
 
 
-        recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this);
+        recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this, nListener);
             rv_recent.setAdapter(recent_customViewAdapterOrd);
             rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
             if (recent_customViewAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE);}
 
-        curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, this);
+        curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, this, nListener);
             rv_current.setAdapter(curr_customViewAdapterOrd);
             rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
             if (curr_customViewAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
@@ -234,16 +222,61 @@ public class ViewOrder extends DrawerBaseActivity{
             dialog.show(getSupportFragmentManager(), "AddOrderDiaFragment");
         });
     }
-/*
+
+    @Override
+    public void sendInput(String name, String qty, String stat) {
+        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot stat:" + stat);
+        try {
+            db = new severinaDB(ViewOrder.this);
+            //Inventory inventory = new Inventory(name,qty, stat, image);
+            Orders order = new Orders(name,qty, stat);
+            db.addOrder(order);
+            Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void UpdateInput(String id, String name, String qty, String stat) {
+        Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
+        try {
+            db = new severinaDB(ViewOrder.this);
+            //Inventory inventory = new Inventory(name,qty, desc, image);
+            Orders order = new Orders(id, name,qty, stat);
+            db.updateOrder(order);
+            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void DeleteInput(String id){
+        Log.d(TAG, "deleteItem:  got id: "+id);
+        try {
+            db = new severinaDB(ViewOrder.this);
+            db.deleteOrder(id);
+            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void gotoUpdateFragment(Orders orders, Bundle args) {
         androidx.fragment.app.FragmentManager fm = this.getSupportFragmentManager();
         UpdateOrderDiaFragment updafrag = new UpdateOrderDiaFragment();
         updafrag.setArguments(args);
         updafrag.show(fm, "UpdateOrdFrag");
+    }
 
-
- */
+    @Override
+    public void gotoDeleteFragment(Orders orders, Bundle args) {
+        androidx.fragment.app.FragmentManager fm = this.getSupportFragmentManager();
+        DeleteOrderDiaFragment delfrag = new DeleteOrderDiaFragment();
+        delfrag.setArguments(args);
+        delfrag.show(fm, "DeleteOrdFrag");
+    }
     }
 
 

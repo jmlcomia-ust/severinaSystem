@@ -24,8 +24,6 @@ public class Inventory implements Serializable {
                 this.description = description;
                 this.image = image;
         }
-
- /*
     public Inventory(String id, String name, String quantity, String description) {
         this.id = id;
         this.name = name;
@@ -36,10 +34,6 @@ public class Inventory implements Serializable {
         this.name = name;
         this.quantity = quantity;
         this.description = description;
-    }
-*/
-    public Inventory() {
-
     }
 
         public String getId() { return id; }

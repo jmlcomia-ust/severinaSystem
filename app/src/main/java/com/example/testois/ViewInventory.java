@@ -1,19 +1,28 @@
 package com.example.testois;
+import android.Manifest;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,13 +38,13 @@ import com.example.testois.fragments.UpdateInventoryDiaFragment;
 import java.util.Collections;
 import java.util.List;
 
-public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapInv.InventoryRecyclerListener,AddInventoryDiaFragment.OnInputListener, DeleteInventoryDiagFragment.OnInputListener{
+public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapInv.InventoryRecyclerListener,AddInventoryDiaFragment.OnInputListener, UpdateInventoryDiaFragment.OnInputListener, DeleteInventoryDiagFragment.OnInputListener{
     private static final String TAG = "ViewInventory";
     ActivityViewInventoryBinding activityViewInventoryBinding;
-    List<Inventory> items;
     Inventory inventory = null;
+    CustomViewAdapInv.InventoryRecyclerListener mListener;
     CustomViewAdapInv customViewAdapInv;
-    Button menu, search;
+    Button search;
     SQLiteDatabase sql;
     severinaDB db;
     TextView emptyfield;
@@ -44,28 +53,24 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.nav_search);
-        SearchView searchView =
-                (SearchView) searchItem.getActionView();
-
-        getMenuInflater().inflate(R.menu.dash_options, menu);
-
-        // Configure the search info and add any event listeners...
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.dash_options, menu);
         return super.onCreateOptionsMenu(menu);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        CustomAdapterInv customAdapterInv;
         List<Inventory> items = db.getitemsList();
         switch (item.getItemId()) {
+            case R.id.nav_profile:
+                //startActivity(new Intent(this, ProfileSettings.class));
+                Toast.makeText(this, "Going to Profile Settings", Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.sort_id:
                 // User chose the "Settings" item, show the app settings UI...
                 Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                customAdapterInv = new CustomAdapterInv(items, ViewInventory.this);
-                recyclerView.setAdapter(customAdapterInv);
+                customViewAdapInv = new CustomViewAdapInv(items, ViewInventory.this, mListener);
+                recyclerView.setAdapter(customViewAdapInv);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ViewInventory.this));
                 recyclerView.getAdapter().notifyDataSetChanged();
                 return true;
@@ -75,8 +80,8 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
                 // as a favorite...
                 Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
                 Collections.reverse(items);
-                customAdapterInv = new CustomAdapterInv(items, ViewInventory.this);
-                recyclerView.setAdapter(customAdapterInv);
+                customViewAdapInv = new CustomViewAdapInv(items, ViewInventory.this, mListener);
+                recyclerView.setAdapter(customViewAdapInv);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ViewInventory.this));
                 recyclerView.getAdapter().notifyDataSetChanged();
                 return true;
@@ -86,8 +91,8 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
                 // as a favorite...
                 Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
                 Collections.reverse(items);
-                customAdapterInv = new CustomAdapterInv(items, ViewInventory.this);
-                recyclerView.setAdapter(customAdapterInv);
+                customViewAdapInv = new CustomViewAdapInv(items, ViewInventory.this, mListener);
+                recyclerView.setAdapter(customViewAdapInv);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ViewInventory.this));
                 recyclerView.getAdapter().notifyDataSetChanged();
                 return true;
@@ -96,28 +101,29 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
-        }
+            }
     }
 
-
-     public void sendInput(String name, String qty, String desc, Bitmap image){
+    //public void sendInput(String name, String qty, String desc, Bitmap image){
+     public void sendInput(String name, String qty, String desc){
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
          try {
              db = new severinaDB(ViewInventory.this);
-             Inventory inventory = new Inventory(name,qty, desc, image);
+             //Inventory inventory = new Inventory(name,qty, desc, image);
+             Inventory inventory = new Inventory(name,qty, desc);
              db.addItem(inventory);
              Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
          }
     }
-/*
-    public void UpdateInput(String id, String name, String qty, String desc, Bitmap image) {
+    //public void UpdateInput(String id, String name, String qty, String desc, Bitmap image) {
+    public void UpdateInput(String id, String name, String qty, String desc) {
         Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
         try {
             db = new severinaDB(ViewInventory.this);
-            Inventory items = new Inventory (id, name, qty, desc, image);
+            //Inventory inventory = new Inventory(name,qty, desc, image);
+            Inventory items = new Inventory (id, name, qty, desc);
             db.updateItem(items);
             Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
@@ -125,7 +131,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         }
     }
 
- */
     public void DeleteInput(String id){
         Log.d(TAG, "deleteItem:  got id: "+id);
         try {
@@ -143,25 +148,19 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         super.onCreate(savedInstanceState);
         activityViewInventoryBinding = ActivityViewInventoryBinding.inflate(getLayoutInflater());
         setContentView(activityViewInventoryBinding.getRoot());
-        allocatedActivityTitle("View Inventory");
-
+        allocatedActivityTitle("Manage Inventory");
+        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         search = findViewById(R.id.search);
-
         db = new severinaDB(this);
-
         List<Inventory> items = db.getitemsList();
-
 
         add_item = findViewById(R.id.add_view_inv);
         recyclerView = findViewById(R.id.rv_view_inv);
-        //new ItemTouchHelper(itemTouchHelperCallback)
-        FragmentManager fragmentManager = getFragmentManager();
        customViewAdapInv = new CustomViewAdapInv(items, this, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(customViewAdapInv);
         //if (customViewAdapInv.getItemCount() != 0){emptyfield.setVisibility(View.GONE);}
-
 
             add_item.setOnClickListener(view -> {
             Log.d(TAG, "onClick: opening Add Dialog Fragment for Inventory.");
@@ -178,11 +177,11 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            fragment.onActivityResult(requestCode, resultCode, data);
-        }
+    protected void onActivityResult(int requestcode, int resultcode, Intent data) {
+        super.onActivityResult(requestcode, resultcode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.add_dialogfrag);
+        fragment.onActivityResult(requestcode, resultcode, data);
+        startActivity(data);
     }
 
     @Override
@@ -191,7 +190,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             UpdateInventoryDiaFragment updafrag = new UpdateInventoryDiaFragment();
             updafrag.setArguments(args);
             updafrag.show(fm, "UpdateInvFrag");
-
     }
 
     @Override

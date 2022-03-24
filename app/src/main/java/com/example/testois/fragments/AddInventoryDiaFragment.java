@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import android.provider.MediaStore;
@@ -26,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.testois.Inventory;
 import com.example.testois.R;
 import com.example.testois.ViewInventory;
 import com.example.testois.severinaDB;
@@ -37,16 +40,17 @@ public class AddInventoryDiaFragment extends DialogFragment {
     private static final String TAG = "AddInventoryDiaFragment";
     private EditText inv_name_txt, inv_qty_txt, inv_desc_txt;
     private Button btn_add, btn_back, btn_insert, increment, decrement;
-    private Bitmap image;
+    private Bitmap defaultimage; private Drawable default_img;
 
     private Bitmap imageToStore;
     private ImageView img_item;
     private Uri imgPath;
-    private severinaDB sev;
-    private SQLiteDatabase db;
+    private severinaDB db;
+    private SQLiteDatabase sql;
 
     public interface OnInputListener {
-       void sendInput(String name, String qty, String desc, Bitmap image);
+        // void sendInput(String name, String qty, String desc, Bitmap image);
+        void sendInput(String name, String qty, String desc);
     }
     public OnInputListener fraglisten;
 
@@ -70,30 +74,11 @@ public class AddInventoryDiaFragment extends DialogFragment {
             increment = view.findViewById(R.id.increment);
             decrement = view.findViewById(R.id.decrement);
 
-            sev=new severinaDB(getContext());
+
+            db=new severinaDB(getContext());
         }catch(Exception e){
             e.printStackTrace();
         }
-
-
-        /*
-        btn_insert.setOnClickListener(v -> {
-            String stringQuery = "Select from ImageTable where Name=\"MyImage\"";
-            Cursor cursor = db.rawQuery(stringQuery, null);
-            try {
-                cursor.moveToFirst();
-                byte[] bytesImage = cursor.getBlob(0);
-                cursor.close();
-                Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytesImage, 0, bytesImage.length);
-                img_item.setImageBitmap(bitmapImage);
-               Log.e(TAG, "Image Set");
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        });
-
-         */
 
         increment.setOnClickListener(v -> {
             int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
@@ -113,49 +98,71 @@ public class AddInventoryDiaFragment extends DialogFragment {
         });
         btn_add.setOnClickListener(v ->{
             Log.d(TAG, "onClick: capturing input");
-
-            //METHOD OF PROGRAMMERS WORLD: https://www.youtube.com/watch?v=-MhB-Frk0ag
-            //String stringFilePath = Environment.getExternalStorageDirectory().getPath()+"/Download/"+inv_name_txt.getText().toString()+".jpeg";
-            //Bitmap bitmap = BitmapFactory.decodeFile(stringFilePath);
-           // ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            //bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
-
-            String name = inv_name_txt.getText().toString();
-            String qty = inv_qty_txt.getText().toString();
-            String desc = inv_desc_txt.getText().toString();
-            //byte[] bytesImage = byteArrayOutputStream.toByteArray();
-            //fraglisten.sendInput(name, qty, desc, bytesImage);
-            fraglisten.sendInput(name, qty, desc, imageToStore);
-            getDialog().dismiss();
-            getActivity().recreate();
-
-        });
+            /*
+            Intent i = new Intent();
+            i.setType("image/*");
+            i.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(i,100);
+            if(imageToStore != null){
+                String name = inv_name_txt.getText().toString();
+                String qty = inv_qty_txt.getText().toString();
+                String desc = inv_desc_txt.getText().toString();
+                fraglisten.sendInput(name, qty, desc, imageToStore);
+                getDialog().dismiss();
+                getActivity().recreate();
+            }else{
+             defaultimage = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_img);
+             */
+                 String name = inv_name_txt.getText().toString();
+                String qty = inv_qty_txt.getText().toString();
+                String desc = inv_desc_txt.getText().toString();
+                fraglisten.sendInput(name, qty, desc);
+                getDialog().dismiss();
+                getActivity().recreate();
+            });
 
         //METHOD OF SAANI: https://www.youtube.com/watch?v=OBtEwSe4LEQ
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
+
                     Intent i = new Intent();
                     i.setType("image/*");
                     i.setAction(Intent.ACTION_GET_CONTENT);
-                     startActivityForResult(i,100);
-
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-
-                try {
-                    Intent data = null;
-                    imgPath=data.getData();
+                    startActivityForResult(i,100);
                     imageToStore = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imgPath);
-                } catch (Exception e) {
-                   e.printStackTrace();
-                }
+
+                } catch (Exception e) { e.printStackTrace(); }
             }
         });
         return view;
     }
+    @Override
+    public void onActivityResult(int requestcode, int resultcode, Intent data) {
+        try {
+            super.onActivityResult(requestcode, resultcode, data);
+            if (requestcode == 100 && resultcode == 0 && data != null && data.getData() != null) {
+                imgPath = data.getData();
+                imageToStore = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imgPath);
+            }
+        }catch(Exception e){ Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show(); }
+    }
+
+    public void storeImage(View v){
+        db = new severinaDB(getActivity());
+        try {
+            if(!inv_name_txt.getText().toString().isEmpty() && !inv_qty_txt.getText().toString().isEmpty() && !inv_desc_txt.getText().toString().isEmpty() && imageToStore!= null){
+                db.storeImage(new Inventory(inv_name_txt.getText().toString(), inv_qty_txt.getText().toString(), inv_desc_txt.getText().toString(), imageToStore));
+            }else{
+                db.storeImage(new Inventory(inv_name_txt.getText().toString(), inv_qty_txt.getText().toString(), inv_desc_txt.getText().toString(), defaultimage));
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onAttach(Context context) {

@@ -33,7 +33,7 @@
             android:layout_marginTop="10sp"
             android:text="Ongoing Orders"
             android:textAlignment="center"
-
+            android:textColor="@color/black"
             android:textSize="40sp" />
 
         <ScrollView
@@ -63,7 +63,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90sp"
             android:text="No Ongoing Orders"
-            android:textColor="@color/light_green"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:visibility="visible" />
 
@@ -74,6 +74,7 @@
             android:layout_below="@id/scroll1"
             android:layout_marginTop="10sp"
             android:text="Recent Orders"
+            android:textColor="@color/black"
             android:textAlignment="center"
 
             android:textSize="40sp" />
@@ -107,7 +108,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60sp"
             android:text="No Recent Orders"
-            android:textColor="@color/light_green"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:visibility="visible" />
     </RelativeLayout>

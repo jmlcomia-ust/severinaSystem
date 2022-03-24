@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="Share"
+        android:id="@+id/share"/>
+    <item
+        android:title="About"
+        android:id="@+id/about"/>
+    <item
+        android:title="exit"
+        android:id="@+id/exit"/>
+    <item
+        android:title="Search"
+        android:id="@+id/search"
+        android:icon="@drawable/search"
+        app:showAsAction="always"/>
+    <item
+        android:title="Profile"
+        android:id="@+id/profile"
+        android:icon="@drawable/ic_accnt"
+        app:showAsAction="always"/>
+
+
+</menu>

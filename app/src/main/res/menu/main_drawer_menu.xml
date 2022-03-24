@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item android:id="@+id/nav_dinventory"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="Dashboard Inventory"/>
+
+        <item android:id="@+id/nav_dorder"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="Dashboard Orders"/>
+
+
+        <item android:id="@+id/nav_vinventory"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="View Inventory"/>
+
+        <item android:id="@+id/nav_vorder"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="View Order"/>
+
+        <item android:id="@+id/nav_gen_report"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="Generate Report"/>
+
+        <item android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="Log Out"/>
+
+    </group>
+</menu>

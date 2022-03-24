@@ -32,7 +32,6 @@ import java.util.List;
 public class UpdateInventoryDiaFragment extends DialogFragment {
     private static final String TAG = "UpdateInvFrag";
     public UpdateInventoryDiaFragment.OnInputListener fragupdate;
-    public DeleteInventoryDiagFragment.OnInputListener fragdelete;
     CustomViewAdapInv customViewAdapInv;
     private EditText inv_id_txt, inv_name_txt, inv_qty_txt, inv_desc_txt;
     private ImageView inv_imgu;
@@ -103,7 +102,6 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
             getDialog().dismiss();
             getActivity().recreate();
         });
-
         return view;
     }
 
@@ -112,7 +110,6 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
         super.onAttach(context);
         try{
             fragupdate = (UpdateInventoryDiaFragment.OnInputListener) getActivity();
-            fragdelete = (DeleteInventoryDiagFragment.OnInputListener) getActivity();
         }catch (ClassCastException e){
             Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
         }

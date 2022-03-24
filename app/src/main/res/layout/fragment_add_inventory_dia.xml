@@ -5,7 +5,6 @@
     android:layout_height="500dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/light_green"
     tools:context=".fragments.AddInventoryDiaFragment"
     android:theme="@style/Theme.AppCompat.Light.Dialog.Alert">

@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.adapter.CustomAdapterInv;
+import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.databinding.ActivityDashboardBinding;
 import com.example.testois.databinding.ActivityDashboardInventoryBinding;
 import com.example.testois.databinding.ActivityDashboardOrdersBinding;
@@ -39,64 +41,61 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
     RecyclerView recyclerView;
     ImageView imageview;
     Button add_btn;
+    CustomAdapterInv customAdapterInv;
     String frag_name, frag_qty, frag_desc; Bitmap frag_image;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.nav_search);
-        SearchView searchView =
-                (SearchView) searchItem.getActionView();
-
-        getMenuInflater().inflate(R.menu.dash_options, menu);
-
-        // Configure the search info and add any event listeners...
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.dash_options, menu);
         return super.onCreateOptionsMenu(menu);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        CustomAdapterInv customAdapterInv;
         List<Inventory> items = db.getitemsList();
-        switch (item.getItemId()) {
-            case R.id.sort_id:
-                // User chose the "Settings" item, show the app settings UI...
-                Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
-                recyclerView.setAdapter(customAdapterInv);
-                recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
-                recyclerView.getAdapter().notifyDataSetChanged();
-                return true;
+                switch (item.getItemId()) {
+                    case R.id.nav_profile:
+                        //Intent i = new Intent(this, ProfileSettings.class);
+                        Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.sort_id:
+                        // User chose the "Settings" item, show the app settings UI...
+                        Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
+                        customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
+                        recyclerView.setAdapter(customAdapterInv);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        return true;
 
-            case R.id.sort_name:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
-                Collections.reverse(items);
-                customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
-                recyclerView.setAdapter(customAdapterInv);
-                recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
-                recyclerView.getAdapter().notifyDataSetChanged();
-                return true;
+                    case R.id.sort_name:
+                        // User chose the "Favorite" action, mark the current item
+                        // as a favorite...
+                        Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+                        Collections.reverse(items);
+                        customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
+                        recyclerView.setAdapter(customAdapterInv);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        return true;
 
-            case R.id.sort_stocks:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
-                Collections.reverse(items);
-                customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
-                recyclerView.setAdapter(customAdapterInv);
-                recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
-                recyclerView.getAdapter().notifyDataSetChanged();
-                return true;
+                    case R.id.sort_stocks:
+                        // User chose the "Favorite" action, mark the current item
+                        // as a favorite...
+                        Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
+                        Collections.reverse(items);
+                        customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
+                        recyclerView.setAdapter(customAdapterInv);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                        return true;
 
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
+                    default:
+                        // If we got here, the user's action was not recognized.
+                        // Invoke the superclass to handle it.
+                        return super.onOptionsItemSelected(item);
 
-        }
+                }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -11,11 +11,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.testois.adapter.CustomAdapterOrd;
+import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.databinding.ActivityDashboardOrdersBinding;
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,7 +34,13 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     CustomAdapterOrd curr_customAdapterOrd, recent_customAdapterOrd;
-    List<Orders> curr_orders;
+    List<Orders> curr_orders;{
+        try{
+            {
+                curr_orders = db.getRecntOrdList();
+                if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); }
+            }
+        }catch(Exception e){Log.e(TAG, "Error on Null");}}
     List<Orders> recnt_orders;{
         try{
             {
@@ -50,21 +59,18 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.nav_search);
-        SearchView searchView =
-                (SearchView) searchItem.getActionView();
-
-        getMenuInflater().inflate(R.menu.dash_options, menu);
-
-        // Configure the search info and add any event listeners...
-
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        inflater.inflate(R.menu.dash_options, menu);
         return super.onCreateOptionsMenu(menu);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_profile:
+                //Intent i = new Intent(this, ProfileSettings.class);
+                Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.sort_id:
                 // User chose the "Settings" item, show the app settings UI...
                 Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
@@ -114,12 +120,10 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
                 rv_recent.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
                 rv_recent.getAdapter().notifyDataSetChanged();
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-
         }
     }
 

@@ -27,15 +27,15 @@ import java.util.List;
 
 public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.MyViewHolder> {
     private static final String TAG = "CustomViewAdapOrd";
-    //OrderRecyclerListener mListener;
+    OrderRecyclerListener nListener;
     Context context;
     List<Orders> orders;
     severinaDB sev;
 
-    public CustomViewAdapOrd(List<Orders> orders, Context context) {
+    public CustomViewAdapOrd(List<Orders> orders, Context context, OrderRecyclerListener nListener) {
         this.orders = orders;
         this.context = context;
-        //this.mListener = mListener;
+        this.nListener = nListener;
         sev = new severinaDB(context);
 
     }
@@ -65,7 +65,7 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
                 args.putString("name", order.getName());
                 args.putString("qty", order.getQuantity());
                 args.putString("desc", order.getStatus());
-               // mListener.gotoUpOrderFragment(order, args);
+                nListener.gotoDeleteFragment(order,args);
             }
         });
         //Recyclerview onClickListener
@@ -76,17 +76,18 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
         return orders.size();
     }
 
+
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView ord_id_txt, ord_name_txt, ord_qty_txt, ord_stat_txt;
         Button btn_edit, btn_delete;
-        //OrderRecyclerListener mListener;
+        CustomViewAdapOrd.OrderRecyclerListener nListener;
         Orders orders;
         View rootView;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
             rootView = itemView;
-           // this.mListener = mListener;
+           this.nListener = nListener;
             ord_id_txt = itemView.findViewById(R.id.view_ord_id);
             ord_name_txt = itemView.findViewById(R.id.view_ord_name);
             ord_qty_txt = itemView.findViewById(R.id.view_ord_qty);
@@ -98,9 +99,7 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
     }
 
 
-    public interface InventoryRecyclerListener {
-        void gotoUpOrderFragment(Orders orders, Bundle args);
-        //void gotoDeleteFragment(Orders Orders);
-    }
-
-}
+    public interface OrderRecyclerListener{
+        void gotoUpdateFragment(Orders orders, Bundle args);
+        void gotoDeleteFragment(Orders orders, Bundle args);
+    }  }

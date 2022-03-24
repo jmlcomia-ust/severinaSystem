@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".simplenavi"
+    android:background="@drawable/gradient_background"
+    android:orientation="vertical"
+    android:gravity="center">
+
+
+    <Button
+        android:id="@+id/btnDashInv"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:text="Dashboard Inventory"
+        android:textSize="20dp">
+    </Button>
+
+    <Button
+        android:id="@+id/btnDashOrd"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:text="Dashboard Orders"
+        android:textSize="20sp">
+    </Button>
+
+    <Button
+        android:id="@+id/btnViewInv"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:text="View Inventory"
+        android:textSize="20sp">
+    </Button>
+
+    <Button
+        android:id="@+id/btnViewOrd"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:text="View Order"
+        android:textSize="20sp">
+    </Button>
+
+    <Button
+        android:id="@+id/btnRepGen"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:text="Report Generation"
+        android:textSize="20sp">
+    </Button>
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/black"
+        android:text="Log Out"
+        android:textSize="20sp">
+    </Button>
+
+
+</LinearLayout>
