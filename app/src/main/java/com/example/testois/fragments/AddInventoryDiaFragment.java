@@ -41,7 +41,6 @@ public class AddInventoryDiaFragment extends DialogFragment {
     private EditText inv_name_txt, inv_qty_txt, inv_desc_txt;
     private Button btn_add, btn_back, btn_insert, increment, decrement;
     private Bitmap defaultimage; private Drawable default_img;
-
     private Bitmap imageToStore;
     private ImageView img_item;
     private Uri imgPath;
@@ -84,8 +83,8 @@ public class AddInventoryDiaFragment extends DialogFragment {
             int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
             quantity++;
             inv_qty_txt.setText(String.valueOf(quantity));
-
         });
+
         decrement.setOnClickListener(v -> {
             int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
             quantity--;
@@ -97,7 +96,23 @@ public class AddInventoryDiaFragment extends DialogFragment {
             getDialog().dismiss();
         });
         btn_add.setOnClickListener(v ->{
-            Log.d(TAG, "onClick: capturing input");
+            if(!inv_name_txt.getText().toString().isEmpty() && !inv_qty_txt.getText().toString().isEmpty() && !inv_desc_txt.getText().toString().isEmpty())
+            {
+                Log.d(TAG, "onClick: capturing input");
+                String name = inv_name_txt.getText().toString();
+                String qty = inv_qty_txt.getText().toString();
+                String desc = inv_desc_txt.getText().toString();
+                fraglisten.sendInput(name, qty, desc);
+                getDialog().dismiss();
+                getActivity().recreate();
+            }
+            else if(inv_name_txt.getText().toString().isEmpty()){ inv_name_txt.requestFocus(); }
+            else if(inv_qty_txt.getText().toString().isEmpty()){ inv_qty_txt.requestFocus(); }
+            else if(inv_desc_txt.getText().toString().isEmpty()){inv_desc_txt.requestFocus(); }
+            else{
+                Toast.makeText(getContext(), "Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
+            }
+
             /*
             Intent i = new Intent();
             i.setType("image/*");
@@ -113,12 +128,6 @@ public class AddInventoryDiaFragment extends DialogFragment {
             }else{
              defaultimage = BitmapFactory.decodeResource(getResources(), R.drawable.ic_default_img);
              */
-                 String name = inv_name_txt.getText().toString();
-                String qty = inv_qty_txt.getText().toString();
-                String desc = inv_desc_txt.getText().toString();
-                fraglisten.sendInput(name, qty, desc);
-                getDialog().dismiss();
-                getActivity().recreate();
             });
 
         //METHOD OF SAANI: https://www.youtube.com/watch?v=OBtEwSe4LEQ

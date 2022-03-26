@@ -17,5 +17,9 @@
             android:icon="@drawable/sort"
             android:title="Sort Items by Quantity"
             app:actionViewClass="androidx.recyclerview.widget.RecyclerView"/>
+        <item android:id="@+id/sort_stat"
+            android:icon="@drawable/sort"
+            android:title="Sort Items by Status"
+            app:actionViewClass="androidx.recyclerview.widget.RecyclerView"/>
     </group>
 </menu>

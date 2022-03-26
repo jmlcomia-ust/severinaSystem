@@ -35,7 +35,7 @@ import java.util.List;
 
 public class DashboardInventory extends DrawerBaseActivity implements Filterable {
     private static final String TAG = "DashboardInventory";
-    ActivityDashboardInventoryBinding dashboardInventoryBinding;
+    ActivityDashboardInventoryBinding activityDashboardInventoryBinding;
     TextView emptyfield;
     severinaDB db;
     RecyclerView recyclerView;
@@ -100,8 +100,8 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dashboardInventoryBinding = ActivityDashboardInventoryBinding.inflate(getLayoutInflater());
-        setContentView(dashboardInventoryBinding.getRoot());
+        activityDashboardInventoryBinding = ActivityDashboardInventoryBinding.inflate(getLayoutInflater());
+        setContentView(activityDashboardInventoryBinding.getRoot());
         allocatedActivityTitle("Dashboard Inventory");
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 

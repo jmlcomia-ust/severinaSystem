@@ -52,6 +52,14 @@ public class severinaDB extends SQLiteOpenHelper {
     public static final String ORD_QTY = "quantity";
     public static final String ORD_STAT = "status";
 
+    /*
+    private static final String TBL_4_NAME="db_stocks";
+    public static final String STK_ID ="id";
+    public static final String STK_ORD = "ordstock";
+    public static final String STK_INV = "invstock";
+    public static final String STK_THRES = "threshold";
+     */
+
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER=1;
     private final Context context;
@@ -70,9 +78,11 @@ public class severinaDB extends SQLiteOpenHelper {
         //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_IMG + "blob) ";
         String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text) ";
         String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_STAT + " text) ";
+       // String q4 = "create table " + TBL_4_NAME + " (" + STK_ID + " integer primary key autoincrement, " + STK_ORD + " integer, " + STK_INV + " integer, " + STK_THRES + " integer) ";
         sql.execSQL(q1);
         sql.execSQL(q2);
         sql.execSQL(q3);
+        //sql.execSQL(q4);
 
     }
 
@@ -81,6 +91,7 @@ public class severinaDB extends SQLiteOpenHelper {
         sql.execSQL("drop table if exists " + TBL_1_NAME + "");
         sql.execSQL("drop table if exists " + TBL_2_NAME + "");
         sql.execSQL("drop table if exists " + TBL_3_NAME + "");
+        //sql.execSQL("drop table if exists " + TBL_4_NAME + "");
             onCreate(sql);
 
     }
@@ -227,7 +238,7 @@ public class severinaDB extends SQLiteOpenHelper {
     public List<Orders> getOrderList() {
             String query = "SELECT * FROM " + TBL_3_NAME;
         sql = this.getReadableDatabase();
-            List<Orders> orders = new ArrayList<>();
+        List<Orders> orders = new ArrayList<>();
             Cursor cursor = sql.rawQuery(query, null);
             if (cursor.moveToFirst()) {
                 do {
@@ -280,11 +291,12 @@ public class severinaDB extends SQLiteOpenHelper {
         return orders;
     }
     public void updateOrder(Orders orders){
+        sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
+        cv.put(severinaDB.ORD_ID, orders.getId());
         cv.put(severinaDB.ORD_NAME,orders.getName());
         cv.put(severinaDB.ORD_QTY,orders.getQuantity());
         cv.put(severinaDB.ORD_STAT,orders.getStatus());
-        sql = this.getWritableDatabase();
         long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(orders.getId())});
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
@@ -294,13 +306,23 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     public void deleteOrder(String row_id){
-        SQLiteDatabase db = this.getWritableDatabase();
-        long result = db.delete(TBL_3_NAME, "_id=?", new String[]{row_id});
+        sql = this.getWritableDatabase();
+        long result = sql.delete(TBL_3_NAME, "id=?", new String[]{row_id});
         if(result == -1){
             Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    //OPERATIONS FOR STOCKS
+    /*
+    public void checkStocks(Orders orders, Inventory inventory){
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (Integer.parseInt(orders.getQuantity()) > Integer.parseInt(inventory.getQuantity())){
+
+        }
+    }
+     */
 }
 

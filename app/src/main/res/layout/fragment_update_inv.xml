@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/light_green"
     tools:context=".fragments.UpdateInventoryDiaFragment"
-    android:theme="@style/Theme.AppCompat.Light.Dialog.Alert">
+    >
 
     <RelativeLayout
         android:id="@+id/fragment_update_inv"
@@ -223,15 +223,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40sp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/increment"
-            android:layout_marginTop="10sp"
+            android:layout_marginTop="20sp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_update"
-                android:layout_width="100sp"
+                android:layout_width="150sp"
                 android:layout_height="40sp"
                 android:padding="1sp"
                 android:background="@color/green"
@@ -241,17 +241,8 @@
                 tools:ignore="MissingConstraints" />
 
             <Button
-                android:id="@+id/btn_delete"
-                android:layout_width="100sp"
-                android:layout_height="40sp"
-                android:padding="1sp"
-                android:background="@color/green"
-                android:text="Delete Item"
-                android:textColor="@color/black" />
-
-            <Button
                 android:id="@+id/btn_back"
-                android:layout_width="100sp"
+                android:layout_width="150sp"
                 android:layout_height="40sp"
                 android:padding="1sp"
                 android:background="@color/green"

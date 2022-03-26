@@ -112,7 +112,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
              //Inventory inventory = new Inventory(name,qty, desc, image);
              Inventory inventory = new Inventory(name,qty, desc);
              db.addItem(inventory);
-             Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
          }
@@ -125,7 +124,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             //Inventory inventory = new Inventory(name,qty, desc, image);
             Inventory items = new Inventory (id, name, qty, desc);
             db.updateItem(items);
-            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
@@ -136,7 +134,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         try {
             db = new severinaDB(ViewInventory.this);
             db.deleteItem(id);
-            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
@@ -148,7 +145,7 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         super.onCreate(savedInstanceState);
         activityViewInventoryBinding = ActivityViewInventoryBinding.inflate(getLayoutInflater());
         setContentView(activityViewInventoryBinding.getRoot());
-        allocatedActivityTitle("Manage Inventory");
+        allocatedActivityTitle("View Inventory");
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         search = findViewById(R.id.search);
@@ -160,7 +157,8 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
        customViewAdapInv = new CustomViewAdapInv(items, this, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(customViewAdapInv);
-        //if (customViewAdapInv.getItemCount() != 0){emptyfield.setVisibility(View.GONE);}
+        emptyfield = findViewById(R.id.emptyRv);
+        if (customViewAdapInv.getItemCount() != 0){emptyfield.setVisibility(View.GONE);}
 
             add_item.setOnClickListener(view -> {
             Log.d(TAG, "onClick: opening Add Dialog Fragment for Inventory.");
@@ -179,9 +177,11 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
     @Override
     protected void onActivityResult(int requestcode, int resultcode, Intent data) {
         super.onActivityResult(requestcode, resultcode, data);
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.add_dialogfrag);
-        fragment.onActivityResult(requestcode, resultcode, data);
-        startActivity(data);
+        try{
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.add_dialogfrag);
+            fragment.onActivityResult(requestcode, resultcode, data);
+            startActivity(data);
+        }catch(Exception e){Log.e(TAG, e.getMessage());}
     }
 
     @Override

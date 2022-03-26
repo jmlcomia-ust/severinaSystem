@@ -1,94 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="@color/color4"
-    android:padding="10sp"
-    android:id="@+id/inv_list">
+    android:id="@+id/inv_lists">
 
-        <ImageView
-            android:id="@+id/inv_img"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/ic_default_img"
-            android:padding="5dp"/>
-
-
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp">
+            android:layout_gravity="center_horizontal"
+            android:padding="12dp">
 
-                <TextView
-                    android:id="@+id/inv_name_txtv"
-                    android:layout_width="wrap_content"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardview_inv_list"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Solane 50kg"
-                    android:textColor="@color/black"
-                    android:textSize="30sp" />
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp"
+                    app:cardMaxElevation="12dp"
+                    app:cardPreventCornerOverlap="true"
+                    tools:layout_editor_absoluteX="10dp"
+                    tools:ignore="MissingConstraints">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:padding="12dp"
+                            android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/inv_id_txtv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="30sp"
-                    android:layout_toRightOf="@id/inv_name_txtv"
-                    android:textColor="@color/black"
-                    android:textSize="30sp"
-                    android:visibility="invisible" />
+                        <ImageView
+                            android:id="@+id/inv_img"
+                            android:src="@drawable/ic_default_img"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginLeft="10dp"
+                            android:padding="1dp" />
 
-                <TextView
-            android:id="@+id/inv_qty_txtv"
+                                <TextView
+                                    android:id="@+id/id"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toEndOf="@id/inv_img"
+                                    android:text="ID:"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/inv_id_txtv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/id"
+                            android:layout_marginStart="10sp"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/qty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="40sp"
+                            android:layout_toEndOf="@id/inv_img"
+                            android:layout_alignStart="@id/id"
+                            android:text="Quantity:"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/inv_qty_txtv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="40sp"
+                            android:layout_marginStart="10sp"
+                            android:layout_toEndOf="@id/qty"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="110sp"
+                                    android:layout_toEndOf="@id/inv_id_txtv"
+                                    android:text="Item:"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/inv_name_txtv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/name"
+                            android:text=""
+                            android:layout_marginStart="10sp"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/name"
+                            android:layout_alignStart="@id/name"
+                            android:layout_marginTop="15sp"
+                            android:layout_toEndOf="@id/inv_qty_txtv"
+                            android:text="Description: "
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/inv_desc_txtv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/name"
+                            android:layout_marginTop="15sp"
+                            android:layout_marginStart="10sp"
+                            android:layout_toEndOf="@id/desc"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="20sp" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/inv_name_txtv"
-            android:text="6"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-        <TextView
-            android:id="@+id/qty_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/inv_name_txtv"
-            android:layout_toEndOf="@id/inv_qty_txtv"
-            android:text=" in stock"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/inv_desc_txtv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/inv_name_txtv"
-            android:layout_toRightOf="@id/qty_txt"
-            android:layout_alignBaseline="@id/inv_qty_txtv"
-            android:layout_marginStart="20sp"
-            android:text="Note: none"
-            android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:layout_marginStart="500sp"
+            android:layout_marginTop="5sp"
+            >
 
                 <Button
                     android:id="@+id/update_item"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_marginEnd="30dp"
-                    android:layout_toStartOf="@id/delete_item"
                     android:background="@drawable/edit" />
 
-                <Button
-                    android:id="@+id/delete_item"
-                    android:layout_width="55dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="50sp"
-                    android:background="@drawable/delete" />
-        </RelativeLayout>
+                        <Button
+                            android:id="@+id/delete_item"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:background="@drawable/delete" />
+        </LinearLayout>
+                        </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -4,7 +4,6 @@ public class Orders {
     private String id;
     private String name;
     private String quantity;
-    private String description;
     private String status;
 
     public Orders(String name, String quantity, String status){

@@ -25,40 +25,41 @@ import java.util.Locale;
 public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyViewHolder> {
     private static final String TAG = "CustomAdapterOrd";
     Context context;
+    severinaDB db;
     List<Orders> orders;
-    severinaDB sev;
 
     public CustomAdapterOrd(List<Orders> orders, Context context){
         this.orders = orders;
         this.context = context;
-        sev = new severinaDB(context);
+        db = new severinaDB(context);
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.dashboard_ord_row, parent, false);
-        MyViewHolder myViewHolder = new MyViewHolder(view);
-        return myViewHolder;
+        return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        final Orders order = orders.get(position);
+       Orders order = orders.get(position);
 
         holder.ord_id_txt.setText(String.valueOf(order.getId()));
         holder.ord_name_txt.setText(String.valueOf(order.getName()));
         holder.ord_qty_txt.setText(String.valueOf(order.getQuantity()));
-        holder.ord_stat_txt.setText(String.valueOf(order.getStatus().toLowerCase()));
+        holder.ord_stat_txt.setText(order.getStatus().toLowerCase());
         //Recyclerview onClickListener
 
     }
 
     @Override
     public int getItemCount() {
-        return orders.size();
+        if(orders != null){
+            return orders.size();
+        }else return 0;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

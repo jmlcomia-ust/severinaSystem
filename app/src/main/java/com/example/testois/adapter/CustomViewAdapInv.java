@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,15 +33,17 @@ import java.util.List;
 public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.MyViewHolder>{
     private static final String TAG = "CustomViewAdapInv";
     InventoryRecyclerListener mListener;
+    //InventoryChecker mChecker;
     Context context;
     List<Inventory> items;
     severinaDB sev;
 
-
+    //public CustomViewAdapInv(List<Inventory> items, Context context, InventoryRecyclerListener mListener, InventoryChecker mChecker) {
     public CustomViewAdapInv(List<Inventory> items, Context context, InventoryRecyclerListener mListener) {
         this.items = items;
         this.context = context;
         this.mListener = mListener;
+        //this.mChecker = mChecker;
         sev = new severinaDB(context);
     }
 
@@ -47,7 +51,8 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_inv_row, parent, false);
-        return new MyViewHolder(view);
+        //return new MyViewHolder(view, mListener, mChecker);
+        return new MyViewHolder(view, mListener);
     }
 
     @SuppressLint("ResourceAsColor")
@@ -58,7 +63,9 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
             holder.position = position;
             holder.txt_id.setText(inventory.getId());
             holder.txt_name.setText(inventory.getName());
-            //checkQuant(inventory);
+            int quant = Integer.parseInt(inventory.getQuantity());
+            if (quant <= 3) { holder.txt_qty.setTextColor(Color.parseColor("#FF0000"));  holder.txt_qty.setTextSize(22); holder.txt_qty.setTypeface(Typeface.DEFAULT_BOLD);}
+
             holder.txt_qty.setText(inventory.getQuantity());
             holder.txt_desc.setText(inventory.getDescription());
            // holder.img_item.setImageBitmap(inventory.getImage());
@@ -72,6 +79,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
                 //args.putByteArray("image", severinaDB.getBytes(inventory.getImage()));
 
                 mListener.gotoUpdateFragment(inventory, args);
+                //mChecker.gotoAddOrderFragment(inventory, args);
             });
             holder.btn_delete.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: opening Delete Dialog Fragment for Inventory.");
@@ -79,8 +87,10 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
                 args.putString("id", String.valueOf(inventory.getId()));
                 args.putString("name", inventory.getName());
                 args.putString("qty", inventory.getQuantity());
+                args.putString("desc", inventory.getDescription());
                 //args.putByteArray("image", severinaDB.getBytes(inventory.getImage()));
                 mListener.gotoDeleteFragment(inventory,args);
+                //mChecker.gotoAddOrderFragment(inventory, args);
 
             });
         }catch(NullPointerException e){
@@ -101,14 +111,16 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
         Button btn_edit, btn_delete;
         int position;
         CustomViewAdapInv.InventoryRecyclerListener mListener;
-        Inventory inventory;
+        //CustomViewAdapInv.InventoryChecker mChecker;
         View rootView;
 
         @SuppressLint("ResourceAsColor")
-        public MyViewHolder(View itemView) {
+        // public MyViewHolder(View itemView, InventoryRecyclerListener mListener, InventoryChecker mChecker) {
+        public MyViewHolder(View itemView, InventoryRecyclerListener mListener) {
             super(itemView);
             rootView = itemView;
             this.mListener = mListener;
+            //this.mChecker = mChecker;
             txt_id = itemView.findViewById(R.id.inv_id_txtv);
             txt_name = itemView.findViewById(R.id.inv_name_txtv);
             txt_qty = itemView.findViewById(R.id.inv_qty_txtv);
@@ -122,5 +134,12 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
 public interface InventoryRecyclerListener{
         void gotoUpdateFragment(Inventory inventory, Bundle args);
         void gotoDeleteFragment(Inventory inventory, Bundle args);
-}  }
+}
+/*
+public interface InventoryChecker{
+    void gotoAddOrderFragment(Inventory inventory, Bundle args);
+}
+ */
+
+}
 

@@ -2,6 +2,8 @@ package com.example.testois.adapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,6 +56,8 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
 
         holder.id.setText(inventory.getId());
         holder.name.setText(inventory.getName());
+        int quant = Integer.parseInt(inventory.getQuantity());
+        if (quant <= 3) { holder.qty.setTextColor(Color.parseColor("#FF0000"));  holder.qty.setTextSize(22); holder.qty.setTypeface(Typeface.DEFAULT_BOLD);}
         holder.qty.setText(inventory.getQuantity());
         holder.desc.setText(inventory.getDescription());
         //Recyclerview onClickListener

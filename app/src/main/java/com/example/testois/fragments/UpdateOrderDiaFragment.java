@@ -24,9 +24,8 @@ import com.example.testois.severinaDB;
 import java.util.List;
 
 public class UpdateOrderDiaFragment extends DialogFragment {
-    private static final String TAG = "UpdateInvFrag";
+    private static final String TAG = "UpdateOrdFrag";
     public UpdateOrderDiaFragment.OnInputListener fragupdate;
-    CustomViewAdapInv customViewAdapInv;
     private EditText ord_id_txt, ord_name_txt, ord_qty_txt , ord_stat_txt ;
     String id, qty_updated, name_updated, stat_updated;
     private Button btn_add_vord, btn_back_vord;
@@ -40,7 +39,7 @@ public class UpdateOrderDiaFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_update_order_dia, container, false);
-        //ord_id_txt = view.findViewById(R.id.ord_id_txtv);
+        ord_id_txt = view.findViewById(R.id.ord_id_txtv);
         ord_name_txt = view.findViewById(R.id.ord_name_txtv);
         ord_qty_txt  = view.findViewById(R.id.ord_qty_txtv);
         ord_stat_txt  = view.findViewById(R.id.ord_stat_txtv);

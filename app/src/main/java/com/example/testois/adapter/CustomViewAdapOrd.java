@@ -28,6 +28,7 @@ import java.util.List;
 public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.MyViewHolder> {
     private static final String TAG = "CustomViewAdapOrd";
     OrderRecyclerListener nListener;
+  // CustomViewAdapInv.InventoryChecker
     Context context;
     List<Orders> orders;
     severinaDB sev;
@@ -40,51 +41,64 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @NonNull
     @Override
-    public CustomViewAdapOrd.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.view_ord_row, parent, false);
-        CustomViewAdapOrd.MyViewHolder myViewHolder = new CustomViewAdapOrd.MyViewHolder(view);
-        return myViewHolder;
+        return new MyViewHolder(view, nListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomViewAdapOrd.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        final Orders order = orders.get(position);
-        holder.ord_id_txt.setText(String.valueOf(order.getId()));
-        holder.ord_name_txt.setText(String.valueOf(order.getName()));
-        holder.ord_qty_txt.setText(String.valueOf(order.getQuantity()));
-        holder.ord_stat_txt.setText(String.valueOf(order.getStatus().toLowerCase()));
-        holder.btn_edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: opening Update Dialog Fragment for Inventory.");
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        try {
+            Orders ord = orders.get(position);
+            holder.position = position;
+            holder.ord_id_txt.setText(String.valueOf(ord.getId()));
+            holder.ord_name_txt.setText(String.valueOf(ord.getName()));
+            holder.ord_qty_txt.setText(String.valueOf(ord.getQuantity()));
+            holder.ord_stat_txt.setText(ord.getStatus().toLowerCase());
+            holder.btn_edit.setOnClickListener(v -> {
+                Log.d(TAG, "onClick: opening Update Dialog Fragment for Orders.");
                 Bundle args = new Bundle();
-                args.putString("id", String.valueOf(order.getId()));
-                args.putString("name", order.getName());
-                args.putString("qty", order.getQuantity());
-                args.putString("desc", order.getStatus());
-                nListener.gotoDeleteFragment(order,args);
-            }
-        });
-        //Recyclerview onClickListener
+                args.putString("id", String.valueOf(ord.getId()));
+                args.putString("name", ord.getName());
+                args.putString("qty", ord.getQuantity());
+                args.putString("stat", ord.getStatus());
+                nListener.gotoUpdateFragment(ord, args);
+            });
+            holder.btn_delete.setOnClickListener(v -> {
+                Log.d(TAG, "onClick: opening Delete Dialog Fragment for Orders.");
+                Bundle args = new Bundle();
+                args.putString("id", String.valueOf(ord.getId()));
+                args.putString("name", ord.getName());
+                args.putString("qty", ord.getQuantity());
+                args.putString("stat", ord.getStatus());
+                nListener.gotoDeleteFragment(ord, args);
+                //Recyclerview onClickListener
+            });
+        } catch (NullPointerException e) {
+            Log.e(TAG, "onBindViewHolder: Null Pointer: " + e.getMessage());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return orders.size();
+        if(orders != null){
+            return orders.size();
+        }else return 0;
+
     }
 
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView ord_id_txt, ord_name_txt, ord_qty_txt, ord_stat_txt;
         Button btn_edit, btn_delete;
+        int position;
         CustomViewAdapOrd.OrderRecyclerListener nListener;
-        Orders orders;
         View rootView;
 
-        MyViewHolder(@NonNull View itemView) {
+        MyViewHolder(@NonNull View itemView, OrderRecyclerListener nListener) {
             super(itemView);
             rootView = itemView;
            this.nListener = nListener;
@@ -94,7 +108,6 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
             ord_stat_txt = itemView.findViewById(R.id.view_ord_stat);
             btn_edit = itemView.findViewById(R.id.edit_ord);
             btn_delete = itemView.findViewById(R.id.delete_ord);
-
         }
     }
 

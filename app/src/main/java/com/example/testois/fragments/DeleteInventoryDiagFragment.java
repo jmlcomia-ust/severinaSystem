@@ -50,7 +50,6 @@ public class DeleteInventoryDiagFragment extends DialogFragment {
         String inv_data_id = args.getString("id");
         String inv_data_name = args.getString("name");
         String inv_data_qty = args.getString("qty");
-        message.setText("Are you sure you want to delete this item:");
         inv_data.setText("ID: "+inv_data_id.trim()+ ", Item Name: "+inv_data_name+", Qty: "+inv_data_qty+". ");
 
         btn_del.setOnClickListener(v -> {

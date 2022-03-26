@@ -6,8 +6,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/light_green"
-    tools:context=".fragments.AddInventoryDiaFragment"
-    android:theme="@style/Theme.AppCompat.Light.Dialog.Alert">
+    android:layout_gravity="center"
+    tools:context=".fragments.AddInventoryDiaFragment">
+
     <RelativeLayout
         android:layout_width="700sp"
         android:layout_height="500dp"
@@ -96,7 +97,7 @@
         <Button
             android:id="@+id/decrement"
             android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:layout_below="@id/item_count"
             android:layout_alignBaseline="@id/inv_qty_txt"
             android:layout_marginStart="40dp"
@@ -104,6 +105,8 @@
             android:background="@color/green"
             android:text="-"
             android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
             tools:layout_editor_absoluteY="270dp" />
 
         <EditText
@@ -111,30 +114,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/item_count"
-            android:layout_marginStart="38dp"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/decrement"
-            android:outlineSpotShadowColor="@color/black"
             android:text="0"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textColorHint="@color/black"
+            android:textSize="20sp"
             tools:layout_editor_absoluteX="68dp"
             tools:layout_editor_absoluteY="262dp" />
 
-    <Button
-        android:id="@+id/increment"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/item_count"
-        android:layout_alignBaseline="@id/inv_qty_txt"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="18dp"
-        android:layout_toEndOf="@id/inv_qty_txt"
-        android:background="@color/green"
-        android:text="+"
-        android:textColor="@color/black"
-        tools:layout_editor_absoluteX="108dp"
-        tools:layout_editor_absoluteY="261dp" />
+        <Button
+            android:id="@+id/increment"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/item_count"
+            android:layout_alignBaseline="@id/inv_qty_txt"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="18dp"
+            android:layout_toEndOf="@id/inv_qty_txt"
+            android:background="@color/green"
+            android:text="+"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="108dp"
+            tools:layout_editor_absoluteY="261dp" />
 
 
 

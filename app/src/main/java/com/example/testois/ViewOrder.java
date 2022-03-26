@@ -41,67 +41,19 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView add_btn;
+    Orders orders;
     String frag_name, frag_qty, frag_stat;
     CustomViewAdapOrd.OrderRecyclerListener nListener;
-    CustomViewAdapOrd curr_customViewAdapterOrd, recent_customViewAdapterOrd;
-    List<Orders> curr_orders;{
-        try{
-            curr_orders = db.getCurrOrdList();
-            {
-                curr_orders = db.getCurrOrdList();
-                if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); }
-            }
-        }catch(Exception e){Log.e(TAG, "Error on Null");}}
-
-    List<Orders> recnt_orders;{
-        try{
-            recnt_orders = db.getRecntOrdList();
-            {
-                recnt_orders = db.getRecntOrdList();
-                if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); }
-            }
-        }catch(Exception e){Log.e(TAG, "Error on Null");}}
+    CustomViewAdapOrd curr_customViewAdapterOrd, recent_customViewAdapterOrd, customViewAdapOrd;
+    List<Orders> all_orders;
+   // List<Orders> curr_orders;{ try{ curr_orders = db.getCurrOrdList();{curr_orders = db.getCurrOrdList();if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
+  //  List<Orders> recnt_orders;{ try{ recnt_orders = db.getRecntOrdList();{ recnt_orders = db.getRecntOrdList();if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1){
             recreate();
-        }
-    }
-    private void setInputToListView(){
-        try {
-            db = new severinaDB(ViewOrder.this);
-            Orders orders = new Orders (frag_name, frag_qty, frag_stat);
-            db.addOrder(orders);
-            if (frag_stat.equalsIgnoreCase("delivered")){
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this, nListener);
-                rv_recent.setAdapter(recent_customViewAdapterOrd);
-                rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                if (recent_customViewAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE);}
-                Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
-            }
-            else if (frag_stat.equalsIgnoreCase("today")){
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, this, nListener);
-                rv_current.setAdapter(curr_customViewAdapterOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                if (curr_customViewAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
-                Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
-            }else{
-            Toast.makeText(this, "Error Adding Orders!", Toast.LENGTH_LONG).show();
-        }} catch (Exception ex) {
-            // Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
-        }
-    }
-    private void setUpdatesToListView(){
-        try {
-            db = new severinaDB(ViewOrder.this);
-            //  Orders orders = new Orders (frag_name, frag_qty, frag_stat, frag_image);
-            Orders orders = new Orders (frag_name, frag_qty, frag_stat);
-            db.updateOrder(orders);
-            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_LONG).show();
-        } catch (Exception ex) {
-            Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -123,52 +75,51 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 return true;
             case R.id.sort_id:
                 // User chose the "Settings" item, show the app settings UI...
-                Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this, nListener);
-                rv_current.setAdapter(curr_customViewAdapterOrd);
+                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
+                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
+                rv_current.setAdapter(customViewAdapOrd);
                 rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
-
-                Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
+                return true;
+                /*
+                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
                 recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this, nListener);
                 rv_recent.setAdapter(recent_customViewAdapterOrd);
                 rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_recent.getAdapter().notifyDataSetChanged();
                 return true;
+                 */
 
             case R.id.sort_name:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
-                Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
-                Collections.reverse(curr_orders);
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this, nListener);
-                rv_current.setAdapter(curr_customViewAdapterOrd);
+                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+                Collections.reverse(all_orders);
+                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
+                rv_current.setAdapter(customViewAdapOrd);
                 rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
-
-                Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
-                Collections.reverse(recnt_orders);
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this, nListener);
-                rv_recent.setAdapter(recent_customViewAdapterOrd);
-                rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                rv_recent.getAdapter().notifyDataSetChanged();
+                return true;
 
             case R.id.sort_stocks:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
-                Collections.sort(curr_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
-                Collections.reverse(curr_orders);
-                curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, ViewOrder.this, nListener);
-                rv_current.setAdapter(curr_customViewAdapterOrd);
+                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
+                Collections.reverse(all_orders);
+                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
+                rv_current.setAdapter(customViewAdapOrd);
                 rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
-
-                Collections.sort(recnt_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
-                Collections.reverse(recnt_orders);
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this, nListener);
-                rv_recent.setAdapter(recent_customViewAdapterOrd);
-                rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                rv_recent.getAdapter().notifyDataSetChanged();
+                return true;
+            case R.id.sort_stat:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getStatus().compareToIgnoreCase(o2.getStatus()));
+                Collections.reverse(all_orders);
+                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
+                rv_current.setAdapter(customViewAdapOrd);
+                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
+                rv_current.getAdapter().notifyDataSetChanged();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -182,39 +133,30 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         super.onCreate(savedInstanceState);
         activityViewOrderBinding = ActivityViewOrderBinding.inflate(getLayoutInflater());
         setContentView(activityViewOrderBinding.getRoot());
-        allocatedActivityTitle("Manage Order");
-
-
-        db = new severinaDB(ViewOrder.this);
-        curr_orders = db.getCurrOrdList();
-        {
-            curr_orders = db.getCurrOrdList();
-            if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); }
-        }
-        recnt_orders = db.getRecntOrdList();
-        {
-            recnt_orders = db.getRecntOrdList();
-            if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); }
-        }
-
+        allocatedActivityTitle("View Order");
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
         add_btn = findViewById(R.id.add_ord);
         rv_current = findViewById(R.id.rv_current);
         rv_recent = findViewById(R.id.rv_recent);
-
-
-
-        recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this, nListener);
+/*
+       recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this, nListener);
             rv_recent.setAdapter(recent_customViewAdapterOrd);
             rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-            if (recent_customViewAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE);}
+            //if (recent_customViewAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE);}
 
         curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, this, nListener);
             rv_current.setAdapter(curr_customViewAdapterOrd);
             rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-            if (curr_customViewAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
+            //if (curr_customViewAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
 
+ */
+        db = new severinaDB(ViewOrder.this);
+        all_orders = db.getOrderList();
+        customViewAdapOrd = new CustomViewAdapOrd(all_orders, this, this);
+        rv_current.setAdapter(customViewAdapOrd);
+        rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
+        if (customViewAdapOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
 
         add_btn.setOnClickListener(view ->{
             Log.d(TAG, "onClick: opening dialog.");
@@ -226,15 +168,11 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     @Override
     public void sendInput(String name, String qty, String stat) {
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot stat:" + stat);
-        try {
+        try{
             db = new severinaDB(ViewOrder.this);
-            //Inventory inventory = new Inventory(name,qty, stat, image);
-            Orders order = new Orders(name,qty, stat);
-            db.addOrder(order);
-            Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_SHORT).show();
-        } catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
-        }
+            Orders orders = new Orders (name, qty, stat);
+            db.addOrder(orders);
+        }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
 
     @Override
@@ -242,10 +180,9 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
         try {
             db = new severinaDB(ViewOrder.this);
-            //Inventory inventory = new Inventory(name,qty, desc, image);
+            //Orders order = new Orders(name,qty, desc, image);
             Orders order = new Orders(id, name,qty, stat);
             db.updateOrder(order);
-            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -256,7 +193,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try {
             db = new severinaDB(ViewOrder.this);
             db.deleteOrder(id);
-            Toast.makeText(this, "Item Updated Successfully!", Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -278,6 +214,5 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         delfrag.show(fm, "DeleteOrdFrag");
     }
     }
-
 
 
