@@ -62,17 +62,17 @@
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/qty"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="40sp"
-                            android:layout_toEndOf="@id/inv_img"
-                            android:layout_alignStart="@id/id"
-                            android:text="Quantity:"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                                <TextView
+                                    android:id="@+id/qty"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignStart="@id/id"
+                                    android:layout_marginTop="40sp"
+                                    android:layout_toEndOf="@id/inv_img"
+                                    android:text="Quantity:"
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/inv_qty_txtv"
@@ -84,6 +84,31 @@
                             android:text=""
                             android:textColor="@color/black"
                             android:textSize="18sp" />
+
+                                <TextView
+                                    android:id="@+id/thres"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignStart="@id/id"
+                                    android:layout_marginTop="5sp"
+                                    android:layout_toEndOf="@id/inv_img"
+                                    android:layout_below="@id/qty"
+                                    android:text="Threshold:"
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/inv_thres_txtv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5sp"
+                                    android:layout_marginStart="10sp"
+                                    android:layout_toEndOf="@id/thres"
+                                    android:layout_below="@id/qty"
+                                    android:text=""
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp" />
 
                                 <TextView
                                     android:id="@+id/name"
@@ -106,18 +131,18 @@
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/name"
-                            android:layout_alignStart="@id/name"
-                            android:layout_marginTop="15sp"
-                            android:layout_toEndOf="@id/inv_qty_txtv"
-                            android:text="Description: "
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+                                <TextView
+                                    android:id="@+id/desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/name"
+                                    android:layout_alignStart="@id/name"
+                                    android:layout_marginTop="15sp"
+                                    android:layout_toEndOf="@id/inv_qty_txtv"
+                                    android:text="Description: "
+                                    android:textColor="@color/black"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/inv_desc_txtv"

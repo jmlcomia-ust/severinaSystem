@@ -89,7 +89,7 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             case R.id.sort_stocks:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
-                Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
+                Collections.sort(items, (Inventory o1, Inventory o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
                 Collections.reverse(items);
                 customViewAdapInv = new CustomViewAdapInv(items, ViewInventory.this, mListener);
                 recyclerView.setAdapter(customViewAdapInv);
@@ -105,24 +105,24 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
     }
 
     //public void sendInput(String name, String qty, String desc, Bitmap image){
-     public void sendInput(String name, String qty, String desc){
+     public void sendInput(String name, int qty, String desc, int thres){
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
          try {
              db = new severinaDB(ViewInventory.this);
              //Inventory inventory = new Inventory(name,qty, desc, image);
-             Inventory inventory = new Inventory(name,qty, desc);
+             Inventory inventory = new Inventory(name,qty, desc, thres);
              db.addItem(inventory);
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
          }
     }
     //public void UpdateInput(String id, String name, String qty, String desc, Bitmap image) {
-    public void UpdateInput(String id, String name, String qty, String desc) {
+    public void UpdateInput(String id, String name, int qty, String desc, int thres) {
         Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
         try {
             db = new severinaDB(ViewInventory.this);
             //Inventory inventory = new Inventory(name,qty, desc, image);
-            Inventory items = new Inventory (id, name, qty, desc);
+            Inventory items = new Inventory (id, name, qty, desc, thres);
             db.updateItem(items);
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
@@ -145,7 +145,7 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         super.onCreate(savedInstanceState);
         activityViewInventoryBinding = ActivityViewInventoryBinding.inflate(getLayoutInflater());
         setContentView(activityViewInventoryBinding.getRoot());
-        allocatedActivityTitle("View Inventory");
+        allocatedActivityTitle("Manage Inventory");
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         search = findViewById(R.id.search);

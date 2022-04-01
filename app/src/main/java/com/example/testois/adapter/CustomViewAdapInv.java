@@ -60,37 +60,36 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
             Inventory inventory = items.get(position);
-            holder.position = position;
             holder.txt_id.setText(inventory.getId());
-            holder.txt_name.setText(inventory.getName());
-            int quant = Integer.parseInt(inventory.getQuantity());
-            if (quant <= 3) { holder.txt_qty.setTextColor(Color.parseColor("#FF0000"));  holder.txt_qty.setTextSize(22); holder.txt_qty.setTypeface(Typeface.DEFAULT_BOLD);}
-
-            holder.txt_qty.setText(inventory.getQuantity());
-            holder.txt_desc.setText(inventory.getDescription());
+            holder.txt_name.setText(inventory.getName().toUpperCase());
+            holder.txt_thres.setText(String.valueOf(inventory.getThreshold()));
+            holder.txt_qty.setText(String.valueOf(inventory.getQuantity()));
+            if (inventory.getQuantity() <= inventory.getThreshold()+1) { holder.txt_qty.setTextColor(Color.parseColor("#FF0000"));  holder.txt_qty.setTextSize(22); holder.txt_qty.setTypeface(Typeface.DEFAULT_BOLD);}
+            holder.txt_desc.setText(inventory.getDescription().toUpperCase());
            // holder.img_item.setImageBitmap(inventory.getImage());
             holder.btn_edit.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: opening Update Dialog Fragment for Inventory.");
                 Bundle args = new Bundle();
                 args.putString("id", String.valueOf(inventory.getId()));
                 args.putString("name", inventory.getName());
-                args.putString("qty", inventory.getQuantity());
+                args.putString("qty", String.valueOf(inventory.getQuantity()));
                 args.putString("desc", inventory.getDescription());
+                args.putString("thres", String.valueOf(inventory.getThreshold()));
                 //args.putByteArray("image", severinaDB.getBytes(inventory.getImage()));
 
                 mListener.gotoUpdateFragment(inventory, args);
-                //mChecker.gotoAddOrderFragment(inventory, args);
             });
             holder.btn_delete.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: opening Delete Dialog Fragment for Inventory.");
                 Bundle args = new Bundle();
                 args.putString("id", String.valueOf(inventory.getId()));
                 args.putString("name", inventory.getName());
-                args.putString("qty", inventory.getQuantity());
+                args.putString("qty", String.valueOf(inventory.getQuantity()));
                 args.putString("desc", inventory.getDescription());
+                args.putString("thres", String.valueOf(inventory.getThreshold()));
                 //args.putByteArray("image", severinaDB.getBytes(inventory.getImage()));
                 mListener.gotoDeleteFragment(inventory,args);
-                //mChecker.gotoAddOrderFragment(inventory, args);
+                notifyItemRangeChanged(position, items.size());
 
             });
         }catch(NullPointerException e){
@@ -107,11 +106,10 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_id, txt_name, txt_qty, txt_desc; ImageView img_item;
+        TextView txt_id, txt_name, txt_qty, txt_desc, txt_thres; ImageView img_item;
         Button btn_edit, btn_delete;
         int position;
         CustomViewAdapInv.InventoryRecyclerListener mListener;
-        //CustomViewAdapInv.InventoryChecker mChecker;
         View rootView;
 
         @SuppressLint("ResourceAsColor")
@@ -120,12 +118,12 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
             super(itemView);
             rootView = itemView;
             this.mListener = mListener;
-            //this.mChecker = mChecker;
             txt_id = itemView.findViewById(R.id.inv_id_txtv);
             txt_name = itemView.findViewById(R.id.inv_name_txtv);
             txt_qty = itemView.findViewById(R.id.inv_qty_txtv);
             img_item = itemView.findViewById(R.id.img_item);
             txt_desc = itemView.findViewById(R.id.inv_desc_txtv);
+            txt_thres = itemView.findViewById(R.id.inv_thres_txtv);
             btn_edit = itemView.findViewById(R.id.update_item);
             btn_delete = itemView.findViewById(R.id.delete_item);
         }
@@ -135,11 +133,6 @@ public interface InventoryRecyclerListener{
         void gotoUpdateFragment(Inventory inventory, Bundle args);
         void gotoDeleteFragment(Inventory inventory, Bundle args);
 }
-/*
-public interface InventoryChecker{
-    void gotoAddOrderFragment(Inventory inventory, Bundle args);
-}
- */
 
 }
 

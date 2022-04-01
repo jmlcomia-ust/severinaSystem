@@ -56,11 +56,11 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
 
         holder.id.setText(inventory.getId());
         holder.name.setText(inventory.getName());
-        int quant = Integer.parseInt(inventory.getQuantity());
-        if (quant <= 3) { holder.qty.setTextColor(Color.parseColor("#FF0000"));  holder.qty.setTextSize(22); holder.qty.setTypeface(Typeface.DEFAULT_BOLD);}
+        holder.thres.setText(inventory.getThreshold());
+        int quant = Integer.parseInt(String.valueOf(inventory.getQuantity()));
+        if (quant <= inventory.getThreshold()) { holder.qty.setTextColor(Color.parseColor("#FF0000"));  holder.qty.setTextSize(22); holder.qty.setTypeface(Typeface.DEFAULT_BOLD);}
         holder.qty.setText(inventory.getQuantity());
         holder.desc.setText(inventory.getDescription());
-        //Recyclerview onClickListener
 
     }
 
@@ -70,7 +70,7 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView id, name, qty, desc;
+        TextView id, name, qty, desc, thres;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +78,7 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
             name = itemView.findViewById(R.id.inv_name_txt);
             qty = itemView.findViewById(R.id.inv_qty_txt);
             desc = itemView.findViewById(R.id.inv_desc_txt);
+            thres = itemView.findViewById(R.id.inv_thres_txt);
         }
     }
 }

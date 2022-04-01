@@ -33,15 +33,15 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
     private static final String TAG = "UpdateInvFrag";
     public UpdateInventoryDiaFragment.OnInputListener fragupdate;
     CustomViewAdapInv customViewAdapInv;
-    private EditText inv_id_txt, inv_name_txt, inv_qty_txt, inv_desc_txt;
+    private EditText inv_id_txt, inv_name_txt, inv_qty_txt, inv_desc_txt, inv_thres_txt;
     private ImageView inv_imgu;
-    String id, qty_updated, name_updated, desc_updated; byte[] img_updated;
+    String id, name_updated, desc_updated;int qty_updated, thres_updated; byte[] img_updated;
     private Button btn_update, btn_back, increment, decrement;
     private SQLiteDatabase sql;
 
     public interface OnInputListener {
         //void UpdateInput(String name, String qty, String desc, byte[] bytesImage);
-        void UpdateInput(String id, String name, String qty, String desc);
+        void UpdateInput(String id, String name, int qty, String desc, int thres);
 
 
     }
@@ -55,6 +55,7 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
         //inv_imgu = view.findViewById(R.id.inv_imgu);
         inv_qty_txt = view.findViewById(R.id.inv_qty_txtu);
         inv_desc_txt = view.findViewById(R.id.inv_desc_txtu);
+        inv_thres_txt = view.findViewById(R.id.inv_thres_txtu);
         btn_update = view.findViewById(R.id.btn_update);
         btn_back = view.findViewById(R.id.btn_back);
         increment = view.findViewById(R.id.increment);
@@ -65,18 +66,19 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
             inv_name_txt.setText(args.getString("name"));
             inv_qty_txt.setText(args.getString("qty"));
             inv_desc_txt.setText(args.getString("desc"));
+            inv_thres_txt.setText(args.getString("thres"));
 
 
         // FUNCTION TO SET EXISTING DATA TO EDITTEXTS> setData();
 
         increment.setOnClickListener(v -> {
-            int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
+            int quantity = Integer.parseInt(inv_qty_txt.getText().toString().trim());
             quantity++;
             inv_qty_txt.setText(String.valueOf(quantity));
 
         });
         decrement.setOnClickListener(v -> {
-            int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
+            int quantity = Integer.parseInt(inv_qty_txt.getText().toString().trim());
             quantity--;
             inv_qty_txt.setText(String.valueOf(quantity));
         });
@@ -92,12 +94,13 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
             //bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
 
             id = inv_id_txt.getText().toString();
-            name_updated = inv_name_txt.getText().toString();
-            qty_updated = inv_qty_txt.getText().toString();
-            desc_updated = inv_desc_txt.getText().toString();
+            name_updated = inv_name_txt.getText().toString().toUpperCase().trim();
+            qty_updated = Integer.parseInt(inv_qty_txt.getText().toString().trim());
+            desc_updated = inv_desc_txt.getText().toString().toUpperCase().trim();
+            thres_updated = Integer.parseInt(inv_thres_txt.getText().toString().trim());
 
             //fragupdate.UpdateInput(name_updated, qty_updated, desc_updated, img_updated);
-            fragupdate.UpdateInput(id,name_updated, qty_updated, desc_updated);
+            fragupdate.UpdateInput(id,name_updated, qty_updated, desc_updated, thres_updated);
 
             getDialog().dismiss();
             getActivity().recreate();

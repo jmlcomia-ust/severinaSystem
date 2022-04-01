@@ -32,6 +32,7 @@ public class DeleteInventoryDiagFragment extends DialogFragment {
     private static final String TAG = "DeleteInvFrag";
     public DeleteInventoryDiagFragment.OnInputListener fragdel;
     severinaDB db = new severinaDB(getActivity());
+    CustomViewAdapInv adapter ;
     public interface OnInputListener {
         void DeleteInput(String id);
     }
@@ -50,7 +51,7 @@ public class DeleteInventoryDiagFragment extends DialogFragment {
         String inv_data_id = args.getString("id");
         String inv_data_name = args.getString("name");
         String inv_data_qty = args.getString("qty");
-        inv_data.setText("ID: "+inv_data_id.trim()+ ", Item Name: "+inv_data_name+", Qty: "+inv_data_qty+". ");
+        inv_data.setText("ID: "+inv_data_id.trim()+ "\nITEM NAME: "+inv_data_name.toUpperCase()+"\nQTY: "+inv_data_qty+" PCS. ");
 
         btn_del.setOnClickListener(v -> {
             Log.d(TAG, "onClick: capturing deletion");

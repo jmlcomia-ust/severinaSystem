@@ -11,8 +11,10 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -32,8 +34,10 @@ import java.util.Locale;
 public class severinaDB extends SQLiteOpenHelper {
 
     private static final String DB_NAME="severinadb";
+    private static final String SQLITE_SEQUENCE = "0";
     private static final String TBL_1_NAME="db_user";
     public static final String USR_ID = "id";
+    //public static final String USR_DNAME = "displayname";
     public static final String USR_NAME = "username";
     public static final String USR_PWRD = "password";
 
@@ -43,6 +47,7 @@ public class severinaDB extends SQLiteOpenHelper {
     public static final String INV_NAME = "name";
     public static final String INV_QTY = "quantity";
     public static final String INV_DESC = "description";
+    public static final String INV_THRES = "threshold";
     public static final Bitmap INV_IMG = null;
 
 
@@ -76,7 +81,7 @@ public class severinaDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sql) {
         String q1 = "create table " + TBL_1_NAME + " (" + USR_ID + " integer primary key autoincrement, " + USR_NAME + " text, " + USR_PWRD + " text) ";
         //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_IMG + "blob) ";
-        String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text) ";
+        String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
         String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_STAT + " text) ";
        // String q4 = "create table " + TBL_4_NAME + " (" + STK_ID + " integer primary key autoincrement, " + STK_ORD + " integer, " + STK_INV + " integer, " + STK_THRES + " integer) ";
         sql.execSQL(q1);
@@ -108,6 +113,14 @@ public class severinaDB extends SQLiteOpenHelper {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
+    //convert ImageView to byte[]
+    public byte[] ImageViewToByte(ImageView image){
+        Bitmap bmp = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        return stream.toByteArray();
+    }
+
     public void storeImage(Inventory inventory){
         try{
             sql = this.getWritableDatabase();
@@ -132,8 +145,12 @@ public class severinaDB extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.USR_NAME,name);
         cv.put(severinaDB.USR_PWRD, password);
+        //cv.put(severinaDB.USR_DNAME, dname);
         sql = this.getWritableDatabase();
         sql.insert(severinaDB.TBL_1_NAME, null,cv);
+    }
+    void checkUser(String name){
+
     }
 
     //ADD INVENTORY ITEM
@@ -161,6 +178,7 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.INV_NAME, inventory.getName());
             cv.put(severinaDB.INV_QTY, inventory.getQuantity());
             cv.put(severinaDB.INV_DESC, inventory.getDescription());
+            cv.put(severinaDB.INV_THRES, inventory.getThreshold());
             //cv.put(String.valueOf(severinaDB.INV_IMG),getBytes(inventory.getImage()));
 
             long result = sql.insert(severinaDB.TBL_2_NAME, null,cv);
@@ -182,10 +200,11 @@ public class severinaDB extends SQLiteOpenHelper {
                 String name = cursor.getString(1);
                 String quantity = cursor.getString(2);
                 String desc = cursor.getString(3);
-                //byte[] imageInBytes = cursor.getBlob(4);
+                String thres = cursor.getString(4);
+                //byte[] imageInBytes = cursor.getBlob(5);
                 //Bitmap image = getImage(imageInBytes);
                 //items.add(new Inventory(String.valueOf(id),name,quantity, desc, image));
-                items.add(new Inventory(String.valueOf(id),name,quantity, desc));
+                items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres)));
             }while(cursor.moveToNext());
         }
         cursor.close();
@@ -200,6 +219,7 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.INV_NAME,inventory.getName());
         cv.put(severinaDB.INV_QTY,inventory.getQuantity());
         cv.put(severinaDB.INV_DESC,inventory.getDescription());
+        cv.put(severinaDB.INV_THRES,inventory.getThreshold());
         long result = sql.update(TBL_2_NAME,cv,INV_ID + " = ?" , new String[] {String.valueOf(inventory.getId())});
 
         if(result == -1){
@@ -217,6 +237,11 @@ public class severinaDB extends SQLiteOpenHelper {
         }else{
             Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
         }
+    }
+    public void truncateItems(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String q3 = "update sqlite_sequence set seq = 0 where name='"+TBL_2_NAME+"'";
+        db.execSQL(q3);
     }
 
     //Operations for Order Table Database

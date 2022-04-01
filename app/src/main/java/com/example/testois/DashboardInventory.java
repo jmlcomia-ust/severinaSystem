@@ -42,7 +42,8 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
     ImageView imageview;
     Button add_btn;
     CustomAdapterInv customAdapterInv;
-    String frag_name, frag_qty, frag_desc; Bitmap frag_image;
+    int frag_qty, frag_thres;
+    String frag_name, frag_desc; Bitmap frag_image;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +83,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
                     case R.id.sort_stocks:
                         // User chose the "Favorite" action, mark the current item
                         // as a favorite...
-                        Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
+                        Collections.sort(items, (Inventory o1, Inventory o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
                         Collections.reverse(items);
                         customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
                         recyclerView.setAdapter(customAdapterInv);
@@ -125,12 +126,13 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
         return null;
     }
     //public void sendInput(String name, String qty, String desc, byte[] bytesImage) {
-        public void sendInput(String name, String qty, String desc) {
+        public void sendInput(String name, int qty, String desc, int thres) {
         //Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot image:" + bytesImage);
             Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
         frag_name = name;
         frag_qty = qty;
         frag_desc = desc;
+        frag_thres = thres;
        //frag_image = bytesImage;
         setInputToListView();
     }
@@ -138,7 +140,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
         try {
             db = new severinaDB(DashboardInventory.this);
             //Inventory inventory = new Inventory(frag_name,frag_qty, frag_desc, frag_image);
-            Inventory inventory = new Inventory(frag_name,frag_qty, frag_desc, frag_image);
+            Inventory inventory = new Inventory(frag_name,frag_qty, frag_desc, frag_thres);
             db.addItem(inventory);
             Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
         } catch (Exception ex) {

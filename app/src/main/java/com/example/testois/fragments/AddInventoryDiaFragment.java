@@ -38,7 +38,7 @@ import java.io.IOException;
 public class AddInventoryDiaFragment extends DialogFragment {
 
     private static final String TAG = "AddInventoryDiaFragment";
-    private EditText inv_name_txt, inv_qty_txt, inv_desc_txt;
+    private EditText inv_name_txt, inv_qty_txt, inv_desc_txt, inv_thres_txt;
     private Button btn_add, btn_back, btn_insert, increment, decrement;
     private Bitmap defaultimage; private Drawable default_img;
     private Bitmap imageToStore;
@@ -49,7 +49,7 @@ public class AddInventoryDiaFragment extends DialogFragment {
 
     public interface OnInputListener {
         // void sendInput(String name, String qty, String desc, Bitmap image);
-        void sendInput(String name, String qty, String desc);
+        void sendInput(String name, int qty, String desc, int thres);
     }
     public OnInputListener fraglisten;
 
@@ -66,6 +66,7 @@ public class AddInventoryDiaFragment extends DialogFragment {
             inv_name_txt = view.findViewById(R.id.inv_name_txt);
             inv_qty_txt = view.findViewById(R.id.inv_qty_txt);
             inv_desc_txt = view.findViewById(R.id.inv_desc_txt);
+            inv_thres_txt = view.findViewById(R.id.inv_thres_txt);
             img_item = view.findViewById(R.id.img_item);
             btn_insert = view.findViewById(R.id.insert_img_item);
             btn_add = view.findViewById(R.id.btn_add_inv);
@@ -102,7 +103,8 @@ public class AddInventoryDiaFragment extends DialogFragment {
                 String name = inv_name_txt.getText().toString();
                 String qty = inv_qty_txt.getText().toString();
                 String desc = inv_desc_txt.getText().toString();
-                fraglisten.sendInput(name, qty, desc);
+                String thres = inv_thres_txt.getText().toString();
+                fraglisten.sendInput(name, Integer.parseInt(qty), desc, Integer.parseInt(thres));
                 getDialog().dismiss();
                 getActivity().recreate();
             }
@@ -162,9 +164,9 @@ public class AddInventoryDiaFragment extends DialogFragment {
         db = new severinaDB(getActivity());
         try {
             if(!inv_name_txt.getText().toString().isEmpty() && !inv_qty_txt.getText().toString().isEmpty() && !inv_desc_txt.getText().toString().isEmpty() && imageToStore!= null){
-                db.storeImage(new Inventory(inv_name_txt.getText().toString(), inv_qty_txt.getText().toString(), inv_desc_txt.getText().toString(), imageToStore));
+                db.storeImage(new Inventory(inv_name_txt.getText().toString(), Integer.parseInt(inv_qty_txt.getText().toString()), inv_desc_txt.getText().toString(), Integer.parseInt(inv_thres_txt.getText().toString())));
             }else{
-                db.storeImage(new Inventory(inv_name_txt.getText().toString(), inv_qty_txt.getText().toString(), inv_desc_txt.getText().toString(), defaultimage));
+                db.storeImage(new Inventory(inv_name_txt.getText().toString(), Integer.parseInt(inv_qty_txt.getText().toString()), inv_desc_txt.getText().toString(), Integer.parseInt(inv_thres_txt.getText().toString())));
             }
         }
         catch (Exception e){

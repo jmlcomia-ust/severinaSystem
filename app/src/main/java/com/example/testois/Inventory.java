@@ -7,33 +7,38 @@ import java.io.Serializable;
 public class Inventory implements Serializable {
         private String id;
         private String name;
-        private String quantity;
+        private int quantity;
         private String description;
+        private int threshold;
         private Bitmap image;
 
-        public Inventory(String name, String quantity, String description, Bitmap image) {
+        public Inventory(String name, int quantity, String description, int threshold, Bitmap image) {
                 this.name = name;
                 this.quantity = quantity;
                 this.description = description;
+                this.threshold = threshold;
                 this.image = image;
         }
-        public Inventory(String id, String name, String quantity, String description, Bitmap image) {
+        public Inventory(String id, String name, int quantity, String description, int threshold, Bitmap image) {
                 this.id = id;
                 this.name = name;
                 this.quantity = quantity;
                 this.description = description;
+            this.threshold = threshold;
                 this.image = image;
         }
-    public Inventory(String id, String name, String quantity, String description) {
+    public Inventory(String id, String name, int quantity, String description, int threshold) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.description = description;
+        this.threshold = threshold;
     }
-    public Inventory(String name, String quantity, String description) {
+    public Inventory(String name, int quantity, String description, int threshold) {
         this.name = name;
         this.quantity = quantity;
         this.description = description;
+        this.threshold = threshold;
     }
 
         public String getId() { return id; }
@@ -49,11 +54,11 @@ public class Inventory implements Serializable {
                 this.name = name;
         }
 
-        public String getQuantity() {
+        public int getQuantity() {
                 return quantity;
         }
 
-        public void setQuantity(String quantity) {
+        public void setQuantity(int quantity) {
                 this.quantity = quantity;
         }
 
@@ -64,6 +69,10 @@ public class Inventory implements Serializable {
         public void setDescription(String description) {
                 this.description = description;
         }
+
+        public int getThreshold(){return threshold;}
+
+        public void setThreshold(int threshold) {this.threshold = threshold;}
 
         public Bitmap getImage() { return image; }
 

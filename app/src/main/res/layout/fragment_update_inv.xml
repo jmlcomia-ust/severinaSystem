@@ -179,6 +179,20 @@
             tools:layout_editor_absoluteX="108dp"
             tools:layout_editor_absoluteY="261dp" />
 
+        <EditText
+            android:id="@+id/inv_thres_txtu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inv_qty_txtu"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/decrement"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="68dp"
+            tools:layout_editor_absoluteY="262dp" />
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="320dp"
