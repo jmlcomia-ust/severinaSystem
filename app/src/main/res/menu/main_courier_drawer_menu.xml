@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+
+        <item android:id="@+id/nav_couriervorder"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="View Order"/>
+
+        <item android:id="@+id/nav_couriermorder"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="Manage Order"/>
+
+        <item android:id="@+id/nav_courierlogout"
+            android:icon="@drawable/ic_arrow_right"
+            android:title="Log Out"/>
+
+    </group>
+</menu>
