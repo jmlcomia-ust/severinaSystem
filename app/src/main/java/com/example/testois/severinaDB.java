@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -69,6 +70,7 @@ public class severinaDB extends SQLiteOpenHelper {
         super(context, DB_NAME, null, VER);
         this.context = context;
     }
+
     public severinaDB open() throws SQLException {
         sql = this.getWritableDatabase();
         return this;
@@ -113,6 +115,14 @@ public class severinaDB extends SQLiteOpenHelper {
     //convert byte[] to Bitmap
     public static Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    //convert Bitmap to URI
+    public static Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     //to resize image for faster uploading to db

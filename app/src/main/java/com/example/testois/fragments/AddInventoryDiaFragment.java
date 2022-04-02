@@ -150,6 +150,7 @@ public class AddInventoryDiaFragment extends DialogFragment {
                     if (null != selectedImageUri) {
                         imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);  //application of image resizing for fast upload to DB
                         imgView.setImageBitmap(imageToStore);
+                        imgView.buildDrawingCache();
                     }
                 }
             }
@@ -162,6 +163,7 @@ public class AddInventoryDiaFragment extends DialogFragment {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
+
     }
 
     @Override

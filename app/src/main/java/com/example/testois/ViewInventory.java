@@ -117,12 +117,12 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
          }
     }
     //public void UpdateInput(String id, String name, int qty, String desc, int thres, byte[] image) {
-    public void UpdateInput(String id, String name, int qty, String desc, int thres) {
-        Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
+    public void UpdateInput(String id, String name, int qty, String desc, int thres,  Bitmap image) {
+        Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot image@: "+image);
         try {
             db = new severinaDB(ViewInventory.this);
             //Inventory inventory = new Inventory(name,qty, desc, image);
-            Inventory items = new Inventory (id, name, qty, desc, thres);
+            Inventory items = new Inventory (id, name, qty, desc, thres, image);
             db.updateItem(items);
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
@@ -172,6 +172,7 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         super.onResume();
         customViewAdapInv.notifyDataSetChanged();
         recyclerView.setAdapter(customViewAdapInv);
+
     }
 
     @Override

@@ -3,9 +3,11 @@ package com.example.testois.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -63,6 +65,9 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
             holder.txt_id.setText(inventory.getId());
             holder.txt_name.setText(inventory.getName().toUpperCase());
             holder.txt_thres.setText(String.valueOf(inventory.getThreshold()));
+            Uri selectedImageUri = severinaDB.getImageUri(context.getApplicationContext(),inventory.getImage());
+
+            holder.img_item.setImageBitmap(severinaDB.decodeUri(context.getApplicationContext(), selectedImageUri, 400));
             holder.txt_qty.setText(String.valueOf(inventory.getQuantity()));
             if (inventory.getQuantity() <= inventory.getThreshold()+1) { holder.txt_qty.setTextColor(Color.parseColor("#FF0000"));  holder.txt_qty.setTextSize(22); holder.txt_qty.setTypeface(Typeface.DEFAULT_BOLD);}
             holder.txt_desc.setText(inventory.getDescription().toUpperCase());
@@ -75,7 +80,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
                 args.putString("qty", String.valueOf(inventory.getQuantity()));
                 args.putString("desc", inventory.getDescription());
                 args.putString("thres", String.valueOf(inventory.getThreshold()));
-                //args.putByteArray("image", severinaDB.getBytes(inventory.getImage()));
+                args.putByteArray("image", severinaDB.getImageBytes(inventory.getImage()));
 
                 mListener.gotoUpdateFragment(inventory, args);
             });
@@ -87,7 +92,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
                 args.putString("qty", String.valueOf(inventory.getQuantity()));
                 args.putString("desc", inventory.getDescription());
                 args.putString("thres", String.valueOf(inventory.getThreshold()));
-                //args.putByteArray("image", severinaDB.getBytes(inventory.getImage()));
+                args.putByteArray("image", severinaDB.getImageBytes(inventory.getImage()));
                 mListener.gotoDeleteFragment(inventory,args);
                 notifyItemRangeChanged(position, items.size());
 
