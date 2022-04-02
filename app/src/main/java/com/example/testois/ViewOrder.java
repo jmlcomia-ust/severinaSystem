@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -38,6 +39,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     private static final String TAG = "ViewOrders";
     ActivityViewOrderBinding activityViewOrderBinding;
     private severinaDB db;
+
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView add_btn;
@@ -55,6 +57,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         if(requestCode == 1){
             recreate();
         }
+
     }
 
 
@@ -166,12 +169,13 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     }
 
     @Override
-    public void sendInput(String name, String qty, String stat) {
+    public void sendInput(String name, int qty, String stat) {
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot stat:" + stat);
         try{
             db = new severinaDB(ViewOrder.this);
-            Orders orders = new Orders (name, qty, stat);
+            Orders orders = new Orders (name, String.valueOf(qty), stat);
             db.addOrder(orders);
+            db.updateStock(name, qty);
         }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
 

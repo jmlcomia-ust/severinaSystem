@@ -12,7 +12,7 @@ public class Inventory implements Serializable {
         private int threshold;
         private Bitmap image;
 
-        public Inventory(String name, int quantity, String description, int threshold, Bitmap image) {
+        public Inventory(String name, int quantity, String description, int threshold,Bitmap image) {
                 this.name = name;
                 this.quantity = quantity;
                 this.description = description;

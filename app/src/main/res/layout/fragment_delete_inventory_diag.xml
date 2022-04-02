@@ -15,7 +15,6 @@
         android:gravity="center"
         android:layout_gravity="center"
         tools2:ignore="MissingConstraints"
-        tools2:context=".fragments.AddOrderDiaFragment"
         android:background="@color/light_green">
 
         <LinearLayout

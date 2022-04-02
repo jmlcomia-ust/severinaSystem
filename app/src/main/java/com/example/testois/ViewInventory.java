@@ -105,18 +105,18 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
     }
 
     //public void sendInput(String name, String qty, String desc, Bitmap image){
-     public void sendInput(String name, int qty, String desc, int thres){
-        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
+     public void sendInput(String name, int qty, String desc, int thres, Bitmap image){
+        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot thres: "+thres+"\ngot image@:"+image);
          try {
              db = new severinaDB(ViewInventory.this);
              //Inventory inventory = new Inventory(name,qty, desc, image);
-             Inventory inventory = new Inventory(name,qty, desc, thres);
+             Inventory inventory = new Inventory(name,qty, desc, thres, image);
              db.addItem(inventory);
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
          }
     }
-    //public void UpdateInput(String id, String name, String qty, String desc, Bitmap image) {
+    //public void UpdateInput(String id, String name, int qty, String desc, int thres, byte[] image) {
     public void UpdateInput(String id, String name, int qty, String desc, int thres) {
         Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
         try {
@@ -182,6 +182,7 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             fragment.onActivityResult(requestcode, resultcode, data);
             startActivity(data);
         }catch(Exception e){Log.e(TAG, e.getMessage());}
+
     }
 
     @Override

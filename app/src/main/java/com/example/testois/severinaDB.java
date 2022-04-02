@@ -2,34 +2,26 @@
 
 package com.example.testois;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-
-import com.example.testois.adapter.CustomViewAdapOrd;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public class severinaDB extends SQLiteOpenHelper {
 
@@ -48,7 +40,7 @@ public class severinaDB extends SQLiteOpenHelper {
     public static final String INV_QTY = "quantity";
     public static final String INV_DESC = "description";
     public static final String INV_THRES = "threshold";
-    public static final Bitmap INV_IMG = null;
+    public static final String INV_IMG = "image";
 
 
     private static final String TBL_3_NAME="db_order";
@@ -71,17 +63,26 @@ public class severinaDB extends SQLiteOpenHelper {
     private ByteArrayOutputStream objectByteArray;
     private byte[] imageInBytes;
     static SQLiteDatabase sql;
+    static severinaDB sev;
 
     public severinaDB(Context context) {
         super(context, DB_NAME, null, VER);
         this.context = context;
     }
+    public severinaDB open() throws SQLException {
+        sql = this.getWritableDatabase();
+        return this;
+    }
+
+    public void close() {
+        this.close();
+    }
 
     @Override
     public void onCreate(SQLiteDatabase sql) {
         String q1 = "create table " + TBL_1_NAME + " (" + USR_ID + " integer primary key autoincrement, " + USR_NAME + " text, " + USR_PWRD + " text) ";
-        //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_IMG + "blob) ";
-        String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
+        String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer, "+ INV_IMG + " blob) ";
+        //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
         String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_STAT + " text) ";
        // String q4 = "create table " + TBL_4_NAME + " (" + STK_ID + " integer primary key autoincrement, " + STK_ORD + " integer, " + STK_INV + " integer, " + STK_THRES + " integer) ";
         sql.execSQL(q1);
@@ -101,16 +102,54 @@ public class severinaDB extends SQLiteOpenHelper {
 
     }
 
-    //convert from bitmap to byte[]
-    public static byte[] getBytes(Bitmap bitmap) {
+    //DATABASE OPERATIONS FOR IMAGES IN DATABASE AND ACTIVITIES
+
+    //convert bitmap to byte[]
+    public static byte[] getImageBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }
-
-    // convert from byte array to bitmap
+    //convert byte[] to Bitmap
     public static Bitmap getImage(byte[] image) {
         return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    //to resize image for faster uploading to db
+    public static Bitmap decodeUri(Context c, Uri selectedImage, int REQUIRED_SIZE) {
+
+        try {
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o);
+
+            // The new size we want to scale to
+            // final int REQUIRED_SIZE =  size;
+
+            // Find the correct scale value. It should be the power of 2.
+            int width_tmp = o.outWidth, height_tmp = o.outHeight;
+            int scale = 1;
+            while (true) {
+                if (width_tmp / 2 < REQUIRED_SIZE
+                        || height_tmp / 2 < REQUIRED_SIZE) {
+                    break;
+                }
+                width_tmp /= 2;
+                height_tmp /= 2;
+                scale *= 2;
+            }
+
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o2);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     //convert ImageView to byte[]
@@ -121,17 +160,29 @@ public class severinaDB extends SQLiteOpenHelper {
         return stream.toByteArray();
     }
 
-    public void storeImage(Inventory inventory){
-        try{
-            sql = this.getWritableDatabase();
-            Bitmap imageToStore = inventory.getImage();
-            objectByteArray = new ByteArrayOutputStream();
-            imageToStore.compress(Bitmap.CompressFormat.JPEG, 100,objectByteArray);
-            imageInBytes = objectByteArray.toByteArray();
+    void loadImageFromDB(AppCompatImageView imgLoaded) {
+        severinaDB db = new severinaDB(context.getApplicationContext());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    db.open();
+                   // final byte[] bytes = db.retreiveImageFromDB();
+                    db.close();
+                    // Show Image from DB in ImageView
+                    imgLoaded.post(new Runnable() {
+                        @Override
+                        public void run() {
+                     //       imgLoaded.setImageBitmap(severinaDB.getImage(bytes));
 
-        }catch(Exception e){
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e("Database", "<loadImageFromDB> Error : " + e.getLocalizedMessage());
+                    db.close();
+                }
+            }
+        }).start();
     }
 
     private static SQLiteDatabase openDatabase(){
@@ -158,28 +209,12 @@ public class severinaDB extends SQLiteOpenHelper {
         try{
             //for storing image to object inventory
             sql = this.getWritableDatabase();
-
-            /*
-            Bitmap imageToStore = inventory.getImage();
-            if(imageToStore != null){
-                objectByteArray = new ByteArrayOutputStream();
-                imageToStore.compress(Bitmap.CompressFormat.JPEG, 100,objectByteArray);
-                imageInBytes = objectByteArray.toByteArray();
-                ContentValues cv = new ContentValues();
-                //for storing other information to object inventory
-                cv.put(severinaDB.INV_NAME, inventory.getName());
-                cv.put(severinaDB.INV_QTY, inventory.getQuantity());
-                cv.put(severinaDB.INV_DESC, inventory.getDescription());
-                cv.put(String.valueOf(severinaDB.INV_IMG), imageInBytes);
-            }
-             */
-
             ContentValues cv = new ContentValues();
             cv.put(severinaDB.INV_NAME, inventory.getName());
             cv.put(severinaDB.INV_QTY, inventory.getQuantity());
             cv.put(severinaDB.INV_DESC, inventory.getDescription());
             cv.put(severinaDB.INV_THRES, inventory.getThreshold());
-            //cv.put(String.valueOf(severinaDB.INV_IMG),getBytes(inventory.getImage()));
+            cv.put(severinaDB.INV_IMG,severinaDB.getImageBytes(inventory.getImage()));
 
             long result = sql.insert(severinaDB.TBL_2_NAME, null,cv);
             if(result != -1){ Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show(); sql.close();}
@@ -194,6 +229,7 @@ public class severinaDB extends SQLiteOpenHelper {
         sql = this.getReadableDatabase();
         List<Inventory> items = new ArrayList<>();
         Cursor cursor = sql.rawQuery(query,null);
+
         if(cursor.moveToFirst()){
             do{
                 int id = Integer.parseInt(cursor.getString(0));
@@ -201,15 +237,20 @@ public class severinaDB extends SQLiteOpenHelper {
                 String quantity = cursor.getString(2);
                 String desc = cursor.getString(3);
                 String thres = cursor.getString(4);
-                //byte[] imageInBytes = cursor.getBlob(5);
-                //Bitmap image = getImage(imageInBytes);
-                //items.add(new Inventory(String.valueOf(id),name,quantity, desc, image));
-                items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres)));
+                byte[] imageInBytes = cursor.getBlob(5);
+                items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres), severinaDB.getImage(imageInBytes)));
+                //items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres)));
             }while(cursor.moveToNext());
         }
         cursor.close();
         return items;
 
+    }
+
+    public void updateStock(String itemname, int qty_ordered){
+        sql = this.getWritableDatabase();
+        String query = "update "+TBL_2_NAME+" set quantity = quantity - "+qty_ordered+" where name = "+itemname+"";
+        sql.execSQL(query);
     }
 
     public void updateItem(Inventory inventory){

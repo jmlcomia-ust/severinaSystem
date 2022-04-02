@@ -34,7 +34,7 @@ public class AddOrderDiaFragment extends DialogFragment {
 
     public interface OnInputListener {
 
-        void sendInput(String name, String qty, String stat);
+        void sendInput(String name, int qty, String stat);
     }
     public OnInputListener fraglisten;
 
@@ -68,7 +68,7 @@ public class AddOrderDiaFragment extends DialogFragment {
             if(!ord_name_txt.getText().toString().isEmpty() && !ord_qty_txt.getText().toString().isEmpty() && !ord_stat_txt.getText().toString().isEmpty()){
                 Log.d(TAG, "onClick: capturing input");
                 String name = ord_name_txt.getText().toString();
-                String qty = ord_qty_txt.getText().toString();
+                int qty = Integer.parseInt(ord_qty_txt.getText().toString());
                 String stat = ord_stat_txt.getText().toString();
                 //db.checkStocks(orders, inventory);
                 fraglisten.sendInput(name, qty, stat);
