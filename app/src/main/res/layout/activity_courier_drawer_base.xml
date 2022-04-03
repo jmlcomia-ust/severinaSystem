@@ -9,7 +9,7 @@
     android:fitsSystemWindows="true"
     android:background="@drawable/ab">
 
-    <include layout="@layout/content_layout"
+    <include layout="@layout/courier_content_layout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
 

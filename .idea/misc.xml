@@ -25,6 +25,7 @@
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.26614583333333336" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/drawable/ic_default_img.xml" value="0.1712962962962963" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/drawable/ic_helmet.xml" value="0.17864583333333334" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.3728205128205128" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/drawable/ic_menu.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/drawable/ic_menu_camera.xml" value="0.2682291666666667" />
@@ -80,7 +81,7 @@
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_slideshow.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_update_inv.xml" value="0.75" />
-        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_update_order_dia.xml" value="0.2702702702702703" />
+        <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/fragment_update_order_dia.xml" value="0.33" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/inventory_row.xml" value="0.67" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/layout_warning_dailog.xml" value="0.22" />
         <entry key="..\:/Users/Johan/AndroidStudioProjects/testOIS/app/src/main/res/layout/list_group.xml" value="0.36666666666666664" />

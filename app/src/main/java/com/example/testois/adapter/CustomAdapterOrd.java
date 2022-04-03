@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,13 +47,16 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-       Orders order = orders.get(position);
-
-        holder.ord_id_txt.setText(String.valueOf(order.getId()));
-        holder.ord_name_txt.setText(String.valueOf(order.getName()));
-        holder.ord_qty_txt.setText(String.valueOf(order.getQuantity()));
-        holder.ord_stat_txt.setText(order.getStatus().toLowerCase());
-        //Recyclerview onClickListener
+        try {
+            Orders order = orders.get(position);
+            holder.ord_id_txt.setText(String.valueOf(order.getId()));
+            holder.ord_name_txt.setText(order.getName());
+            holder.ord_qty_txt.setText(String.valueOf(order.getQuantity()));
+            holder.ord_desc_txt.setText(order.getDescription());
+            holder.ord_stat_txt.setText(order.getStatus());
+        } catch (Exception e) {
+            Log.e(TAG, "onBindViewHolder: Null Pointer: " + e.getMessage());
+        }
 
     }
 
@@ -62,14 +67,15 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
         }else return 0;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView ord_id_txt, ord_name_txt, ord_qty_txt,ord_stat_txt;
+    static class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView ord_id_txt, ord_name_txt, ord_qty_txt,ord_stat_txt, ord_desc_txt;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ord_id_txt = itemView.findViewById(R.id.ord_id_txt);
             ord_name_txt = itemView.findViewById(R.id.ord_name_txt);
             ord_qty_txt = itemView.findViewById(R.id.ord_qty_txt);
+            ord_desc_txt= itemView.findViewById(R.id.ord_desc_txt);
             ord_stat_txt = itemView.findViewById(R.id.ord_stat_txt);
         }
 

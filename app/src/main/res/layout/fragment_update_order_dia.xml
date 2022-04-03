@@ -113,13 +113,20 @@
             android:textStyle="bold" />
 
         <Spinner
-            android:id="@+id/ord_desc_txtv"
+            android:id="@+id/ord_desc_dropv"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:textColor="@color/black"
             android:textAlignment="center" />
+        <TextView
+            android:id="@+id/ord_desc_txtv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="invisible"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -135,13 +142,20 @@
             />
 
         <Spinner
-            android:id="@+id/ord_stat_txtv"
+            android:id="@+id/ord_stat_dropv"
             android:layout_width="200sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:textColor="@color/black"
             android:textAlignment="center" />
+        <TextView
+            android:id="@+id/ord_stat_txtv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="invisible"
+            />
     </LinearLayout>
 
     <LinearLayout

@@ -248,22 +248,29 @@ public class severinaDB extends SQLiteOpenHelper {
         return items;
 
     }
-    public List<String> getInventoryItems(){
-        sql=this.getReadableDatabase();
-        String query = "select " + INV_NAME + " from " + TBL_2_NAME;
-        List<String> items = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query, null);
-        int ctr = 0;
-        if (cursor.moveToFirst()){
-            do{
-                items.add(ctr, cursor.getString(1));
-                ctr+=1;
-            }while(cursor.moveToNext());
+        public List<String> getInvName(){
+            List<String> inventory = new ArrayList<>();
+
+            // Select All Query
+            String selectQuery = " select * from " + TBL_2_NAME;
+
+            SQLiteDatabase db = this.getReadableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    inventory.add(cursor.getString(1));
+                } while (cursor.moveToNext());
+            }
+
+            // closing connection
+            cursor.close();
+            db.close();
+
+            // returning names
+            return inventory;
         }
-        cursor.close();
-        sql.close();
-        return items;
-    }
 
     public void updateStock(String itemname, int qty_ordered){
         sql = this.getWritableDatabase();

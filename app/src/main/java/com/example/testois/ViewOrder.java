@@ -32,6 +32,7 @@ import com.example.testois.fragments.DeleteOrderDiaFragment;
 import com.example.testois.fragments.UpdateInventoryDiaFragment;
 import com.example.testois.fragments.UpdateOrderDiaFragment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,15 +40,15 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     private static final String TAG = "ViewOrders";
     ActivityViewOrderBinding activityViewOrderBinding;
     private severinaDB db;
-
+    SearchView search_ord;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView add_btn;
-    Orders orders;
-    String frag_name, frag_qty, frag_stat;
     CustomViewAdapOrd.OrderRecyclerListener nListener;
-    CustomViewAdapOrd curr_customViewAdapterOrd, recent_customViewAdapterOrd, customViewAdapOrd;
+    CustomViewAdapOrd customViewAdapOrd;
     List<Orders> all_orders;
+
+
    // List<Orders> curr_orders;{ try{ curr_orders = db.getCurrOrdList();{curr_orders = db.getCurrOrdList();if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
   //  List<Orders> recnt_orders;{ try{ recnt_orders = db.getRecntOrdList();{ recnt_orders = db.getRecntOrdList();if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
 
@@ -123,6 +124,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         allocatedActivityTitle("View Order");
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
+        search_ord = findViewById(R.id.search_ord);
         add_btn = findViewById(R.id.add_ord);
         rv_current = findViewById(R.id.rv_current);
         rv_recent = findViewById(R.id.rv_recent);
@@ -150,7 +152,28 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             AddOrderDiaFragment dialog = new AddOrderDiaFragment();
             dialog.show(getSupportFragmentManager(), "AddOrderDiaFragment");
         });
+/*
+        search_ord.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if(rv_current.contains(query)){
+                    adapter.getFilter().filter(query);
+                }else{
+                    Toast.makeText(MainActivity.this, "No Match found",Toast.LENGTH_LONG).show();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //    adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
+ */
+}
 
     @Override
     public void sendInput(String name, int qty, String desc, String stat) {
