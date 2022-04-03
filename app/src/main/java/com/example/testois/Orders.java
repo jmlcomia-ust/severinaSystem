@@ -1,28 +1,31 @@
 package com.example.testois;
 
 public class Orders {
-    private String id;
+    private int id;
     private String name;
-    private String quantity;
+    private int quantity;
+    private String description;
     private String status;
 
-    public Orders(String name, String quantity, String status){
+    public Orders(String name, int quantity, String description, String status){
         this.name=name;
         this.quantity=quantity;
+        this.description=description;
         this.status=status;
     }
-    public Orders(String id, String name, String quantity, String status){
+    public Orders(int id, String name, int quantity, String description, String status){
         this.id=id;
         this.name=name;
         this.quantity=quantity;
+        this.description=description;
         this.status=status;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -34,13 +37,17 @@ public class Orders {
         this.name = name;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    public String getDescription() { return description;}
+
+    public void setDescription(String description) {this.description=description;}
 
     public String getStatus() {
         return status;

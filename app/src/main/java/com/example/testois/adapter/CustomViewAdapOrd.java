@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -57,13 +58,15 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
             holder.ord_id_txt.setText(String.valueOf(ord.getId()));
             holder.ord_name_txt.setText(String.valueOf(ord.getName()));
             holder.ord_qty_txt.setText(String.valueOf(ord.getQuantity()));
+            //older.ord_desc_txt.setText(ord.getDescription());
             holder.ord_stat_txt.setText(ord.getStatus().toLowerCase());
             holder.btn_edit.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: opening Update Dialog Fragment for Orders.");
                 Bundle args = new Bundle();
                 args.putString("id", String.valueOf(ord.getId()));
                 args.putString("name", ord.getName());
-                args.putString("qty", ord.getQuantity());
+                args.putInt("qty", ord.getQuantity());
+                args.putString("desc", ord.getDescription());
                 args.putString("stat", ord.getStatus());
                 nListener.gotoUpdateFragment(ord, args);
             });
@@ -72,7 +75,8 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
                 Bundle args = new Bundle();
                 args.putString("id", String.valueOf(ord.getId()));
                 args.putString("name", ord.getName());
-                args.putString("qty", ord.getQuantity());
+                args.putInt("qty", ord.getQuantity());
+                args.putString("desc", ord.getDescription());
                 args.putString("stat", ord.getStatus());
                 nListener.gotoDeleteFragment(ord, args);
                 //Recyclerview onClickListener
@@ -93,6 +97,7 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView ord_id_txt, ord_name_txt, ord_qty_txt, ord_stat_txt;
+        Spinner ord_desc_txt;
         Button btn_edit, btn_delete;
         int position;
         CustomViewAdapOrd.OrderRecyclerListener nListener;
@@ -105,6 +110,7 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
             ord_id_txt = itemView.findViewById(R.id.view_ord_id);
             ord_name_txt = itemView.findViewById(R.id.view_ord_name);
             ord_qty_txt = itemView.findViewById(R.id.view_ord_qty);
+            ord_desc_txt = itemView.findViewById(R.id.view_ord_desc);
             ord_stat_txt = itemView.findViewById(R.id.view_ord_stat);
             btn_edit = itemView.findViewById(R.id.edit_ord);
             btn_delete = itemView.findViewById(R.id.delete_ord);

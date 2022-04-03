@@ -1,3 +1,5 @@
+package com.example.testois;
+
 import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,9 +12,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.testois.LoginActivity;
-import com.example.testois.R;
-import com.example.testois.ViewOrder;
 import com.google.android.material.navigation.NavigationView;
 
 public class CourierDrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

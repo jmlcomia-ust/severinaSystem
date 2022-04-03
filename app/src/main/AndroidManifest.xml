@@ -17,6 +17,9 @@
             android:name=".DrawerBaseActivity"
             android:exported="false" />
         <activity
+            android:name=".CourierDrawerBaseActivity"
+            android:exported="false" />
+        <activity
             android:name=".ViewInventory"
             android:exported="false" />
         <activity
@@ -24,6 +27,9 @@
             android:exported="false" />
         <activity
             android:name=".DashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CourierDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".ViewOrder"

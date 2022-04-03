@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class severinaDB extends SQLiteOpenHelper {
 
@@ -34,29 +35,20 @@ public class severinaDB extends SQLiteOpenHelper {
     public static final String USR_NAME = "username";
     public static final String USR_PWRD = "password";
 
-
     private static final String TBL_2_NAME="db_inventory";
     public static final String INV_ID = "id";
     public static final String INV_NAME = "name";
     public static final String INV_QTY = "quantity";
     public static final String INV_DESC = "description";
     public static final String INV_THRES = "threshold";
-    public static final String INV_IMG = "image";
-
+    //public static final String INV_IMG = "image";
 
     private static final String TBL_3_NAME="db_order";
     public static final String ORD_ID ="id";
     public static final String ORD_NAME = "name";
     public static final String ORD_QTY = "quantity";
+    public static final String ORD_DESC = "description";
     public static final String ORD_STAT = "status";
-
-    /*
-    private static final String TBL_4_NAME="db_stocks";
-    public static final String STK_ID ="id";
-    public static final String STK_ORD = "ordstock";
-    public static final String STK_INV = "invstock";
-    public static final String STK_THRES = "threshold";
-     */
 
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER=1;
@@ -83,10 +75,10 @@ public class severinaDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sql) {
         String q1 = "create table " + TBL_1_NAME + " (" + USR_ID + " integer primary key autoincrement, " + USR_NAME + " text, " + USR_PWRD + " text) ";
-        String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer, "+ INV_IMG + " blob) ";
-        //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
-        String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_STAT + " text) ";
-       // String q4 = "create table " + TBL_4_NAME + " (" + STK_ID + " integer primary key autoincrement, " + STK_ORD + " integer, " + STK_INV + " integer, " + STK_THRES + " integer) ";
+        String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
+        //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) "+INV_IMG+" blob) ";
+        String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_STAT + " text) ";
+
         sql.execSQL(q1);
         sql.execSQL(q2);
         sql.execSQL(q3);
@@ -105,7 +97,7 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     //DATABASE OPERATIONS FOR IMAGES IN DATABASE AND ACTIVITIES
-
+/*
     //convert bitmap to byte[]
     public static byte[] getImageBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -194,7 +186,7 @@ public class severinaDB extends SQLiteOpenHelper {
             }
         }).start();
     }
-
+ */
     private static SQLiteDatabase openDatabase(){
         String path = DB_PATH + DB_NAME;
         sql = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
@@ -224,7 +216,7 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.INV_QTY, inventory.getQuantity());
             cv.put(severinaDB.INV_DESC, inventory.getDescription());
             cv.put(severinaDB.INV_THRES, inventory.getThreshold());
-            cv.put(severinaDB.INV_IMG,severinaDB.getImageBytes(inventory.getImage()));
+            //cv.put(severinaDB.INV_IMG,severinaDB.getImageBytes(inventory.getImage()));
 
             long result = sql.insert(severinaDB.TBL_2_NAME, null,cv);
             if(result != -1){ Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show(); sql.close();}
@@ -242,19 +234,35 @@ public class severinaDB extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do{
-                int id = Integer.parseInt(cursor.getString(0));
+                int id = cursor.getInt(0);
                 String name = cursor.getString(1);
-                String quantity = cursor.getString(2);
+                int quantity = cursor.getInt(2);
                 String desc = cursor.getString(3);
-                String thres = cursor.getString(4);
-                byte[] imageInBytes = cursor.getBlob(5);
-                items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres), severinaDB.getImage(imageInBytes)));
-                //items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres)));
+                int thres = cursor.getInt(4);
+                //byte[] imageInBytes = cursor.getBlob(5);
+               //items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres), severinaDB.getImage(imageInBytes)));
+                items.add(new Inventory(id,name,quantity, desc, thres));
             }while(cursor.moveToNext());
         }
         cursor.close();
         return items;
 
+    }
+    public List<String> getInventoryItems(){
+        sql=this.getReadableDatabase();
+        String query = "select " + INV_NAME + " from " + TBL_2_NAME;
+        List<String> items = new ArrayList<>();
+        Cursor cursor = sql.rawQuery(query, null);
+        int ctr = 0;
+        if (cursor.moveToFirst()){
+            do{
+                items.add(ctr, cursor.getString(1));
+                ctr+=1;
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        sql.close();
+        return items;
     }
 
     public void updateStock(String itemname, int qty_ordered){
@@ -271,6 +279,7 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.INV_QTY,inventory.getQuantity());
         cv.put(severinaDB.INV_DESC,inventory.getDescription());
         cv.put(severinaDB.INV_THRES,inventory.getThreshold());
+       // cv.put(severinaDB.INV_IMG, inventory.getImage());
         long result = sql.update(TBL_2_NAME,cv,INV_ID + " = ?" , new String[] {String.valueOf(inventory.getId())});
 
         if(result == -1){
@@ -299,9 +308,11 @@ public class severinaDB extends SQLiteOpenHelper {
     void addOrder(Orders order){
         sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(severinaDB.ORD_NAME, order.getName());
+        cv.put(severinaDB.ORD_NAME, order.getName().trim().toUpperCase());
         cv.put(severinaDB.ORD_QTY, order.getQuantity());
-        cv.put(severinaDB.ORD_STAT, order.getStatus().toLowerCase());
+        cv.put(severinaDB.ORD_DESC, order.getDescription().trim().toUpperCase());
+        cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
+
         long result = sql.insert(severinaDB.TBL_3_NAME, null,cv);
         if(result == -1){
             Toast.makeText(context, "Adding Orders Failed", Toast.LENGTH_SHORT).show();
@@ -318,62 +329,27 @@ public class severinaDB extends SQLiteOpenHelper {
             Cursor cursor = sql.rawQuery(query, null);
             if (cursor.moveToFirst()) {
                 do {
-                    int id = Integer.parseInt(cursor.getString(0));
-                    String name = cursor.getString(1);
-                    String quantity = cursor.getString(2);
-                    String stat = cursor.getString(3);
-                    orders.add(new Orders(String.valueOf(id), name, quantity, stat));
+                    int id = cursor.getInt(0);
+                    String name = cursor.getString(1).toUpperCase();
+                    int quantity = cursor.getInt(2);
+                    String desc = cursor.getString(3).toUpperCase();
+                    String stat = cursor.getString(4).toUpperCase();
+                    orders.add(new Orders(id, name, quantity, desc, stat));
                 } while (cursor.moveToNext());
             }
             cursor.close();
             return orders;
     }
 
-    public List<Orders> getCurrOrdList(){
-        List<Orders> orders = new ArrayList<>();
-            String query="select * from " + TBL_3_NAME + " where status = " + ORD_STAT +"";
-        sql = this.getReadableDatabase();
-            Cursor cursor = sql.rawQuery(query,null);
-            if(cursor.moveToFirst()){
-                while((cursor.moveToNext() && (cursor.getString(3).equalsIgnoreCase("today"))) || (cursor.moveToNext() && (cursor.getString(3).equalsIgnoreCase("on route"))))
-                {
-                    int id = Integer.parseInt(cursor.getString(0));
-                    String name = cursor.getString(1);
-                    String quantity = cursor.getString(2);
-                    String stat = cursor.getString(3);
-                    orders.add(new Orders(String.valueOf(id),name,quantity, stat));
-
-                }
-            }
-            cursor.close();
-            return orders;
-    }
-    public List<Orders> getRecntOrdList(){
-        String query="select * from " + TBL_3_NAME + " where status = " + ORD_STAT +"";
-        sql = this.getReadableDatabase();
-        List<Orders> orders = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query,null);
-        if(cursor.moveToFirst()){
-            while((cursor.moveToNext() && (cursor.getString(3).equalsIgnoreCase("DELIVERED"))) || (cursor.moveToNext() && (cursor.getString(3).equalsIgnoreCase("delivered"))))
-            {
-                int id = Integer.parseInt(cursor.getString(0));
-                String name = cursor.getString(1);
-                String quantity = cursor.getString(2);
-                String stat = cursor.getString(3);
-                orders.add(new Orders(String.valueOf(id),name,quantity, stat));
-            }
-        }
-        cursor.close();
-        return orders;
-    }
-    public void updateOrder(Orders orders){
+    public void updateOrder(Orders order){
         sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(severinaDB.ORD_ID, orders.getId());
-        cv.put(severinaDB.ORD_NAME,orders.getName());
-        cv.put(severinaDB.ORD_QTY,orders.getQuantity());
-        cv.put(severinaDB.ORD_STAT,orders.getStatus());
-        long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(orders.getId())});
+        cv.put(severinaDB.ORD_ID, order.getId());
+        cv.put(severinaDB.ORD_NAME, order.getName().trim().toUpperCase());
+        cv.put(severinaDB.ORD_QTY, order.getQuantity());
+        cv.put(severinaDB.ORD_DESC, order.getDescription().trim().toUpperCase());
+        cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
+        long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(order.getId())});
         if(result == -1){
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         }else {

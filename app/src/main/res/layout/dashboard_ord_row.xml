@@ -68,9 +68,9 @@
                 android:id="@+id/qty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@id/id"
                 android:layout_marginTop="40sp"
                 android:layout_toEndOf="@id/ord_img"
-                android:layout_alignStart="@id/id"
                 android:text="Quantity:"
                 android:textColor="@color/black"
                 android:textSize="20dp"
@@ -87,6 +87,28 @@
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/qty"
+                android:layout_toEndOf="@id/ord_img"
+                android:text="Order/s:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/view_ord_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/qty"
+                android:layout_marginStart="10sp"
+                android:layout_toEndOf="@id/qty"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/name"
@@ -115,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
                 android:layout_alignStart="@id/name"
-                android:layout_marginTop="15sp"
+                android:layout_marginTop="20sp"
                 android:layout_toRightOf="@id/ord_qty_txt"
                 android:text="Order Status:"
                 android:textColor="@color/black"

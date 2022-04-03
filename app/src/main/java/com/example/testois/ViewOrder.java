@@ -76,22 +76,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 //Intent i = new Intent(this, ProfileSettings.class);
                 Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.sort_id:
-                // User chose the "Settings" item, show the app settings UI...
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
-                rv_current.setAdapter(customViewAdapOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                rv_current.getAdapter().notifyDataSetChanged();
-                return true;
-                /*
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, ViewOrder.this, nListener);
-                rv_recent.setAdapter(recent_customViewAdapterOrd);
-                rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                rv_recent.getAdapter().notifyDataSetChanged();
-                return true;
-                 */
 
             case R.id.sort_name:
                 // User chose the "Favorite" action, mark the current item
@@ -107,7 +91,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             case R.id.sort_stocks:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getQuantity().compareToIgnoreCase(o2.getQuantity()));
+                Collections.sort(all_orders, (Orders o1, Orders o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
                 Collections.reverse(all_orders);
                 customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
                 rv_current.setAdapter(customViewAdapOrd);
@@ -169,23 +153,23 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     }
 
     @Override
-    public void sendInput(String name, int qty, String stat) {
-        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot stat:" + stat);
+    public void sendInput(String name, int qty, String desc, String stat) {
+        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try{
             db = new severinaDB(ViewOrder.this);
-            Orders orders = new Orders (name, String.valueOf(qty), stat);
+            Orders orders = new Orders (name, qty, desc, stat);
             db.addOrder(orders);
             db.updateStock(name, qty);
         }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
 
     @Override
-    public void UpdateInput(String id, String name, String qty, String stat) {
-        Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + stat);
+    public void UpdateInput(int id, String name, int qty, String desc, String stat) {
+        Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try {
             db = new severinaDB(ViewOrder.this);
             //Orders order = new Orders(name,qty, desc, image);
-            Orders order = new Orders(id, name,qty, stat);
+            Orders order = new Orders(id, name, qty, desc, stat);
             db.updateOrder(order);
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();

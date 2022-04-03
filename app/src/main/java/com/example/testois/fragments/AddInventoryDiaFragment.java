@@ -52,8 +52,8 @@ public class AddInventoryDiaFragment extends DialogFragment {
     private SQLiteDatabase sql;
 
     public interface OnInputListener {
-        // void sendInput(String name, String qty, String desc, Bitmap image);
-        void sendInput(String name, int qty, String desc, int thres, Bitmap image);
+        // void sendInput(String name, String qty, String desc, int thres, Bitmap image);
+        void sendInput(String name, int qty, String desc, int thres);
     }
     public OnInputListener fraglisten;
 
@@ -101,16 +101,17 @@ public class AddInventoryDiaFragment extends DialogFragment {
             getDialog().dismiss();
         });
         btn_add.setOnClickListener(v -> {
-            imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);
+            //imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);
             if (!inv_name_txt.getText().toString().isEmpty() && !inv_qty_txt.getText().toString().isEmpty() && !inv_desc_txt.getText().toString().isEmpty() && !inv_thres_txt.getText().toString().isEmpty()) {
                 Log.d(TAG, "onClick: capturing input");
                 String name = inv_name_txt.getText().toString();
                 int qty = Integer.parseInt(inv_qty_txt.getText().toString());
                 String desc = inv_desc_txt.getText().toString();
                 int thres = Integer.parseInt(inv_thres_txt.getText().toString());
-                byte[] imageInByte = severinaDB.getImageBytes(imageToStore);
-                Bitmap imageInBit = severinaDB.getImage(imageInByte);
-                fraglisten.sendInput(name, qty, desc, thres, imageInBit);
+                //byte[] imageInByte = severinaDB.getImageBytes(imageToStore);
+                //Bitmap imageInBit = severinaDB.getImage(imageInByte);
+                //fraglisten.sendInput(name, qty, desc, thres, imageInBit);
+                fraglisten.sendInput(name, qty, desc, thres);
                 getDialog().dismiss();
                 getActivity().recreate();
             } else if (inv_name_txt.getText().toString().isEmpty()) {
@@ -125,7 +126,9 @@ public class AddInventoryDiaFragment extends DialogFragment {
                 Toast.makeText(getContext(), "Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
             }
         });
-
+        return view;
+    }
+/*
         //METHOD OF SAANI: https://www.youtube.com/watch?v=OBtEwSe4LEQ
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +168,8 @@ public class AddInventoryDiaFragment extends DialogFragment {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
 
     }
+
+ */
 
     @Override
     public void onAttach(Context context) {

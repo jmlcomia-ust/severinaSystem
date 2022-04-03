@@ -40,8 +40,10 @@ public class DeleteOrderDiaFragment extends DialogFragment {
         String ord_data_id = args.getString("id");
         String ord_data_name = args.getString("name");
         String ord_data_qty = args.getString("qty");
+        //String ord_data_desc = args.putString("desc");
         String ord_data_stat = args.getString("stat");
-        ord_data.setText("ID: "+ord_data_id.trim()+ ", Item Ordered: "+ord_data_name+", Qty: "+ord_data_qty+", Status: "+ord_data_stat+". ");
+        //ord_data.setText("ID: "+ord_data_id.trim()+ ", \nCustomer Name: "+ord_data_name+"\n Qty: "+ord_data_qty+ "\n Order/s: " + ord_data_desc+"\n Status: "+ord_data_stat+". ");
+        ord_data.setText("ID: "+ord_data_id.trim()+ ", \nCustomer Name: "+ord_data_name+"\n Qty: "+ord_data_qty+ "\n Status: "+ord_data_stat+". ");
 
         btn_del.setOnClickListener(v -> {
             Log.d(TAG, "onClick: capturing deletion");

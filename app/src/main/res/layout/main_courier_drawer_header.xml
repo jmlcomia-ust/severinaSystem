@@ -10,7 +10,9 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="left"
-        android:src="@drawable/ic_baseline_sports_motorsports_24" />
+        android:minHeight="60dp"
+        android:minWidth="60dp"
+        android:src="@drawable/ic_helmet" />
 
     <TextView
         android:id="@+id/courierUserName"

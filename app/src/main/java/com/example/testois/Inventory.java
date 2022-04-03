@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import java.io.Serializable;
 
 public class Inventory implements Serializable {
-        private String id;
+        private int id;
         private String name;
         private int quantity;
         private String description;
@@ -19,7 +19,7 @@ public class Inventory implements Serializable {
                 this.threshold = threshold;
                 this.image = image;
         }
-        public Inventory(String id, String name, int quantity, String description, int threshold, Bitmap image) {
+        public Inventory(int id, String name, int quantity, String description, int threshold, Bitmap image) {
                 this.id = id;
                 this.name = name;
                 this.quantity = quantity;
@@ -27,7 +27,7 @@ public class Inventory implements Serializable {
             this.threshold = threshold;
                 this.image = image;
         }
-    public Inventory(String id, String name, int quantity, String description, int threshold) {
+    public Inventory(int id, String name, int quantity, String description, int threshold) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -41,8 +41,8 @@ public class Inventory implements Serializable {
         this.threshold = threshold;
     }
 
-        public String getId() { return id; }
-        public void setId(String id) {
+        public int getId() { return id; }
+        public void setId(int id) {
                 this.id = id;
         }
 

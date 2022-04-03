@@ -63,7 +63,7 @@
                 android:layout_alignStart="@id/id"
                 android:layout_marginTop="40sp"
                 android:layout_toEndOf="@id/view_img"
-                android:text="Quantity:"
+                android:text="Qty:"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -78,6 +78,29 @@
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/qty"
+                android:layout_toEndOf="@id/view_img"
+                android:text="Order/s:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/view_ord_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_ord_qty"
+                android:layout_marginStart="10sp"
+                android:layout_toEndOf="@id/qty"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
 
             <TextView
                 android:id="@+id/name"
@@ -106,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
                 android:layout_alignStart="@id/name"
-                android:layout_marginTop="15sp"
+                android:layout_marginTop="20sp"
                 android:layout_toEndOf="@id/view_ord_qty"
                 android:text="Order Status:"
                 android:textColor="@color/black"

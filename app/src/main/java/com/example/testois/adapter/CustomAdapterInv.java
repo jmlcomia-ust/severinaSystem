@@ -54,7 +54,7 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
     public void onBindViewHolder(@NonNull final MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         final Inventory inventory = items.get(position);
 
-        holder.id.setText(inventory.getId());
+        holder.id.setText(String.valueOf(inventory.getId()));
         holder.name.setText(inventory.getName());
         holder.thres.setText("Threshold: "+String.valueOf(inventory.getThreshold()));
         int quant = Integer.parseInt(String.valueOf(inventory.getQuantity()));

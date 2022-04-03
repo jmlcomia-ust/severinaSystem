@@ -41,19 +41,19 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
     CustomViewAdapInv customViewAdapInv;
     private EditText inv_id_txt, inv_name_txt, inv_qty_txt, inv_desc_txt, inv_thres_txt;
     private ImageView inv_imgu;
-    private Bitmap imageToStore;
-    private Uri selectedImageUri;
-    String id, name_updated, desc_updated;int qty_updated, thres_updated; byte[] img_updated;
+   // private Bitmap imageToStore;
+   // private Uri selectedImageUri;
+    int id;
+    String name_updated, desc_updated;int qty_updated, thres_updated; byte[] img_updated;
     private Button btn_update, btn_back, increment, decrement, btn_insert;
     private SQLiteDatabase sql;
 
     public interface OnInputListener {
-        //void UpdateInput(String name, String qty, String desc, byte[] bytesImage);
-        void UpdateInput(String id, String name, int qty, String desc, int thres, Bitmap image);
-
+        //void UpdateInput(String name, String qty, String desc, int thres, Bitmap image);
+        void UpdateInput(int id, String name, int qty, String desc, int thres);
 
     }
-
+/*
     @Override
     public void onActivityResult(int requestcode, int resultcode, Intent data) {
         try {
@@ -62,7 +62,7 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
                 if (requestcode == 100) {
                     selectedImageUri = data.getData();
                     if (null != selectedImageUri) {
-                        imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);  //application of image resizing for fast upload to DB
+                        //imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);  //application of image resizing for fast upload to DB
                         inv_imgu.setImageBitmap(imageToStore);
                     }
                 }
@@ -77,6 +77,7 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 100);
     }
+ */
 
     @Nullable
     @Override
@@ -96,12 +97,12 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
         decrement = view.findViewById(R.id.decrement);
 
         Bundle args = getArguments();
-            inv_id_txt.setText(args.getString("id"));
+            inv_id_txt.setText(String.valueOf(args.getInt("ids")));
             inv_name_txt.setText(args.getString("name"));
-            inv_qty_txt.setText(args.getString("qty"));
+            inv_qty_txt.setText(String.valueOf(args.getInt("qty")));
             inv_desc_txt.setText(args.getString("desc"));
-            inv_thres_txt.setText(args.getString("thres"));
-            inv_imgu.setImageBitmap(severinaDB.getImage(args.getByteArray("image")));
+            inv_thres_txt.setText(String.valueOf(args.getInt("thres")));
+            //inv_imgu.setImageBitmap(severinaDB.getImage(args.getByteArray("image")));
 
 
         // FUNCTION TO SET EXISTING DATA TO EDITTEXTS> setData();
@@ -121,6 +122,7 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
             Log.d(TAG, "onClick: closing dialog");
             getDialog().dismiss();
         });
+        /*
         //METHOD OF SAANI: https://www.youtube.com/watch?v=OBtEwSe4LEQ
         btn_insert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,29 +134,26 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
                 }
             }
         });
+         */
 
         btn_update.setOnClickListener(v ->{
             Log.d(TAG, "onClick: capturing updates");
-            //String stringFilePath = Environment.getExternalStorageDirectory().getPath()+"/Download/"+inv_name_txt.getText().toString()+".jpeg";
-            //Bitmap bitmap = BitmapFactory.decodeFile(stringFilePath);
-            //ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            //bitmap.compress(Bitmap.CompressFormat.PNG, 0, byteArrayOutputStream);
 
-            id = inv_id_txt.getText().toString();
+            id = Integer.parseInt(inv_id_txt.getText().toString().trim());
             name_updated = inv_name_txt.getText().toString().toUpperCase().trim();
             qty_updated = Integer.parseInt(inv_qty_txt.getText().toString().trim());
             desc_updated = inv_desc_txt.getText().toString().toUpperCase().trim();
             thres_updated = Integer.parseInt(inv_thres_txt.getText().toString().trim());
-            imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);
+            //imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);
 
             //putBitmap to imageview
-            inv_imgu.setImageBitmap(imageToStore);
+           // inv_imgu.setImageBitmap(imageToStore);
 
-            img_updated = severinaDB.getImageBytes(imageToStore);
+            //img_updated = severinaDB.getImageBytes(imageToStore);
 
-            inv_imgu.getDrawingCache();
-            //fragupdate.UpdateInput(name_updated, qty_updated, desc_updated, img_updated);
-            fragupdate.UpdateInput(id,name_updated, qty_updated, desc_updated, thres_updated, imageToStore);
+            //inv_imgu.getDrawingCache();
+            //fragupdate.UpdateInput(name_updated, qty_updated, desc_updated,  thres_updated, imageToStore);
+            fragupdate.UpdateInput(id,name_updated, qty_updated, desc_updated, thres_updated);
 
             getDialog().dismiss();
             getActivity().recreate();

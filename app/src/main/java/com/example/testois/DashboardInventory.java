@@ -62,7 +62,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
                         return true;
                     case R.id.sort_id:
                         // User chose the "Settings" item, show the app settings UI...
-                        Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
+                        Collections.sort(items, (Inventory o1, Inventory o2) -> String.valueOf(o1.getId()).compareToIgnoreCase(String.valueOf(o2.getId())));
                         customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
                         recyclerView.setAdapter(customAdapterInv);
                         recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));

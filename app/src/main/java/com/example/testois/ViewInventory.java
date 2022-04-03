@@ -66,14 +66,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
                 //startActivity(new Intent(this, ProfileSettings.class));
                 Toast.makeText(this, "Going to Profile Settings", Toast.LENGTH_SHORT).show();
                 return true;
-            case R.id.sort_id:
-                // User chose the "Settings" item, show the app settings UI...
-                Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getId().compareToIgnoreCase(o2.getId()));
-                customViewAdapInv = new CustomViewAdapInv(items, ViewInventory.this, mListener);
-                recyclerView.setAdapter(customViewAdapInv);
-                recyclerView.setLayoutManager(new LinearLayoutManager(ViewInventory.this));
-                recyclerView.getAdapter().notifyDataSetChanged();
-                return true;
 
             case R.id.sort_name:
                 // User chose the "Favorite" action, mark the current item
@@ -104,25 +96,27 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             }
     }
 
-    //public void sendInput(String name, String qty, String desc, Bitmap image){
-     public void sendInput(String name, int qty, String desc, int thres, Bitmap image){
-        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot thres: "+thres+"\ngot image@:"+image);
+    //public void sendInput(String name, String qty, String desc, int thres, Bitmap image){
+     public void sendInput(String name, int qty, String desc, int thres){
+        //Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot thres: "+thres+"\ngot image@:"+image);
+        Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot thres: "+thres);
          try {
              db = new severinaDB(ViewInventory.this);
-             //Inventory inventory = new Inventory(name,qty, desc, image);
-             Inventory inventory = new Inventory(name,qty, desc, thres, image);
+             //Inventory inventory = new Inventory(name,qty, desc, thres, image);
+             Inventory inventory = new Inventory(name,qty, desc, thres);
              db.addItem(inventory);
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
          }
     }
-    //public void UpdateInput(String id, String name, int qty, String desc, int thres, byte[] image) {
-    public void UpdateInput(String id, String name, int qty, String desc, int thres,  Bitmap image) {
-        Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot image@: "+image);
+    //public void UpdateInput(String id, String name, int qty, String desc, int thres,Bitmap image) {
+    public void UpdateInput(int id, String name, int qty, String desc, int thres) {
+        //Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot image@: "+image);
+        Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
         try {
             db = new severinaDB(ViewInventory.this);
-            //Inventory inventory = new Inventory(name,qty, desc, image);
-            Inventory items = new Inventory (id, name, qty, desc, thres, image);
+            //Inventory inventory = new Inventory(name,qty, desc, thres, image);
+            Inventory items = new Inventory (id, name, qty, desc, thres);
             db.updateItem(items);
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
