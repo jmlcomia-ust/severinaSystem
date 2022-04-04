@@ -1,16 +1,19 @@
 package com.example.testois;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-
+import androidx.core.app.ActivityCompat;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
-import com.example.testois.databinding.ActivityViewOrderBinding;
+import com.example.testois.utilities.Metodos;
+import com.example.testois.utilities.severinaDB;
+
 
 
 public class ReportGenerationMenu extends DrawerBaseActivity {
@@ -22,16 +25,23 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
         activityReportGenerationMenuBinding = ActivityReportGenerationMenuBinding.inflate(getLayoutInflater());
         setContentView(activityReportGenerationMenuBinding.getRoot());
         allocatedActivityTitle("Generate Reports");
+        ActivityCompat.requestPermissions(ReportGenerationMenu.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+        Button btn_genreport = findViewById(R.id.btn_genreport);
+        severinaDB db = new severinaDB(this);
+        Inventory inventory;
+        Orders orders;
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_report,menu);
+        getMenuInflater().inflate(R.menu.menu_report, menu);
 
         return true;
 
         // Configure the search info and add any event listeners...
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -58,4 +68,19 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void createPDF(View view) {
+        String filename = "OrderInventoryReport_Severina";
+        String filecontent = "OrderInventoryReport_Severina";
+        Metodos fop = new Metodos();
+        if (fop.write(filename, filecontent)) {
+            Toast.makeText(getApplicationContext(),
+                    filename + ".pdf created", Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            Toast.makeText(getApplicationContext(), "I/O error",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

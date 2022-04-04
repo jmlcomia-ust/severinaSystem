@@ -1,35 +1,26 @@
 package com.example.testois;
 import android.Manifest;
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.testois.adapter.CustomAdapterInv;
+import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapInv;
-import com.example.testois.databinding.ActivityDashboardInventoryBinding;
 import com.example.testois.databinding.ActivityViewInventoryBinding;
 import com.example.testois.fragments.AddInventoryDiaFragment;
 import com.example.testois.fragments.DeleteInventoryDiagFragment;
@@ -44,7 +35,7 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
     Inventory inventory = null;
     CustomViewAdapInv.InventoryRecyclerListener mListener;
     CustomViewAdapInv customViewAdapInv;
-    Button search;
+    SearchView searchView;
     SQLiteDatabase sql;
     severinaDB db;
     TextView emptyfield;
@@ -56,6 +47,38 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         inflater.inflate(R.menu.dash_options, menu);
+
+        // Initialise menu item search bar
+        // with id and take its object
+        MenuItem searchViewItem = menu.findItem(R.id.nav_search);
+        searchView = (SearchView) searchViewItem.getActionView();
+
+        // attach setOnQueryTextListener
+        // to search view defined above
+        searchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+
+                    // Override onQueryTextSubmit method
+                    // which is call
+                    // when submitquery is searched
+
+                    @Override
+                    public boolean onQueryTextSubmit(String query)
+                    {
+                        return false;
+                    }
+
+                    // This method is overridden to filter
+                    // the adapter according to a search query
+                    // when the user is typing search
+                    @Override
+                    public boolean onQueryTextChange(String newText)
+                    {
+                        customViewAdapInv.getFilter().filter(newText);
+                        return false;
+                    }
+                });
+
         return super.onCreateOptionsMenu(menu);
     }
     @Override
@@ -118,6 +141,7 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             //Inventory inventory = new Inventory(name,qty, desc, thres, image);
             Inventory items = new Inventory (id, name, qty, desc, thres);
             db.updateItem(items);
+            db.close();
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
@@ -142,7 +166,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         allocatedActivityTitle("Manage Inventory");
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
-        search = findViewById(R.id.search);
         db = new severinaDB(this);
         List<Inventory> items = db.getitemsList();
 

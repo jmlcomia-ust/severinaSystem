@@ -1,28 +1,21 @@
 package com.example.testois.adapter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.testois.Inventory;
 import com.example.testois.Orders;
 import com.example.testois.R;
-import com.example.testois.severinaDB;
+import com.example.testois.utilities.severinaDB;
 
 import java.util.List;
-import java.util.Locale;
 
 public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyViewHolder> {
     private static final String TAG = "CustomAdapterOrd";

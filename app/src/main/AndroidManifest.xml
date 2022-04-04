@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.testois">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +15,12 @@
         android:roundIcon="@mipmap/ois_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TestOIS">
+        <activity
+            android:name=".CourierViewOrder"
+            android:exported="false" />
+        <activity
+            android:name=".CourierDashboardOrder"
+            android:exported="false" />
         <activity
             android:name=".DrawerBaseActivity"
             android:exported="false" />

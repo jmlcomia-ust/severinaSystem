@@ -1,32 +1,21 @@
 package com.example.testois.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.testois.Inventory;
 import com.example.testois.R;
 import com.example.testois.adapter.CustomViewAdapInv;
-import com.example.testois.severinaDB;
-
-import java.util.List;
+import com.example.testois.utilities.severinaDB;
 
 public class DeleteInventoryDiagFragment extends DialogFragment {
     private static final String TAG = "DeleteInvFrag";

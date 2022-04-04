@@ -3,13 +3,10 @@
 package com.example.testois.fragments;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,9 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.testois.Orders;
 import com.example.testois.R;
-import com.example.testois.severinaDB;
+import com.example.testois.utilities.severinaDB;
 
 import java.util.List;
 

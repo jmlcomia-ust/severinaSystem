@@ -42,7 +42,11 @@ public class CourierDrawerBaseActivity extends AppCompatActivity implements Navi
 
         switch (item.getItemId()) {
             case R.id.nav_couriervorder:
-                startActivity(new Intent(this, ViewOrder.class));
+                startActivity(new Intent(this, CourierDashboardOrder.class));
+                overridePendingTransition(0, 0);
+                break;
+            case R.id.nav_couriermorder:
+                startActivity(new Intent(this, CourierViewOrder.class));
                 overridePendingTransition(0, 0);
                 break;
             case R.id.nav_courierlogout:

@@ -2,23 +2,17 @@ package com.example.testois.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,17 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testois.Inventory;
 import com.example.testois.R;
-import com.example.testois.ViewInventory;
-import com.example.testois.severinaDB;
+import com.example.testois.utilities.severinaDB;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.MyViewHolder>{
+public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.MyViewHolder> implements Filterable {
     private static final String TAG = "CustomViewAdapInv";
     InventoryRecyclerListener mListener;
     //InventoryChecker mChecker;
     Context context;
     List<Inventory> items;
+    List<Inventory> itemsAll;
     severinaDB sev;
 
     //public CustomViewAdapInv(List<Inventory> items, Context context, InventoryRecyclerListener mListener, InventoryChecker mChecker) {
@@ -46,7 +42,8 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
         this.context = context;
         this.mListener = mListener;
         //this.mChecker = mChecker;
-        sev = new severinaDB(context);
+        itemsAll = new ArrayList<>();
+        itemsAll.addAll(items);
     }
 
     @NonNull
@@ -62,6 +59,8 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
             Inventory inventory = items.get(position);
+            //Inventory inventoryForSearch = itemsAll.get(position);
+
             holder.txt_id.setText(String.valueOf(inventory.getId()));
             holder.txt_name.setText(inventory.getName().toUpperCase());
             holder.txt_thres.setText(String.valueOf(inventory.getThreshold()));
@@ -112,6 +111,42 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
             return items.size();
         } else return 0;
     }
+
+    @Override
+    public Filter getFilter() {
+        return myFilter;
+    }
+    Filter myFilter = new Filter() {
+
+        //Automatic on background thread
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+
+            List<Inventory> filteredList = new ArrayList<>();
+
+            if (charSequence == null || charSequence.length() == 0) {
+                filteredList.addAll(items);
+            } else {
+                for (Inventory specified: itemsAll) {
+                    if (specified.toString().toLowerCase().contains(charSequence.toString().toLowerCase())) {
+                        filteredList.add(specified);
+                    }
+                }
+            }
+
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+
+        //Automatic on UI thread
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            items.clear();
+            items.addAll((Collection<? extends Inventory>) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txt_id, txt_name, txt_qty, txt_desc, txt_thres; ImageView img_item;

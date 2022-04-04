@@ -1,8 +1,5 @@
 package com.example.testois;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomAdapterInv;
-import com.example.testois.adapter.CustomViewAdapInv;
-import com.example.testois.databinding.ActivityDashboardBinding;
 import com.example.testois.databinding.ActivityDashboardInventoryBinding;
-import com.example.testois.databinding.ActivityDashboardOrdersBinding;
-import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.Collections;
 import java.util.List;
@@ -59,14 +53,6 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
                     case R.id.nav_profile:
                         //Intent i = new Intent(this, ProfileSettings.class);
                         Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.sort_id:
-                        // User chose the "Settings" item, show the app settings UI...
-                        Collections.sort(items, (Inventory o1, Inventory o2) -> String.valueOf(o1.getId()).compareToIgnoreCase(String.valueOf(o2.getId())));
-                        customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
-                        recyclerView.setAdapter(customAdapterInv);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
-                        recyclerView.getAdapter().notifyDataSetChanged();
                         return true;
 
                     case R.id.sort_name:

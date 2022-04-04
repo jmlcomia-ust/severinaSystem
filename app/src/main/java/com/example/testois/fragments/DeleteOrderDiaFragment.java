@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,10 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.testois.Orders;
 import com.example.testois.R;
-import com.example.testois.adapter.CustomViewAdapInv;
-import com.example.testois.severinaDB;
 
 
 public class DeleteOrderDiaFragment extends DialogFragment {

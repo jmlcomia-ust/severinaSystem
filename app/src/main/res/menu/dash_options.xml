@@ -3,11 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
 
-        <item android:id="@+id/sort_id"
-            android:icon="@drawable/sort"
-            android:title="Sort Items by ID"
-            app:actionViewClass="androidx.recyclerview.widget.RecyclerView"/>
-
         <item android:id="@+id/sort_name"
             android:icon="@drawable/sort"
             android:title="Sort Items by Name"

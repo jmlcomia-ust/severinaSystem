@@ -1,6 +1,7 @@
 package com.example.testois;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,19 +17,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapOrd;
+import com.example.testois.databinding.ActivityCourierViewOrderBinding;
 import com.example.testois.databinding.ActivityViewOrderBinding;
 import com.example.testois.fragments.AddOrderDiaFragment;
 import com.example.testois.fragments.DeleteOrderDiaFragment;
 import com.example.testois.fragments.UpdateOrderDiaFragment;
+import com.example.testois.utilities.severinaDB;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.OrderRecyclerListener, AddOrderDiaFragment.OnInputListener, UpdateOrderDiaFragment.OnInputListener, DeleteOrderDiaFragment.OnInputListener{
+public class CourierViewOrder extends CourierDrawerBaseActivity implements CustomViewAdapOrd.OrderRecyclerListener, AddOrderDiaFragment.OnInputListener, UpdateOrderDiaFragment.OnInputListener, DeleteOrderDiaFragment.OnInputListener{
     private static final String TAG = "ViewOrders";
-    ActivityViewOrderBinding activityViewOrderBinding;
+    ActivityCourierViewOrderBinding activityCourierViewOrderBinding;
     private severinaDB db;
     SearchView search_ord;
     RecyclerView rv_current, rv_recent;
@@ -39,8 +41,8 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     List<Orders> all_orders;
 
 
-   // List<Orders> curr_orders;{ try{ curr_orders = db.getCurrOrdList();{curr_orders = db.getCurrOrdList();if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
-  //  List<Orders> recnt_orders;{ try{ recnt_orders = db.getRecntOrdList();{ recnt_orders = db.getRecntOrdList();if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
+    // List<Orders> curr_orders;{ try{ curr_orders = db.getCurrOrdList();{curr_orders = db.getCurrOrdList();if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
+    //  List<Orders> recnt_orders;{ try{ recnt_orders = db.getRecntOrdList();{ recnt_orders = db.getRecntOrdList();if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -73,9 +75,9 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 // as a favorite...
                 Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
                 Collections.reverse(all_orders);
-                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
+                customViewAdapOrd = new CustomViewAdapOrd(all_orders, CourierViewOrder.this, nListener);
                 rv_current.setAdapter(customViewAdapOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
+                rv_current.setLayoutManager(new LinearLayoutManager(CourierViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
                 return true;
 
@@ -84,9 +86,9 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 // as a favorite...
                 Collections.sort(all_orders, (Orders o1, Orders o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
                 Collections.reverse(all_orders);
-                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
+                customViewAdapOrd = new CustomViewAdapOrd(all_orders, CourierViewOrder.this, nListener);
                 rv_current.setAdapter(customViewAdapOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
+                rv_current.setLayoutManager(new LinearLayoutManager(CourierViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
                 return true;
             case R.id.sort_stat:
@@ -94,9 +96,9 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 // as a favorite...
                 Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getStatus().compareToIgnoreCase(o2.getStatus()));
                 Collections.reverse(all_orders);
-                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
+                customViewAdapOrd = new CustomViewAdapOrd(all_orders, CourierViewOrder.this, nListener);
                 rv_current.setAdapter(customViewAdapOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
+                rv_current.setLayoutManager(new LinearLayoutManager(CourierViewOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
                 return true;
             default:
@@ -109,8 +111,8 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityViewOrderBinding = ActivityViewOrderBinding.inflate(getLayoutInflater());
-        setContentView(activityViewOrderBinding.getRoot());
+        activityCourierViewOrderBinding = ActivityCourierViewOrderBinding.inflate(getLayoutInflater());
+        setContentView(activityCourierViewOrderBinding.getRoot());
         allocatedActivityTitle("View Order");
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
@@ -130,11 +132,11 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             //if (curr_customViewAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
 
  */
-        db = new severinaDB(ViewOrder.this);
+        db = new severinaDB(CourierViewOrder.this);
         all_orders = db.getOrderList();
         customViewAdapOrd = new CustomViewAdapOrd(all_orders, this, this);
         rv_current.setAdapter(customViewAdapOrd);
-        rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
+        rv_current.setLayoutManager(new LinearLayoutManager(CourierViewOrder.this));
         if (customViewAdapOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
 
         add_btn.setOnClickListener(view ->{
@@ -163,13 +165,13 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         });
     }
  */
-}
+    }
 
     @Override
     public void sendInput(String name, int qty, String desc, String stat) {
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try{
-            db = new severinaDB(ViewOrder.this);
+            db = new severinaDB(CourierViewOrder.this);
             Orders orders = new Orders (name, qty, desc, stat);
             db.addOrder(orders);
             db.updateStock(name, qty);
@@ -180,7 +182,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     public void UpdateInput(int id, String name, int qty, String desc, String stat) {
         Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try {
-            db = new severinaDB(ViewOrder.this);
+            db = new severinaDB(CourierViewOrder.this);
             //Orders order = new Orders(name,qty, desc, image);
             Orders order = new Orders(id, name, qty, desc, stat);
             db.updateOrder(order);
@@ -192,7 +194,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     public void DeleteInput(String id){
         Log.d(TAG, "deleteItem:  got id: "+id);
         try {
-            db = new severinaDB(ViewOrder.this);
+            db = new severinaDB(CourierViewOrder.this);
             db.deleteOrder(id);
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
@@ -214,6 +216,4 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         delfrag.setArguments(args);
         delfrag.show(fm, "DeleteOrdFrag");
     }
-    }
-
-
+}

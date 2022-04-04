@@ -1,7 +1,6 @@
 package com.example.testois.fragments;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -18,12 +17,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.testois.Orders;
 import com.example.testois.R;
-import com.example.testois.ViewOrder;
-import com.example.testois.adapter.CustomViewAdapInv;
-import com.example.testois.adapter.CustomViewAdapOrd;
-import com.example.testois.severinaDB;
+import com.example.testois.utilities.severinaDB;
 
 import java.util.List;
 

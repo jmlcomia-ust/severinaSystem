@@ -1,8 +1,10 @@
 package com.example.testois;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,21 +14,21 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomAdapterOrd;
+import com.example.testois.databinding.ActivityCourierDashboardOrderBinding;
 import com.example.testois.databinding.ActivityDashboardOrdersBinding;
+import com.example.testois.utilities.severinaDB;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.Collections;
 import java.util.List;
 
-public class DashboardOrders extends DrawerBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class CourierDashboardOrder  extends CourierDrawerBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "DashboardOrders";
-
-    ActivityDashboardOrdersBinding activityDashboardOrdersBinding;
+    ActivityCourierDashboardOrderBinding activityCourierDashboardOrderBinding;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
-    CustomAdapterOrd curr_customAdapterOrd,  customAdapterOrd;
+    CustomAdapterOrd customAdapterOrd;
     List<Orders> all_orders;
 
 
@@ -58,9 +60,9 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
                 // as a favorite...
                 Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
                 Collections.reverse(all_orders);
-                customAdapterOrd = new CustomAdapterOrd(all_orders, DashboardOrders.this);
+                customAdapterOrd = new CustomAdapterOrd(all_orders, CourierDashboardOrder.this);
                 rv_current.setAdapter(customAdapterOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_current.setLayoutManager(new LinearLayoutManager(CourierDashboardOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
                 return true;
             case R.id.sort_stocks:
@@ -68,9 +70,9 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
                 // as a favorite...
                 Collections.sort(all_orders, (Orders o1, Orders o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
                 Collections.reverse(all_orders);
-                customAdapterOrd = new CustomAdapterOrd(all_orders, DashboardOrders.this);
+                customAdapterOrd = new CustomAdapterOrd(all_orders, CourierDashboardOrder.this);
                 rv_current.setAdapter(customAdapterOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
+                rv_current.setLayoutManager(new LinearLayoutManager(CourierDashboardOrder.this));
                 rv_current.getAdapter().notifyDataSetChanged();
                 return true;
             default:
@@ -83,11 +85,11 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityDashboardOrdersBinding = ActivityDashboardOrdersBinding.inflate(getLayoutInflater());
-        setContentView(activityDashboardOrdersBinding.getRoot());
+        activityCourierDashboardOrderBinding = ActivityCourierDashboardOrderBinding.inflate(getLayoutInflater());
+        setContentView(activityCourierDashboardOrderBinding.getRoot());
         allocatedActivityTitle("Dashboard Orders");
 
-        severinaDB db = new severinaDB(DashboardOrders.this);
+        severinaDB db = new severinaDB(CourierDashboardOrder.this);
         all_orders = db.getOrderList();
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
@@ -95,9 +97,9 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
         rv_recent = findViewById(R.id.rv_recent);
 
         customAdapterOrd = new CustomAdapterOrd(all_orders, this);
-            rv_current.setAdapter(customAdapterOrd);
-        rv_current.setLayoutManager(new LinearLayoutManager(DashboardOrders.this));
-            if (customAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE); emptyfield1.setVisibility(View.GONE);}
+        rv_current.setAdapter(customAdapterOrd);
+        rv_current.setLayoutManager(new LinearLayoutManager(CourierDashboardOrder.this));
+        if (customAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE); emptyfield1.setVisibility(View.GONE);}
 
     }
 }

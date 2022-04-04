@@ -1,6 +1,6 @@
 //Reference: https://www.techypid.com/sqlite-crud-operation-with-example-in-android/
 
-package com.example.testois;
+package com.example.testois.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,22 +8,15 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.AppCompatImageView;
+import com.example.testois.Inventory;
+import com.example.testois.Orders;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class severinaDB extends SQLiteOpenHelper {
 
@@ -194,7 +187,7 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     //Add User
-    void addUser(String name, String password){
+    public void addUser(String name, String password){
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.USR_NAME,name);
         cv.put(severinaDB.USR_PWRD, password);
@@ -207,7 +200,7 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     //ADD INVENTORY ITEM
-    void addItem(Inventory inventory){
+    public void addItem(Inventory inventory){
         try{
             //for storing image to object inventory
             sql = this.getWritableDatabase();
@@ -241,6 +234,28 @@ public class severinaDB extends SQLiteOpenHelper {
                 int thres = cursor.getInt(4);
                 //byte[] imageInBytes = cursor.getBlob(5);
                //items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres), severinaDB.getImage(imageInBytes)));
+                items.add(new Inventory(id,name,quantity, desc, thres));
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        return items;
+
+    }
+    public ArrayList<Inventory> getItemArrList(){
+        String query="SELECT * FROM " + TBL_2_NAME;
+        sql = this.getReadableDatabase();
+        ArrayList<Inventory> items = new ArrayList<>();
+        Cursor cursor = sql.rawQuery(query,null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(0);
+                String name = cursor.getString(1);
+                int quantity = cursor.getInt(2);
+                String desc = cursor.getString(3);
+                int thres = cursor.getInt(4);
+                //byte[] imageInBytes = cursor.getBlob(5);
+                //items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres), severinaDB.getImage(imageInBytes)));
                 items.add(new Inventory(id,name,quantity, desc, thres));
             }while(cursor.moveToNext());
         }
@@ -312,7 +327,7 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     //Operations for Order Table Database
-    void addOrder(Orders order){
+    public void addOrder(Orders order){
         sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.ORD_NAME, order.getName().trim().toUpperCase());
@@ -346,6 +361,24 @@ public class severinaDB extends SQLiteOpenHelper {
             }
             cursor.close();
             return orders;
+    }
+    public ArrayList<Orders> getOrderArrList() {
+        String query = "SELECT * FROM " + TBL_3_NAME;
+        sql = this.getReadableDatabase();
+        ArrayList<Orders> orders = new ArrayList<>();
+        Cursor cursor = sql.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String name = cursor.getString(1).toUpperCase();
+                int quantity = cursor.getInt(2);
+                String desc = cursor.getString(3).toUpperCase();
+                String stat = cursor.getString(4).toUpperCase();
+                orders.add(new Orders(id, name, quantity, desc, stat));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return orders;
     }
 
     public void updateOrder(Orders order){
