@@ -56,10 +56,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
                         return true;
 
                     case R.id.sort_name:
-                        // User chose the "Favorite" action, mark the current item
-                        // as a favorite...
-                        Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
-                        Collections.reverse(items);
+                        //getItemsByName
                         customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
                         recyclerView.setAdapter(customAdapterInv);
                         recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
@@ -67,10 +64,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
                         return true;
 
                     case R.id.sort_stocks:
-                        // User chose the "Favorite" action, mark the current item
-                        // as a favorite...
-                        Collections.sort(items, (Inventory o1, Inventory o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
-                        Collections.reverse(items);
+                        //getItemsOrderByStocks
                         customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
                         recyclerView.setAdapter(customAdapterInv);
                         recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
@@ -78,8 +72,6 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
                         return true;
 
                     default:
-                        // If we got here, the user's action was not recognized.
-                        // Invoke the superclass to handle it.
                         return super.onOptionsItemSelected(item);
 
                 }
@@ -97,7 +89,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
         List<Inventory> items = db.getitemsList();
         emptyfield = findViewById(R.id.emptyRv);
         //searchview = findViewById(R.id.settings);
-        imageview = findViewById(R.id.inv_img);
+        //imageview = findViewById(R.id.inv_img);
         recyclerView = findViewById(R.id.recyclerView);
 
         CustomAdapterInv customAdapterInv = new CustomAdapterInv(items, this);

@@ -24,25 +24,12 @@
             android:layout_marginBottom="10sp"
             android:background="@drawable/add_btn" />
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_inv"
-            android:layout_width="660sp"
-            android:layout_height="50sp"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="-120dp"
-            android:background="@color/white"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="28dp"
-            tools:layout_editor_absoluteY="59dp" />
-
         <TextView
             android:id="@+id/ongoing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_inv"
             android:layout_marginTop="10sp"
-            android:text="Inventory"
+            android:text="Manage Inventory"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="40sp" />
@@ -51,9 +38,9 @@
             android:id="@+id/emptyRv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/search_inv"
+            android:layout_below="@id/ongoing"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="120sp"
+            android:layout_marginTop="20sp"
             android:text="No Products in Inventory yet"
             android:textColor="@color/white"
             android:textSize="40sp"
@@ -62,8 +49,9 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="1000dp"
-            android:layout_below="@+id/search_inv"
+            android:layout_below="@+id/ongoing"
             android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
             android:paddingTop="10dp"
             tools:ignore="MissingConstraints,NotSibling">
 

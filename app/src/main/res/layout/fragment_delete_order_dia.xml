@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools2="http://schemas.android.com/tools/"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.DeleteOrderDiaFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools/"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_gravity="center"
-        tools:ignore="MissingConstraints"
+        tools2:ignore="MissingConstraints"
         android:background="@color/light_green">
 
         <LinearLayout
@@ -35,26 +34,26 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="150sp"
             android:orientation="horizontal"
             android:gravity="center">
 
             <TextView
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
-                android:layout_height="40sp"
+                android:layout_height="60sp"
+                android:layout_alignParentTop="true"
                 android:layout_gravity="center"
-                android:layout_marginTop="10sp"
+                android:foregroundGravity="center"
                 android:gravity="center"
                 android:text="Are you sure you want to delete this order:"
-                android:foregroundGravity="center"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/ord_data"
                 android:layout_width="wrap_content"
-                android:layout_height="40sp"
+                android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_below="@id/message"
                 android:gravity="center" />

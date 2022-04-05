@@ -27,25 +27,25 @@ public class severinaDB extends SQLiteOpenHelper {
     private static final String DB_NAME="severinadb";
     private static final String SQLITE_SEQUENCE = "0";
     private static final String TBL_1_NAME="db_user";
-    public static final String USR_ID = "id";
+    public static final String USR_ID = "usr_id";
     //public static final String USR_DNAME = "displayname";
-    public static final String USR_NAME = "username";
-    public static final String USR_PWRD = "password";
+    public static final String USR_NAME = "usr_name";
+    public static final String USR_PWRD = "usr_pwd";
 
     private static final String TBL_2_NAME="db_inventory";
-    public static final String INV_ID = "id";
-    public static final String INV_NAME = "name";
-    public static final String INV_QTY = "quantity";
-    public static final String INV_DESC = "description";
-    public static final String INV_THRES = "threshold";
+    public static final String INV_ID = "inv_id";
+    public static final String INV_NAME = "inv_name";
+    public static final String INV_QTY = "inv_quantity";
+    public static final String INV_DESC = "inv_description";
+    public static final String INV_THRES = "inv_threshold";
     //public static final String INV_IMG = "image";
 
     private static final String TBL_3_NAME="db_order";
-    public static final String ORD_ID ="id";
-    public static final String ORD_NAME = "name";
-    public static final String ORD_QTY = "quantity";
-    public static final String ORD_DESC = "description";
-    public static final String ORD_STAT = "status";
+    public static final String ORD_ID ="ord_id";
+    public static final String ORD_NAME = "ord_name";
+    public static final String ORD_QTY = "ord_quantity";
+    public static final String ORD_DESC = "ord_description";
+    public static final String ORD_STAT = "ord_status";
 
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER=1;
@@ -65,9 +65,6 @@ public class severinaDB extends SQLiteOpenHelper {
         return this;
     }
 
-    public void close() {
-        this.close();
-    }
 
     @Override
     public void onCreate(SQLiteDatabase sql) {
@@ -293,7 +290,7 @@ public class severinaDB extends SQLiteOpenHelper {
 
     public void updateStock(String itemname, int qty_ordered){
         sql = this.getWritableDatabase();
-        String query = "update "+TBL_2_NAME+" set quantity = quantity - "+qty_ordered+" where name = "+itemname+"";
+        String query = "update table "+TBL_2_NAME+" set inv_quantity = inv_quantity - "+qty_ordered+" where inv_name = "+itemname+"";
         sql.execSQL(query);
     }
 
@@ -309,25 +306,20 @@ public class severinaDB extends SQLiteOpenHelper {
         long result = sql.update(TBL_2_NAME,cv,INV_ID + " = ?" , new String[] {String.valueOf(inventory.getId())});
 
         if(result == -1){
-            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Failed updating item.Please Try again Later.", Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(context, "Item Updated Successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, " Item Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void deleteItem(String id){
         SQLiteDatabase db = this.getWritableDatabase();
-        long result = db.delete(TBL_2_NAME, " id=?", new String[]{id});
+        long result = db.delete(TBL_2_NAME, " inv_id=?", new String[]{id});
         if(result == -1){
-            Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
-        }else{
             Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(context, "Failed to Delete. Please Try Again later.", Toast.LENGTH_SHORT).show();
         }
-    }
-    public void truncateItems(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String q3 = "update sqlite_sequence set seq = 0 where name='"+TBL_2_NAME+"'";
-        db.execSQL(q3);
     }
 
     //Operations for Order Table Database
@@ -341,9 +333,9 @@ public class severinaDB extends SQLiteOpenHelper {
 
         long result = sql.insert(severinaDB.TBL_3_NAME, null,cv);
         if(result == -1){
-            Toast.makeText(context, "Adding Orders Failed", Toast.LENGTH_SHORT).show();
-        }else {
             Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Adding Orders Failed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -359,7 +351,7 @@ public class severinaDB extends SQLiteOpenHelper {
                     String name = cursor.getString(1).toUpperCase();
                     int quantity = cursor.getInt(2);
                     String desc = cursor.getString(3).toUpperCase();
-                    String stat = cursor.getString(4).toUpperCase();
+                    String stat = cursor.getString(4);
                     orders.add(new Orders(id, name, quantity, desc, stat));
                 } while (cursor.moveToNext());
             }
@@ -395,15 +387,28 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
         long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(order.getId())});
         if(result == -1){
-            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-        }else {
             Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateOrderfromCour(Orders order){
+        sql = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.ORD_ID, order.getId());
+        cv.put(severinaDB.ORD_STAT, order.getStatus());
+        long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(order.getId())});
+        if(result == -1){
+            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void deleteOrder(String row_id){
         sql = this.getWritableDatabase();
-        long result = sql.delete(TBL_3_NAME, "id=?", new String[]{row_id});
+        long result = sql.delete(TBL_3_NAME, "ord_id=?", new String[]{row_id});
         if(result == -1){
             Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
         }else{
@@ -425,16 +430,20 @@ public class severinaDB extends SQLiteOpenHelper {
             file.createNewFile();
             CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
             SQLiteDatabase db = this.getReadableDatabase();
-            Cursor curCSV = db.rawQuery("SELECT * FROM db_inventory, db_order",null);
-            csvWrite.writeNext(curCSV.getColumnNames());
-            while(curCSV.moveToNext())
+            Cursor curCSV1 = db.rawQuery("SELECT inv_name, inv_description, inv_quantity FROM db_inventory",null);
+            Cursor curCSV2 = db.rawQuery("SELECT ord_description, ord_quantity FROM db_order",null);
+            csvWrite.writeNext(curCSV1.getColumnNames());
+            csvWrite.writeNext(curCSV2.getColumnNames());
+            while(curCSV1.moveToNext() && curCSV2.moveToNext())
             {
-                //Which column you want to exprort
-                String arrStr[] ={curCSV.getString(0),curCSV.getString(1), curCSV.getString(2)};
+                //Which column you want to export
+                String[] arrStr ={curCSV1.getString(0),curCSV1.getString(1), curCSV1.getString(2)};
+                String[] arrStr2 = {curCSV2.getString(0), curCSV1.getString(1)};
                 csvWrite.writeNext(arrStr);
+                csvWrite.writeNext(arrStr2);
             }
             csvWrite.close();
-            curCSV.close();
+            curCSV1.close();curCSV2.close();
         }
         catch(Exception sqlEx)
         {

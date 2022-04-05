@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragmentname"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="0dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
@@ -46,30 +46,30 @@
             android:text="Item ID:"
             android:textColor="@color/black"
             android:textSize="20dp"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:visibility="invisible"/>
 
-    <EditText
-        android:id="@+id/inv_id_txtu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fragmentname"
-        android:layout_marginLeft="4dp"
-        android:layout_toEndOf="@id/id"
-        android:ems="5"
-        android:textColor="@color/black"
-        android:textAlignment="center"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="-6dp" />
+        <EditText
+            android:id="@+id/inv_id_txtu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragmentname"
+            android:layout_marginLeft="4dp"
+            android:layout_toEndOf="@id/id"
+            android:ems="5"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="-6dp"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/id"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10sp"
-            android:layout_marginEnd="10sp"
-            android:layout_marginBottom="10sp"
+            android:layout_marginStart="190sp"
+            android:layout_marginTop="-30sp"
             android:padding="5dp"
             android:text="Item Name:"
             android:textColor="@color/black"
@@ -81,7 +81,7 @@
             android:id="@+id/inv_name_txtu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/inv_id_txtu"
+            android:layout_alignTop="@id/name"
             android:layout_toEndOf="@id/name"
             android:ems="9"
             android:padding="5dp"
@@ -97,8 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/name"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="11dp"
+            android:layout_alignStart="@id/name"
             android:layout_marginTop="11dp"
             android:padding="5dp"
             android:text="Description:"
@@ -108,12 +107,13 @@
 
         <EditText
             android:id="@+id/inv_desc_txtu"
-            android:layout_width="250dp"
-            android:layout_height="100sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/item_des"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="13dp"
+            android:layout_alignTop="@id/item_des"
+            android:layout_toEndOf="@id/item_des"
+            android:ems="9"
+            android:inputType="textMultiLine"
             android:padding="5dp"
             android:text=""
             android:textColor="@color/black"
@@ -124,10 +124,8 @@
             android:id="@+id/item_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/inv_desc_txtu"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="77dp"
-            android:layout_marginTop="6dp"
+            android:layout_below="@id/item_des"
+            android:layout_alignStart="@id/name"
             android:padding="5dp"
             android:text="Quantity:"
             android:textColor="@color/black"
@@ -138,14 +136,13 @@
 
         <Button
             android:id="@+id/decrement"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="40dp"
-            android:layout_below="@id/item_count"
-            android:layout_alignBaseline="@id/inv_qty_txtu"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="18dp"
-            android:background="@color/green"
-            android:text="-"
+            android:layout_below="@id/item_des"
+            android:layout_alignTop="@id/item_count"
+            android:layout_alignStart="@id/inv_desc_txtu"
+            android:layout_marginStart="20sp"
+            android:background="@drawable/ic_arrow_left"
             android:textColor="@color/black"
             tools:layout_editor_absoluteY="270dp" />
 
@@ -154,9 +151,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/item_count"
-            android:layout_marginStart="38dp"
-            android:layout_marginTop="10dp"
+            android:layout_alignTop="@id/item_count"
             android:layout_toEndOf="@id/decrement"
+            android:layout_marginStart="20sp"
             android:outlineSpotShadowColor="@color/black"
             android:text="0"
             android:textColor="@color/black"
@@ -166,34 +163,72 @@
 
         <Button
             android:id="@+id/increment"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_below="@id/item_count"
-            android:layout_alignBaseline="@id/inv_qty_txtu"
-            android:layout_marginStart="38dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginStart="20sp"
+            android:layout_alignTop="@id/item_count"
             android:layout_toEndOf="@id/inv_qty_txtu"
-            android:background="@color/green"
-            android:text="+"
+            android:background="@drawable/ic_arrow_right"
             android:textColor="@color/black"
             tools:layout_editor_absoluteX="108dp"
             tools:layout_editor_absoluteY="261dp" />
+        <TextView
+            android:id="@+id/item_thres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_count"
+            android:layout_alignStart="@id/name"
+            android:padding="5dp"
+            android:layout_marginTop="10sp"
+            android:text="Threshold:"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="3dp"
+            tools:layout_editor_absoluteY="226dp" />
+
+        <Button
+            android:id="@+id/decrement2"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/item_des"
+            android:layout_alignTop="@id/item_thres"
+            android:layout_alignStart="@id/inv_desc_txtu"
+            android:layout_marginStart="20sp"
+            android:background="@drawable/ic_arrow_left"
+            android:textColor="@color/black"
+            tools:layout_editor_absoluteY="270dp" />
 
         <EditText
             android:id="@+id/inv_thres_txtu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/inv_qty_txtu"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@id/decrement"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/decrement2"
             android:text="0"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="20sp"
             tools:layout_editor_absoluteX="68dp"
             tools:layout_editor_absoluteY="262dp" />
-        <LinearLayout
+
+        <Button
+            android:id="@+id/increment2"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/item_count"
+            android:layout_marginStart="20sp"
+            android:layout_alignTop="@id/item_thres"
+            android:layout_toEndOf="@id/inv_thres_txtu"
+            android:background="@drawable/ic_arrow_right"
+            android:textColor="@color/black"
+            tools:layout_editor_absoluteX="108dp"
+            tools:layout_editor_absoluteY="261dp" />
+
+
+        <!--<LinearLayout
             android:layout_width="200dp"
             android:layout_height="320dp"
             android:layout_alignParentEnd="true"
@@ -232,14 +267,14 @@
                 android:padding="1sp"
                 android:text="Insert Image"
                 android:textColor="@color/black" />
-        </LinearLayout>
+        </LinearLayout>-->
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/increment"
-            android:layout_marginTop="20sp"
+            android:layout_marginTop="113dp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -247,9 +282,9 @@
                 android:id="@+id/btn_update"
                 android:layout_width="150sp"
                 android:layout_height="40sp"
-                android:padding="1sp"
-                android:background="@color/green"
                 android:layout_marginEnd="32dp"
+                android:background="@color/green"
+                android:padding="1sp"
                 android:text="Update ITEM"
                 android:textColor="@color/black"
                 tools:ignore="MissingConstraints" />
@@ -258,11 +293,11 @@
                 android:id="@+id/btn_back"
                 android:layout_width="150sp"
                 android:layout_height="40sp"
-                android:padding="1sp"
-                android:background="@color/green"
                 android:layout_below="@id/increment"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="32dp"
+                android:background="@color/green"
+                android:padding="1sp"
                 android:text="Back"
                 android:textColor="@color/black" />
         </LinearLayout>

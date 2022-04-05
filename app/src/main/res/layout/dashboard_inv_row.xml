@@ -15,104 +15,101 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardview_inv_list"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_gravity="center_horizontal"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="20dp"
             app:cardElevation="10dp"
             app:cardMaxElevation="12dp"
             app:cardPreventCornerOverlap="true"
-            tools:layout_editor_absoluteX="10dp"
-            tools:ignore="MissingConstraints">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="12dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 android:text="ID:"
-                android:layout_marginLeft="130sp"
-                android:layout_marginTop="20dp"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
             <TextView
                 android:id="@+id/inv_id_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="160sp"
+                android:layout_marginStart="50sp"
                 android:layout_marginTop="20dp"
-                android:layout_marginLeft="10sp"
-                android:layout_marginBottom="20dp"
-
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                />
+                android:textSize="15dp"
+                android:visibility="invisible" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name: "
-                android:layout_marginTop="50dp"
-                android:layout_marginLeft="130sp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:text="Item Name: "
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/inv_name_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:layout_marginTop="50dp"
-                android:layout_marginLeft="200sp"
+                android:layout_marginStart="130dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
+                android:ems="10"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                />
+                android:textSize="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Note: "
-                android:layout_marginTop="80dp"
-                android:layout_marginLeft="130sp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginStart="20sp"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="20sp"
+                android:text="Description: "
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/inv_desc_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="130sp"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="20sp"
+                android:ems="10"
                 android:text=""
-                android:layout_marginTop="80dp"
-                android:layout_marginLeft="200sp"
-                android:layout_marginBottom="20dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="20dp"
-                />
+                android:textSize="20dp" />
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/inv_img"
                 android:layout_width="100dp"
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_default_img" />
+                android:src="@drawable/ic_default_img" />-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="130dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginStart="380sp"
+                android:layout_marginTop="30sp"
                 android:text="Stock Qty: "
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -122,26 +119,35 @@
                 android:id="@+id/inv_qty_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="230dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:text=""
+                android:layout_marginStart="480sp"
+                android:layout_marginTop="30sp"
                 android:ems="3"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="380sp"
+                android:layout_marginTop="60sp"
+                android:layout_marginBottom="20sp"
+                android:text="Threshold: "
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/inv_thres_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="150dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginStart="480sp"
+                android:layout_marginTop="60dp"
+                android:ems="3"
                 android:text=""
                 android:textColor="@color/black"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

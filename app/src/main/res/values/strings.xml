@@ -12,4 +12,14 @@
     <string name="dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <string name="a_desc">Page 1 </string>
+    <string name="b_desc">Page 2</string>
+    <string name="c_desc">Page 3</string>
+    <string name="d_desc">Page 4</string>
+    <string name="next">next</string>
+    <string name="skip">skip</string>
+    <string name="start">GOT IT</string>
+    <string name="slide_1_desc">slide_1_desc</string>
+    <string name="slide_1_title">slide_1_title</string>
 </resources>

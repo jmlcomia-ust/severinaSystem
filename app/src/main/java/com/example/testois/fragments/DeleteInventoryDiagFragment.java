@@ -40,7 +40,7 @@ public class DeleteInventoryDiagFragment extends DialogFragment {
         String inv_data_id = args.getString("id");
         String inv_data_name = args.getString("name");
         String inv_data_qty = args.getString("qty");
-        inv_data.setText("ID: "+inv_data_id.trim()+ "\nITEM NAME: "+inv_data_name.toUpperCase()+"\nQTY: "+inv_data_qty+" PCS. ");
+        inv_data.setText("ITEM NAME: "+inv_data_name.toUpperCase()+"\nQTY: "+inv_data_qty+" PCS. ");
 
         btn_del.setOnClickListener(v -> {
             Log.d(TAG, "onClick: capturing deletion");

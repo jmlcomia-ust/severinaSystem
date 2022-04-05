@@ -14,35 +14,12 @@
         tools:context=".DashboardOrders"
         android:background="@drawable/ab">
 
-        <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/add_ord"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10sp"
-            android:layout_marginEnd="10sp"
-            android:layout_marginBottom="10sp"
-            android:background="@drawable/add_btn" />
-
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_ord"
-            android:layout_width="660sp"
-            android:layout_height="50sp"
-            android:layout_marginStart="10sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="-120dp"
-            android:background="@color/white"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="28dp"
-            tools:layout_editor_absoluteY="59dp" />
         <TextView
             android:id="@+id/ongoing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
-            android:layout_below="@id/search_ord"
-            android:text="Ongoing Orders"
+            android:text="View All Orders"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="40sp" />
@@ -52,8 +29,9 @@
             android:layout_width="match_parent"
             android:layout_height="1000dp"
             android:layout_below="@+id/ongoing"
+            android:layout_alignBaseline="@id/ongoing"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:paddingTop="10dp"
             tools:ignore="MissingConstraints,NotSibling">
@@ -61,7 +39,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_current"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="400dp"
                 android:layout_gravity="center_horizontal" />
 
         </ScrollView>

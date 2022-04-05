@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
             String password = edtpword.getText().toString();
             if (name.equals(user.getName()) && password.equals(user.getPassword())) {
                 Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                Intent intent = new Intent(LoginActivity.this, ViewPagerActivity.class);
                 intent.putExtra("username", edtuname.getText().toString());
                 startActivity(intent);
 

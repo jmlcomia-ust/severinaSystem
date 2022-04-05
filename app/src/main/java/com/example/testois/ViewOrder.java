@@ -114,7 +114,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         allocatedActivityTitle("View Order");
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
-        search_ord = findViewById(R.id.search_ord);
+        //search_ord = findViewById(R.id.search_ord);
         add_btn = findViewById(R.id.add_ord);
         rv_current = findViewById(R.id.rv_current);
         rv_recent = findViewById(R.id.rv_recent);

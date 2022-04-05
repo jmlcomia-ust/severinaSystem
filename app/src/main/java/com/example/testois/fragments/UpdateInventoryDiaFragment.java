@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.example.testois.R;
 import com.example.testois.adapter.CustomViewAdapInv;
+import com.example.testois.utilities.severinaDB;
 
 
 public class UpdateInventoryDiaFragment extends DialogFragment {
@@ -29,7 +30,7 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
    // private Uri selectedImageUri;
     int id;
     String name_updated, desc_updated;int qty_updated, thres_updated; byte[] img_updated;
-    private Button btn_update, btn_back, increment, decrement, btn_insert;
+    private Button btn_update, btn_back, increment, decrement, increment2, decrement2,btn_insert;
     private SQLiteDatabase sql;
 
     public interface OnInputListener {
@@ -70,15 +71,17 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
         // Get field from view
         inv_id_txt = view.findViewById(R.id.inv_id_txtu);
         inv_name_txt = view.findViewById(R.id.inv_name_txtu);
-        inv_imgu = view.findViewById(R.id.inv_imgu);
+        //inv_imgu = view.findViewById(R.id.inv_imgu);
         inv_qty_txt = view.findViewById(R.id.inv_qty_txtu);
         inv_desc_txt = view.findViewById(R.id.inv_desc_txtu);
         inv_thres_txt = view.findViewById(R.id.inv_thres_txtu);
         btn_update = view.findViewById(R.id.btn_update);
-        btn_insert = view.findViewById(R.id.insert_photo);
+        //btn_insert = view.findViewById(R.id.insert_photo);
         btn_back = view.findViewById(R.id.btn_back);
         increment = view.findViewById(R.id.increment);
         decrement = view.findViewById(R.id.decrement);
+        increment2 = view.findViewById(R.id.increment2);
+        decrement2 = view.findViewById(R.id.decrement2);
 
         Bundle args = getArguments();
             inv_id_txt.setText(String.valueOf(args.getInt("ids")));
@@ -92,20 +95,32 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
         // FUNCTION TO SET EXISTING DATA TO EDITTEXTS> setData();
 
         increment.setOnClickListener(v -> {
-            int quantity = Integer.parseInt(inv_qty_txt.getText().toString().trim());
+            int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
             quantity++;
             inv_qty_txt.setText(String.valueOf(quantity));
-
+            decrement.setVisibility(View.VISIBLE);
         });
+
         decrement.setOnClickListener(v -> {
-            int quantity = Integer.parseInt(inv_qty_txt.getText().toString().trim());
+            int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
             quantity--;
             inv_qty_txt.setText(String.valueOf(quantity));
+            if(inv_qty_txt.getText().toString().equals("0")){ decrement.setVisibility(View.INVISIBLE);}
         });
-        btn_back.setOnClickListener(v -> {
-            Log.d(TAG, "onClick: closing dialog");
-            getDialog().dismiss();
+
+        increment2.setOnClickListener(v -> {
+            int thres = Integer.parseInt(inv_thres_txt.getText().toString());
+            thres++;
+            inv_thres_txt.setText(String.valueOf(thres));
+            decrement2.setVisibility(View.VISIBLE);
         });
+        decrement2.setOnClickListener(v -> {
+            int thres = Integer.parseInt(inv_thres_txt.getText().toString());
+            thres--;
+            inv_thres_txt.setText(String.valueOf(thres));
+            if(inv_thres_txt.getText().toString().equals("0")){ decrement2.setVisibility(View.INVISIBLE);}
+        });
+
         /*
         //METHOD OF SAANI: https://www.youtube.com/watch?v=OBtEwSe4LEQ
         btn_insert.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +134,10 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
             }
         });
          */
-
+        btn_back.setOnClickListener(v ->{
+            Log.d(TAG, "onClick: closing dialog");
+            getDialog().dismiss();
+        });
         btn_update.setOnClickListener(v ->{
             Log.d(TAG, "onClick: capturing updates");
 
@@ -154,7 +172,4 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
             Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage() );
         }
     }
-  //  public void refreshAdapter(){
-      //  adapter.notifyDataSetChanged();
-    //}
 }

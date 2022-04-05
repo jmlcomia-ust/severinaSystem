@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
     android:background="@drawable/ab">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -125,6 +129,6 @@
                 android:text="Courier View" />
 
         </LinearLayout>
-
     </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

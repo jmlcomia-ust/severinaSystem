@@ -11,7 +11,6 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
         android:padding="10dp"
         tools:context=".DashboardInventory">
 
@@ -19,8 +18,7 @@
             android:id="@+id/ongoing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
-            android:text="Inventory"
+            android:text="View All Inventory"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="40sp" />
@@ -40,7 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="1000dp"
             android:layout_below="@+id/ongoing"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="10sp"
             android:paddingTop="10dp"
             tools:ignore="MissingConstraints,NotSibling">
 
@@ -49,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10sp"
                 android:paddingTop="?attr/actionBarSize" />
         </ScrollView>
     </RelativeLayout>

@@ -30,10 +30,10 @@ public class AddInventoryDiaFragment extends DialogFragment {
     private static final String TAG = "AddInventoryDiaFragment";
     private Uri selectedImageUri;
     private EditText inv_name_txt, inv_qty_txt, inv_desc_txt, inv_thres_txt;
-    private Button btn_add, btn_back, btn_insert, increment, decrement;
-    private Bitmap defaultimage; private Drawable default_img;
-    private Bitmap imageToStore;
-    private AppCompatImageView imgView;
+    private Button btn_add,btn_back, btn_insert,increment,decrement, decrement2, increment2;
+    //private Bitmap defaultimage; private Drawable default_img;
+    //private Bitmap imageToStore;
+    //private AppCompatImageView imgView;
     private severinaDB db;
     private SQLiteDatabase sql;
 
@@ -57,12 +57,14 @@ public class AddInventoryDiaFragment extends DialogFragment {
             inv_qty_txt = view.findViewById(R.id.inv_qty_txt);
             inv_desc_txt = view.findViewById(R.id.inv_desc_txt);
             inv_thres_txt = view.findViewById(R.id.inv_thres_txt);
-            imgView = view.findViewById(R.id.img_item);
-            btn_insert = view.findViewById(R.id.insert_img_item);
+            //imgView = view.findViewById(R.id.img_item);
+            //btn_insert = view.findViewById(R.id.insert_img_item);
             btn_add = view.findViewById(R.id.btn_add_inv);
             btn_back = view.findViewById(R.id.btn_back_inv);
             increment = view.findViewById(R.id.increment);
             decrement = view.findViewById(R.id.decrement);
+            increment2 = view.findViewById(R.id.increment2);
+            decrement2 = view.findViewById(R.id.decrement2);
 
 
             db = new severinaDB(getContext());
@@ -70,16 +72,33 @@ public class AddInventoryDiaFragment extends DialogFragment {
             e.printStackTrace();
         }
 
+        decrement.setVisibility(View.INVISIBLE);
+        decrement2.setVisibility(View.INVISIBLE);
         increment.setOnClickListener(v -> {
             int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
             quantity++;
             inv_qty_txt.setText(String.valueOf(quantity));
+            decrement.setVisibility(View.VISIBLE);
         });
 
         decrement.setOnClickListener(v -> {
             int quantity = Integer.parseInt(inv_qty_txt.getText().toString());
             quantity--;
             inv_qty_txt.setText(String.valueOf(quantity));
+            if(inv_qty_txt.getText().toString().equals("0")){ decrement.setVisibility(View.INVISIBLE);}
+        });
+
+        increment2.setOnClickListener(v -> {
+            int thres = Integer.parseInt(inv_thres_txt.getText().toString());
+            thres++;
+            inv_thres_txt.setText(String.valueOf(thres));
+            decrement2.setVisibility(View.VISIBLE);
+        });
+        decrement2.setOnClickListener(v -> {
+            int thres = Integer.parseInt(inv_thres_txt.getText().toString());
+            thres--;
+            inv_thres_txt.setText(String.valueOf(thres));
+            if(inv_thres_txt.getText().toString().equals("0")){ decrement2.setVisibility(View.INVISIBLE);}
         });
 
         btn_back.setOnClickListener(v -> {

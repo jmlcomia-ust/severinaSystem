@@ -21,6 +21,11 @@ public class Orders {
         this.status=status;
     }
 
+    public Orders(int id, String stat) {
+        this.id=id;
+        this.status=status;
+    }
+
     public int getId() {
         return id;
     }
