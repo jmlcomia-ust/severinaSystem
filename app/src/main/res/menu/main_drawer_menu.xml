@@ -16,7 +16,7 @@
             android:title="Manage Inventory"/>
 
         <item android:id="@+id/nav_vorder"
-            android:icon="@drawable/ic_arrow_right"
+            android:icon="@drawable/invtoord"
             android:title="Manage Order"/>
 
         <item android:id="@+id/nav_gen_report"

@@ -2,7 +2,12 @@ package com.example.testois;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,13 +19,37 @@ import androidx.core.app.ActivityCompat;
 import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
-import com.example.testois.utilities.Metodos;
+import com.example.testois.utilities.GeneraatePDFReport;
 import com.example.testois.utilities.severinaDB;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.html.WebColors;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class ReportGenerationMenu extends DrawerBaseActivity {
     ActivityReportGenerationMenuBinding activityReportGenerationMenuBinding;
+    private PdfPCell cell;
+    BaseColor headColor = WebColors.getRGBColor("#DEDEDE");
+    BaseColor tableHeadColor = WebColors.getRGBColor("#F5ABAB");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +59,12 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
         allocatedActivityTitle("Generate Reports");
         ActivityCompat.requestPermissions(ReportGenerationMenu.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
         Button btn_genreport = findViewById(R.id.btn_genreport);
+        btn_genreport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GeneraatePDFReport generate = new GeneraatePDFReport();
+            }
+        });
         severinaDB db = new severinaDB(this);
         Inventory inventory;
         Orders orders;
@@ -70,20 +105,4 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void createPDF(View view) {
-        String filename = "OrderInventoryReport_Severina";
-        String filecontent = "OrderInventoryReport_Severina";
-        Metodos fop = new Metodos();
-        if (fop.write(filename, filecontent)) {
-            Toast.makeText(getApplicationContext(),
-                    filename + ".pdf created", Toast.LENGTH_SHORT)
-                    .show();
-        } else {
-            Toast.makeText(getApplicationContext(), "I/O error",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-}
+    }}

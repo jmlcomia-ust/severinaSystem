@@ -16,12 +16,15 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import com.example.testois.dao.User;
 import com.google.android.material.navigation.NavigationView;
 
 public class DrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
+    User user;
 
     @Override
     public void setContentView(View view) {
@@ -39,6 +42,13 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_drawer_open, R.string.menu_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        TextView header_one = navigationView.findViewById(R.id.userName);   //change TextViews in Drawer Header
+        //header_one.setText(R.string.header_name);
+        TextView header_two = navigationView.findViewById(R.id.userRole);
+        //header_two.setText(R.string.header_role);
+        TextView header_three = navigationView.findViewById(R.id.userMail);
+        //header_three.setText(user.getName());
     }
 
     @Override
@@ -49,26 +59,32 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             case R.id.nav_dinventory:
                 startActivity(new Intent(this, DashboardInventory.class));
                 overridePendingTransition(0, 0);
+                finish();
                 break;
             case R.id.nav_dorder:
                 startActivity(new Intent(this, DashboardOrders.class));
                 overridePendingTransition(0, 0);
+                finish();
                 break;
             case R.id.nav_vinventory:
                 startActivity(new Intent(this, ViewInventory.class));
                 overridePendingTransition(0, 0);
+                finish();
                 break;
             case R.id.nav_vorder:
                 startActivity(new Intent(this, ViewOrder.class));
                 overridePendingTransition(0, 0);
+                finish();
                 break;
             case R.id.nav_gen_report:
                 startActivity(new Intent(this, ReportGenerationMenu.class)); //change to gen report, do same edit on other acts for gen report
                 overridePendingTransition(0, 0);
+                finish();
                 break;
             case R.id.nav_logout:
                 startActivity(new Intent(this, LoginActivity.class));
                 overridePendingTransition(0, 0);
+                finish();
                 break;
             default:
                 startActivity(new Intent(this, DashboardActivity.class));

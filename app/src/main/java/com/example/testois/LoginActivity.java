@@ -21,6 +21,10 @@ public class LoginActivity extends AppCompatActivity {
     SQLiteDatabase db;
     User user = new User();
     @Override
+    public void onBackPressed() {
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
