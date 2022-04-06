@@ -63,7 +63,7 @@ public class CourierDrawerBaseActivity extends AppCompatActivity implements Navi
 
     protected void allocatedActivityTitle(String titleString) {
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(titleString);
+            getSupportActionBar().setTitle("");
         }
     }
 }

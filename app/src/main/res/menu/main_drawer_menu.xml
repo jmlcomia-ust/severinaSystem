@@ -13,11 +13,11 @@
 
         <item android:id="@+id/nav_vinventory"
             android:icon="@drawable/ic_arrow_right"
-            android:title="View Inventory"/>
+            android:title="Manage Inventory"/>
 
         <item android:id="@+id/nav_vorder"
             android:icon="@drawable/ic_arrow_right"
-            android:title="View Order"/>
+            android:title="Manage Order"/>
 
         <item android:id="@+id/nav_gen_report"
             android:icon="@drawable/ic_arrow_right"

@@ -1,4 +1,4 @@
-package com.example.testois;
+package com.example.testois.dao;
 
 import android.graphics.Bitmap;
 

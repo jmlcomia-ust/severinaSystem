@@ -8,7 +8,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,11 +19,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.testois.dao.Inventory;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomAdapterInv;
 import com.example.testois.databinding.ActivityDashboardInventoryBinding;
 
-import java.util.Collections;
 import java.util.List;
 
 public class DashboardInventory extends DrawerBaseActivity implements Filterable {
@@ -102,27 +101,5 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
     @Override
     public Filter getFilter() {
         return null;
-    }
-    //public void sendInput(String name, String qty, String desc, byte[] bytesImage) {
-        public void sendInput(String name, int qty, String desc, int thres) {
-        //Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot image:" + bytesImage);
-            Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
-        frag_name = name;
-        frag_qty = qty;
-        frag_desc = desc;
-        frag_thres = thres;
-       //frag_image = bytesImage;
-        setInputToListView();
-    }
-    private void setInputToListView() {
-        try {
-            db = new severinaDB(DashboardInventory.this);
-            //Inventory inventory = new Inventory(frag_name,frag_qty, frag_desc, frag_image);
-            Inventory inventory = new Inventory(frag_name,frag_qty, frag_desc, frag_thres);
-            db.addItem(inventory);
-            Toast.makeText(this, "Item Added Successfully!", Toast.LENGTH_LONG).show();
-        } catch (Exception ex) {
-           // Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
-        }
     }
 }

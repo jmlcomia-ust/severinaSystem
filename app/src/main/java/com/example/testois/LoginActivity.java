@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.testois.dao.User;
 import com.example.testois.utilities.severinaDB;
 
 public class LoginActivity extends AppCompatActivity {

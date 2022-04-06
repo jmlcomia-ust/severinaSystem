@@ -5,7 +5,11 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.testois.dao.Orders;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.databinding.ActivityViewOrderBinding;
@@ -29,7 +34,7 @@ import java.util.List;
 public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.OrderRecyclerListener, AddOrderDiaFragment.OnInputListener, UpdateOrderDiaFragment.OnInputListener, DeleteOrderDiaFragment.OnInputListener{
     private static final String TAG = "ViewOrders";
     ActivityViewOrderBinding activityViewOrderBinding;
-    private severinaDB db;
+    public severinaDB db, db_inv;
     SearchView search_ord;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
@@ -106,6 +111,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,7 +142,13 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         rv_current.setAdapter(customViewAdapOrd);
         rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
         if (customViewAdapOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
-
+/*
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            @SuppressLint({"NewApi", "LocalSuppress"}) NotificationChannel channel = new NotificationChannel("NotifOnOrder", "NotifOnOrder", NotificationManager.IMPORTANCE_DEFAULT);
+            @SuppressLint({"NewApi", "LocalSuppress"}) NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+ */
         add_btn.setOnClickListener(view ->{
             Log.d(TAG, "onClick: opening dialog.");
             AddOrderDiaFragment dialog = new AddOrderDiaFragment();
@@ -171,8 +183,10 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try{
             db = new severinaDB(ViewOrder.this);
             Orders orders = new Orders (name, qty, desc, stat);
-            db.addOrder(orders);
-            db.updateStock(name, qty);
+            if(stat.equalsIgnoreCase("TODAY")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty)); }
+            else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty));}
+            else{ db.NotifyOnOrder(3, desc, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
+           //db.updateStock(name, qty);
         }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
 
@@ -182,8 +196,11 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try {
             db = new severinaDB(ViewOrder.this);
             //Orders order = new Orders(name,qty, desc, image);
-            Orders order = new Orders(id, name, qty, desc, stat);
-            db.updateOrder(order);
+            Orders orders = new Orders(id, name, qty, desc, stat);
+            if(stat.equalsIgnoreCase("TODAY")){ db.updateOrder(orders); db.NotifyOnOrder(1, name, String.valueOf(qty)); }
+            else if(stat.equalsIgnoreCase("DELIVERED")){ db.updateOrder(orders); db.NotifyOnOrder(2,name, String.valueOf(qty));}
+            else{ db.NotifyOnOrder(3, name, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
+           // db.updateStock(name, qty);
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }

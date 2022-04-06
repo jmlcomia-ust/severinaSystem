@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.testois.Orders;
+import com.example.testois.dao.Orders;
 import com.example.testois.R;
 import com.example.testois.utilities.severinaDB;
 

@@ -1,4 +1,4 @@
-package com.example.testois;
+package com.example.testois.dao;
 
 public class User {
         String id;

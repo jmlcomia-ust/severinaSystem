@@ -1,7 +1,6 @@
 package com.example.testois;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.adapter.CustomAdapterOrd;
+import com.example.testois.dao.Orders;
 import com.example.testois.databinding.ActivityCourierDashboardOrderBinding;
-import com.example.testois.databinding.ActivityDashboardOrdersBinding;
 import com.example.testois.utilities.severinaDB;
 import com.google.android.material.navigation.NavigationView;
 

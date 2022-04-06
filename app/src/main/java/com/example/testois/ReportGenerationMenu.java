@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
+
+import com.example.testois.dao.Inventory;
+import com.example.testois.dao.Orders;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
 import com.example.testois.utilities.Metodos;
 import com.example.testois.utilities.severinaDB;

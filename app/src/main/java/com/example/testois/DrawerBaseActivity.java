@@ -80,7 +80,7 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
 
     protected void allocatedActivityTitle(String titleString) {
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(titleString);
+            getSupportActionBar().setTitle("");
         }
     }
 }

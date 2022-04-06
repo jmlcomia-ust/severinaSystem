@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.adapter.CustomCourViewAdapOrd;
+import com.example.testois.dao.Orders;
 import com.example.testois.databinding.ActivityCourierViewOrderBinding;
 import com.example.testois.fragments.CourUpdateOrderDiaFragment;
 import com.example.testois.utilities.severinaDB;

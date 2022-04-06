@@ -120,13 +120,13 @@ public class AddInventoryDiaFragment extends DialogFragment {
                 getDialog().dismiss();
                 getActivity().recreate();
             } else if (inv_name_txt.getText().toString().isEmpty()) {
-                inv_name_txt.requestFocus();
+                inv_name_txt.requestFocus(); inv_name_txt.setError("This input is required");
             } else if (inv_qty_txt.getText().toString().isEmpty()) {
-                inv_qty_txt.requestFocus();
+                inv_qty_txt.requestFocus(); inv_qty_txt.setError("This input is required");
             } else if (inv_desc_txt.getText().toString().isEmpty()) {
-                inv_desc_txt.requestFocus();
+                inv_desc_txt.requestFocus();inv_desc_txt.setError("This input is required");
             } else if (inv_thres_txt.getText().toString().isEmpty()) {
-                inv_thres_txt.requestFocus();
+                inv_thres_txt.requestFocus();inv_thres_txt.setError("This input is required");
             } else {
                 Toast.makeText(getContext(), "Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
             }

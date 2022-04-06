@@ -19,7 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.testois.Inventory;
+import com.example.testois.dao.Inventory;
 import com.example.testois.R;
 import com.example.testois.utilities.severinaDB;
 
@@ -66,7 +66,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
             holder.txt_thres.setText(String.valueOf(inventory.getThreshold()));
             holder.txt_desc.setText(inventory.getDescription().toUpperCase());
             holder.txt_qty.setText(String.valueOf(inventory.getQuantity()));
-            if (inventory.getQuantity() <= inventory.getThreshold()+1) { holder.txt_qty.setTextColor(Color.parseColor("#FF0000"));  holder.txt_qty.setTextSize(22); holder.txt_qty.setTypeface(Typeface.DEFAULT_BOLD);}
+            if (inventory.getQuantity() <= inventory.getThreshold()+1 || inventory.getQuantity() <= (inventory.getThreshold()+2) || inventory.getQuantity() <= (inventory.getThreshold())) { holder.txt_qty.setTextColor(Color.parseColor("#FF0000"));  holder.txt_qty.setTextSize(22); holder.txt_qty.setTypeface(Typeface.DEFAULT_BOLD);}
             // holder.img_item.setImageBitmap(inventory.getImage());
 
             holder.btn_edit.setOnClickListener(v -> {

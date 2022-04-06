@@ -1,8 +1,12 @@
 package com.example.testois;
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.testois.dao.Inventory;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.databinding.ActivityViewInventoryBinding;
@@ -29,6 +34,7 @@ import com.example.testois.fragments.UpdateInventoryDiaFragment;
 import java.util.Collections;
 import java.util.List;
 //hello
+@SuppressLint("NewApi")
 public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapInv.InventoryRecyclerListener,AddInventoryDiaFragment.OnInputListener, UpdateInventoryDiaFragment.OnInputListener, DeleteInventoryDiagFragment.OnInputListener{
     private static final String TAG = "ViewInventory";
     ActivityViewInventoryBinding activityViewInventoryBinding;
@@ -128,6 +134,9 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
              //Inventory inventory = new Inventory(name,qty, desc, thres, image);
              Inventory inventory = new Inventory(name,qty, desc, thres);
              db.addItem(inventory);
+             if(qty == (thres+1) || qty ==(thres+2)){ db.NotifyOnStock(1,name); }
+             else if(qty < thres){ db.NotifyOnStock(2,name); }
+             else if(qty <= thres){db.NotifyOnStock(3,name);}
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
          }
@@ -141,6 +150,9 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             //Inventory inventory = new Inventory(name,qty, desc, thres, image);
             Inventory items = new Inventory (id, name, qty, desc, thres);
             db.updateItem(items);
+            if(qty == (thres+1) || qty ==(thres+2)){ db.NotifyOnStock(1,name); }
+            else if(qty < thres){ db.NotifyOnStock(2,name); }
+            else if(qty <= thres){db.NotifyOnStock(3,name);}
             db.close();
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
@@ -166,6 +178,13 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         allocatedActivityTitle("Manage Inventory");
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
+       /* if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            NotificationChannel channel = new NotificationChannel("NotifOnStock", "NotifOnStock", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        */
         db = new severinaDB(this);
         List<Inventory> items = db.getitemsList();
 
