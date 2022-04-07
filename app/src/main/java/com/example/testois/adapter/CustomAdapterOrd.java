@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import com.example.testois.dao.Orders;
 import com.example.testois.R;
 import com.example.testois.utilities.severinaDB;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyViewHolder> {
@@ -22,11 +24,16 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
     Context context;
     severinaDB db;
     List<Orders> orders;
+    List<Orders> ordersAll;
+    List<Orders> fullOrd;
 
     public CustomAdapterOrd(List<Orders> orders, Context context){
         this.orders = orders;
         this.context = context;
         db = new severinaDB(context);
+        ordersAll = new ArrayList<>();
+        fullOrd = new ArrayList<>(orders);
+        ordersAll.addAll(orders);
 
     }
 
@@ -75,5 +82,49 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
         }
 
     }
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Orders> filteredList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0) {
+                filteredList.addAll(fullOrd);
+
+            }
+            else
+            {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Orders item: fullOrd){
+                    if (String.valueOf(item.getQuantity()).contentEquals(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getDescription().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getStatus().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            orders.clear();
+            orders.addAll((List) results.values);
+            notifyDataSetChanged();
+
+        }
+    };
 
 }

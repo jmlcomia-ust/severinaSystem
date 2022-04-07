@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.example.testois.dao.Orders;
 import com.example.testois.R;
 import com.example.testois.utilities.severinaDB;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.MyViewHolder> {
@@ -23,6 +25,8 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
   // CustomViewAdapInv.InventoryChecker
     Context context;
     List<Orders> orders;
+    List<Orders> ordersAll;
+    List<Orders> fullOrd;
     severinaDB db;
 
     public CustomViewAdapOrd(List<Orders> orders, Context context, OrderRecyclerListener nListener) {
@@ -30,6 +34,9 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
         this.context = context;
         this.nListener = nListener;
         db = new severinaDB(context);
+        ordersAll = new ArrayList<>();
+        fullOrd = new ArrayList<>(orders);
+        ordersAll.addAll(orders);
 
     }
 
@@ -115,4 +122,53 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
     public interface OrderRecyclerListener{
         void gotoUpdateFragment(Orders orders, Bundle args);
         void gotoDeleteFragment(Orders orders, Bundle args);
-    }  }
+    }
+
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Orders> filteredList = new ArrayList<>();
+
+            if(constraint == null || constraint.length() == 0) {
+                filteredList.addAll(fullOrd);
+
+            }
+            else
+            {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (Orders item: fullOrd){
+                    if (String.valueOf(item.getQuantity()).contentEquals(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getDescription().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getStatus().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            orders.clear();
+            orders.addAll((List) results.values);
+            notifyDataSetChanged();
+
+        }
+    };
+
+
+
+}

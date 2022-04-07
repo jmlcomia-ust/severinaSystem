@@ -1,5 +1,6 @@
 package com.example.testois;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +25,7 @@ import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomAdapterInv;
 import com.example.testois.databinding.ActivityDashboardInventoryBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DashboardInventory extends DrawerBaseActivity implements Filterable {
@@ -33,6 +35,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
     severinaDB db;
     RecyclerView recyclerView;
     ImageView imageview;
+    SearchView searchView;
     Button add_btn;
     CustomAdapterInv customAdapterInv;
     int frag_qty, frag_thres;
@@ -43,6 +46,30 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         inflater.inflate(R.menu.dash_options, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.nav_search);
+        searchView = (SearchView) searchViewItem.getActionView();
+        searchView.clearFocus();
+        db = new severinaDB(this);
+        List<Inventory> items = db.getitemsList();
+        items = new ArrayList<>();
+
+        MenuItem searchItem = menu.findItem(R.id.nav_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                customAdapterInv.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
     @Override
@@ -91,7 +118,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
         //imageview = findViewById(R.id.inv_img);
         recyclerView = findViewById(R.id.recyclerView);
 
-        CustomAdapterInv customAdapterInv = new CustomAdapterInv(items, this);
+        customAdapterInv = new CustomAdapterInv(items, this);
         recyclerView.setAdapter(customAdapterInv);
         recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
         if (customAdapterInv.getItemCount() != 0){emptyfield.setVisibility(View.GONE);}

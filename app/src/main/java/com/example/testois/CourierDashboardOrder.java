@@ -1,6 +1,7 @@
 package com.example.testois;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +45,22 @@ public class CourierDashboardOrder  extends CourierDrawerBaseActivity implements
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         inflater.inflate(R.menu.dash_options, menu);
+        MenuItem searchItem = menu.findItem(R.id.nav_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                customAdapterOrd.getFilter().filter(newText);
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
     @Override

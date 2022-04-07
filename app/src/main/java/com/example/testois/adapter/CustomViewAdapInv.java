@@ -34,6 +34,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
     Context context;
     List<Inventory> items;
     List<Inventory> itemsAll;
+    List<Inventory> fullInv;
     severinaDB sev;
 
     //public CustomViewAdapInv(List<Inventory> items, Context context, InventoryRecyclerListener mListener, InventoryChecker mChecker) {
@@ -43,6 +44,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
         this.mListener = mListener;
         //this.mChecker = mChecker;
         itemsAll = new ArrayList<>();
+        fullInv = new ArrayList<>(items);
         itemsAll.addAll(items);
     }
 
@@ -112,42 +114,6 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
         } else return 0;
     }
 
-    @Override
-    public Filter getFilter() {
-        return myFilter;
-    }
-    Filter myFilter = new Filter() {
-
-        //Automatic on background thread
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-
-            List<Inventory> filteredList = new ArrayList<>();
-
-            if (charSequence == null || charSequence.length() == 0) {
-                filteredList.addAll(items);
-            } else {
-                for (Inventory specified: itemsAll) {
-                    if (specified.toString().toLowerCase().contains(charSequence.toString().toLowerCase())) {
-                        filteredList.add(specified);
-                    }
-                }
-            }
-
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = filteredList;
-            return filterResults;
-        }
-
-        //Automatic on UI thread
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            items.clear();
-            items.addAll((Collection<? extends Inventory>) filterResults.values);
-            notifyDataSetChanged();
-        }
-    };
-
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txt_id, txt_name, txt_qty, txt_desc, txt_thres; ImageView img_item;
         Button btn_edit, btn_delete;
@@ -176,6 +142,46 @@ public interface InventoryRecyclerListener{
         void gotoUpdateFragment(Inventory inventory, Bundle args);
         void gotoDeleteFragment(Inventory inventory, Bundle args);
 }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+    private Filter exampleFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Inventory> filteredList = new ArrayList<>();
+            if (constraint == null || constraint.length() == 0){
+                filteredList.addAll(fullInv);
+            }else{
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for(Inventory item : fullInv){
+                    if (String.valueOf(item.getQuantity()).contentEquals(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                    if (item.getDescription().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+
+        }
+
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            items.clear();
+            items.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
 }
 

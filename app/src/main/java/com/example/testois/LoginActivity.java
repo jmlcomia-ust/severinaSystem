@@ -22,26 +22,8 @@ public class LoginActivity extends AppCompatActivity {
     int id = 0;
     SQLiteDatabase db;
     User user = new User();
-    private PrefManager prefManager;
-    String prevStarted = "yes";
     @Override
     public void onBackPressed() {
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences sharedpreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
-        if (!sharedpreferences.getBoolean(prevStarted, false)) {
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putBoolean(prevStarted, Boolean.TRUE);
-            editor.apply();
-            severinadb = new severinaDB(LoginActivity.this);
-            severinadb.addUser(user.getName(), user.getPassword());
-        } else {
-            severinadb = new severinaDB(LoginActivity.this);
-        }
     }
 
     @Override
@@ -49,10 +31,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);
         edtuname = (EditText) findViewById(R.id.user);
         edtpword = (EditText) findViewById(R.id.pass);
+
+        severinadb = new severinaDB(LoginActivity.this); //alternatively put in splash screen
+        severinadb.addUser(user.getName(), user.getPassword());     //alternatively put in splash screen
 
         btn1.setOnClickListener(v -> {
             String name = edtuname.getText().toString();
@@ -69,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         btn2.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(), CourierDashboardActivity.class);
+            Intent i = new Intent(getApplicationContext(), ViewPagerActivity.class);
             startActivity(i);
         });
     }

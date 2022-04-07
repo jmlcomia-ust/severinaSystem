@@ -105,97 +105,6 @@ public class severinaDB extends SQLiteOpenHelper {
 
     }
 
-    //DATABASE OPERATIONS FOR IMAGES IN DATABASE AND ACTIVITIES
-/*
-    //convert bitmap to byte[]
-    public static byte[] getImageBytes(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
-    }
-    //convert byte[] to Bitmap
-    public static Bitmap getImage(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }
-
-    //convert Bitmap to URI
-    public static Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    //to resize image for faster uploading to db
-    public static Bitmap decodeUri(Context c, Uri selectedImage, int REQUIRED_SIZE) {
-
-        try {
-
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o);
-
-            // The new size we want to scale to
-            // final int REQUIRED_SIZE =  size;
-
-            // Find the correct scale value. It should be the power of 2.
-            int width_tmp = o.outWidth, height_tmp = o.outHeight;
-            int scale = 1;
-            while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE) {
-                    break;
-                }
-                width_tmp /= 2;
-                height_tmp /= 2;
-                scale *= 2;
-            }
-
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o2);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    //convert ImageView to byte[]
-    public byte[] ImageViewToByte(ImageView image){
-        Bitmap bmp = ((BitmapDrawable) image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG,80,stream);
-        return stream.toByteArray();
-    }
-
-    void loadImageFromDB(AppCompatImageView imgLoaded) {
-        severinaDB db = new severinaDB(context.getApplicationContext());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    db.open();
-                   // final byte[] bytes = db.retreiveImageFromDB();
-                    db.close();
-                    // Show Image from DB in ImageView
-                    imgLoaded.post(new Runnable() {
-                        @Override
-                        public void run() {
-                     //       imgLoaded.setImageBitmap(severinaDB.getImage(bytes));
-
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.e("Database", "<loadImageFromDB> Error : " + e.getLocalizedMessage());
-                    db.close();
-                }
-            }
-        }).start();
-    }
- */
     private static SQLiteDatabase openDatabase(){
         String path = DB_PATH + DB_NAME;
         sql = SQLiteDatabase.openDatabase(path, null, SQLiteDatabase.OPEN_READWRITE);
@@ -210,9 +119,6 @@ public class severinaDB extends SQLiteOpenHelper {
         //cv.put(severinaDB.USR_DNAME, dname);
         sql = this.getWritableDatabase();
         sql.insert(severinaDB.TBL_1_NAME, null,cv);
-    }
-    void checkUser(String name){
-
     }
 
     //ADD INVENTORY ITEM
@@ -259,28 +165,6 @@ public class severinaDB extends SQLiteOpenHelper {
         return items;
 
     }
-    public ArrayList<Inventory> getItemArrList(){
-        String query="SELECT * FROM " + TBL_2_NAME;
-        sql = this.getReadableDatabase();
-        ArrayList<Inventory> items = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query,null);
-
-        if(cursor.moveToFirst()){
-            do{
-                int id = cursor.getInt(0);
-                String name = cursor.getString(1);
-                int quantity = cursor.getInt(2);
-                String desc = cursor.getString(3);
-                int thres = cursor.getInt(4);
-                //byte[] imageInBytes = cursor.getBlob(5);
-                //items.add(new Inventory(String.valueOf(id),name,Integer.parseInt(quantity), desc, Integer.parseInt(thres), severinaDB.getImage(imageInBytes)));
-                items.add(new Inventory(id,name,quantity, desc, thres));
-            }while(cursor.moveToNext());
-        }
-        cursor.close();
-        return items;
-
-    }
         public List<String> getInvName(){
             List<String> inventory = new ArrayList<>();
 
@@ -296,7 +180,6 @@ public class severinaDB extends SQLiteOpenHelper {
                     inventory.add(cursor.getString(1));
                 } while (cursor.moveToNext());
             }
-
             // closing connection
             cursor.close();
             db.close();
@@ -517,11 +400,10 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     public List<Report> getReportData() {
-        sql = this.getReadableDatabase();
-
-        String query = "create table db_report as select db_inventory.inv_id, db_inventory.inv_name," +
-                " db_inventory.inv_quantity, db_order.ord_date, db_order.ord_quantity " +
-                " from db_inventory, db_order where db_inventory.inv_name = db_order.ord_description ";
+        sql = this.getWritableDatabase();
+        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + "," + J_INVNAME + "," + J_IQTY + "," + J_OQTY + ") " +
+                "SELECT db_order.ord_id, db_order.ord_date, db_inventory.inv_name, db_inventory.inv_quantity, db_order.ord_quantity " +
+                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
 
         List<Report> reportList = new ArrayList<>();
 
@@ -534,10 +416,125 @@ public class severinaDB extends SQLiteOpenHelper {
                 int inv_qty = cursor.getInt(3);
                 int ord_qty = cursor.getInt(4);
                 reportList.add(new Report(id, date, name, inv_qty, ord_qty));
+                ContentValues cv = new ContentValues();
+                cv.put(severinaDB.J_ID, id);
+                cv.put(severinaDB.J_DATE, date);
+                cv.put(severinaDB.J_INVNAME,name);
+                cv.put(severinaDB.J_IQTY,inv_qty);
+                cv.put(severinaDB.J_OQTY,ord_qty);
+                sql.insert(TBL_4_NAME, null,cv);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return reportList;
     }
+
+    public void transferData(Report report) {
+        sql = this.getReadableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.J_ID, report.getOrd_id());
+        cv.put(severinaDB.J_DATE, report.getOrd_date());
+        cv.put(severinaDB.J_INVNAME,report.getInv_name().trim().toUpperCase());
+        cv.put(severinaDB.J_IQTY, report.getInv_quantity());
+        cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
+        long result = sql.insert(TBL_4_NAME,null, cv);
+        if(result == -1){
+            Toast.makeText(context, "Failed fetching report data. Please try again later.", Toast.LENGTH_LONG).show();
+        }else {
+            Toast.makeText(context, "Fetched Report Data Successfully!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //DATABASE OPERATIONS FOR IMAGES IN DATABASE AND ACTIVITIES
+/*
+    //convert bitmap to byte[]
+    public static byte[] getImageBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
+    //convert byte[] to Bitmap
+    public static Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
+    }
+
+    //convert Bitmap to URI
+    public static Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    //to resize image for faster uploading to db
+    public static Bitmap decodeUri(Context c, Uri selectedImage, int REQUIRED_SIZE) {
+
+        try {
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o);
+
+            // The new size we want to scale to
+            // final int REQUIRED_SIZE =  size;
+
+            // Find the correct scale value. It should be the power of 2.
+            int width_tmp = o.outWidth, height_tmp = o.outHeight;
+            int scale = 1;
+            while (true) {
+                if (width_tmp / 2 < REQUIRED_SIZE
+                        || height_tmp / 2 < REQUIRED_SIZE) {
+                    break;
+                }
+                width_tmp /= 2;
+                height_tmp /= 2;
+                scale *= 2;
+            }
+
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o2);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //convert ImageView to byte[]
+    public byte[] ImageViewToByte(ImageView image){
+        Bitmap bmp = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        return stream.toByteArray();
+    }
+
+    void loadImageFromDB(AppCompatImageView imgLoaded) {
+        severinaDB db = new severinaDB(context.getApplicationContext());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    db.open();
+                   // final byte[] bytes = db.retreiveImageFromDB();
+                    db.close();
+                    // Show Image from DB in ImageView
+                    imgLoaded.post(new Runnable() {
+                        @Override
+                        public void run() {
+                     //       imgLoaded.setImageBitmap(severinaDB.getImage(bytes));
+
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e("Database", "<loadImageFromDB> Error : " + e.getLocalizedMessage());
+                    db.close();
+                }
+            }
+        }).start();
+    }
+ */
 }
 

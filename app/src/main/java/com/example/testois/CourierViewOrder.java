@@ -17,11 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.adapter.CustomCourViewAdapOrd;
+import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.databinding.ActivityCourierViewOrderBinding;
 import com.example.testois.fragments.CourUpdateOrderDiaFragment;
 import com.example.testois.utilities.severinaDB;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView add_btn;
+    SearchView searchView;
     CustomCourViewAdapOrd.OrderRecyclerListener nListener;
     CustomCourViewAdapOrd customCourViewAdapOrd;
     List<Orders> all_orders;
@@ -52,6 +55,29 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
         inflater.inflate(R.menu.main_menu, menu);
         inflater.inflate(R.menu.dash_options, menu);
 
+        MenuItem searchViewItem = menu.findItem(R.id.nav_search);
+        searchView = (SearchView) searchViewItem.getActionView();
+        searchView.clearFocus();
+        db = new severinaDB(this);
+        List<Inventory> items = db.getitemsList();
+        items = new ArrayList<>();
+
+        MenuItem searchItem = menu.findItem(R.id.nav_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                customCourViewAdapOrd.getFilter().filter(newText);
+                return false;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
     @Override

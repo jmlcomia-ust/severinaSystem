@@ -59,32 +59,28 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         // with id and take its object
         MenuItem searchViewItem = menu.findItem(R.id.nav_search);
         searchView = (SearchView) searchViewItem.getActionView();
+        searchView.clearFocus();
 
-        // attach setOnQueryTextListener
-        // to search view defined above
-        searchView.setOnQueryTextListener(
-                new SearchView.OnQueryTextListener() {
+        db = new severinaDB(this);
+        List<Inventory> items = db.getitemsList();
+        items = new ArrayList<>();
 
-                    // Override onQueryTextSubmit method
-                    // which is call
-                    // when submitquery is searched
+        MenuItem searchItem = menu.findItem(R.id.nav_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
 
-                    @Override
-                    public boolean onQueryTextSubmit(String query)
-                    {
-                        return false;
-                    }
 
-                    // This method is overridden to filter
-                    // the adapter according to a search query
-                    // when the user is typing search
-                    @Override
-                    public boolean onQueryTextChange(String newText)
-                    {
-                        customViewAdapInv.getFilter().filter(newText);
-                        return false;
-                    }
-                });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                customViewAdapInv.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }

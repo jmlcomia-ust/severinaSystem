@@ -1,8 +1,14 @@
 package com.example.testois.utilities;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Environment;
 
+import com.example.testois.ViewOrder;
+import com.example.testois.adapter.CustomViewAdapInv;
+import com.example.testois.adapter.CustomViewAdapOrd;
+import com.example.testois.dao.Inventory;
+import com.example.testois.dao.Orders;
 import com.example.testois.dao.Report;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -24,12 +30,15 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListAllReport {
 
         //creating a PdfWriter variable. PdfWriter class is available at com.itextpdf.text.pdf.PdfWriter
         private PdfWriter pdfWriter;
         severinaDB db;
+        CustomViewAdapOrd.OrderRecyclerListener nListener;
+        CustomViewAdapInv.InventoryRecyclerListener mListener;
 
 
         //we will add some products to arrayListRProductModel to show in the PDF document
@@ -201,7 +210,7 @@ public class ListAllReport {
                 cell.setFixedHeight(28);
                 table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(arrayListReport.get(i).getOrd_status()));
+                cell = new PdfPCell(new Phrase(arrayListReport.get(i).getOrd_date()));
                 cell.setFixedHeight(28);
                 table.addCell(cell);
 
@@ -229,7 +238,9 @@ public class ListAllReport {
             }
         }
 
-        /**
+
+
+    /**
          * This is an inner class which is used to create header and footer
          * @author XYZ
          *
@@ -275,5 +286,9 @@ public class ListAllReport {
          * Generate static data for table
          */
 
-        private void generateTableData(){ db.getReportData(); }
+        private void generateTableData(){
+            List<Report> reportList = db.getReportData();
+            //Report report = new Report (id, qty, desc, date, stat);
+            //db.transferData(report);
+        }
 }

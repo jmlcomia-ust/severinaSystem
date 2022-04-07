@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapOrd;
@@ -29,6 +30,7 @@ import com.example.testois.fragments.DeleteOrderDiaFragment;
 import com.example.testois.fragments.UpdateOrderDiaFragment;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,6 +59,27 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
         inflater.inflate(R.menu.dash_options, menu);
+
+        db = new severinaDB(this);
+        List<Inventory> items = db.getitemsList();
+        items = new ArrayList<>();
+
+        MenuItem searchItem = menu.findItem(R.id.nav_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                customViewAdapOrd.getFilter().filter(newText);
+                return false;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -131,6 +154,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             dialog.show(getSupportFragmentManager(), "AddOrderDiaFragment");
         });
 }
+
 
     @Override
     public void sendInput(String name, int qty, String desc, String date, String stat) {
