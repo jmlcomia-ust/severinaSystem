@@ -1,13 +1,8 @@
 package com.example.testois.utilities;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
-import android.widget.Toast;
 
-import com.example.testois.ReportGenerationMenu;
 import com.example.testois.dao.Report;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
@@ -28,13 +23,14 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URI;
 import java.util.ArrayList;
 
 public class ListAllReport {
 
         //creating a PdfWriter variable. PdfWriter class is available at com.itextpdf.text.pdf.PdfWriter
         private PdfWriter pdfWriter;
+        severinaDB db;
+
 
         //we will add some products to arrayListRProductModel to show in the PDF document
         private static ArrayList<Report> arrayListReport = new ArrayList<Report>();
@@ -129,7 +125,7 @@ public class ListAllReport {
          * @throws DocumentException
          */
 
-        private static void addContent(Document document) throws DocumentException {
+        private void addContent(Document document) throws DocumentException {
 
             Paragraph reportBody = new Paragraph();
             reportBody.setFont(new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.NORMAL)); //public static Font FONT_BODY = new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.NORMAL);
@@ -147,10 +143,10 @@ public class ListAllReport {
          * @param reportBody
          * @throws BadElementException
          */
-        private static void createTable(Paragraph reportBody)
+        private void createTable(Paragraph reportBody)
                 throws BadElementException {
 
-            float[] columnWidths = {5,5,5,2}; //total 4 columns and their width. The first three columns will take the same width and the fourth one will be 5/2.
+            float[] columnWidths = {2,5,5,5,5}; //total 4 columns and their width. The first three columns will take the same width and the fourth one will be 5/2.
             PdfPTable table = new PdfPTable(columnWidths);
 
             table.setWidthPercentage(100); //set table with 100% (full page)
@@ -158,33 +154,41 @@ public class ListAllReport {
 
 
             //Adding table headers
-            PdfPCell cell = new PdfPCell(new Phrase("Product Name", //Table Header
+            PdfPCell cell = new PdfPCell(new Phrase("INVENTORY ID", //Table Header
                     new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD))); //Public static Font FONT_TABLE_HEADER = new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER); //alignment
             cell.setBackgroundColor(new GrayColor(0.75f)); //cell background color
             cell.setFixedHeight(30); //cell height
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase("Brand Name",
+            cell = new PdfPCell(new Phrase("Date",
                     new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD)));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBackgroundColor(new GrayColor(0.75f));
             cell.setFixedHeight(30);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase("Category Name",
+            cell = new PdfPCell(new Phrase("ITEM NAME",
                     new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD)));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBackgroundColor(new GrayColor(0.75f));
             cell.setFixedHeight(30);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase("Unit",
+            cell = new PdfPCell(new Phrase("QTY STOCKS LEFT",
                     new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD)));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBackgroundColor(new GrayColor(0.75f));
             cell.setFixedHeight(30);
             table.addCell(cell);
+
+            cell = new PdfPCell(new Phrase("STOCKS DELIVERED FOR THIS WEEK",
+                    new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD)));
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setBackgroundColor(new GrayColor(0.75f));
+            cell.setFixedHeight(30);
+            table.addCell(cell);
+
 
             //End of adding table headers
 
@@ -271,16 +275,5 @@ public class ListAllReport {
          * Generate static data for table
          */
 
-        private static void generateTableData(){
-            Report report = new Report (1, "04/07/2022", 4, 5);
-            arrayListReport.add(report);
-
-            report = new Report (2, "05/07/2022", 2, 12);
-            arrayListReport.add(report);
-
-            report = new Report (3, "04/015/2022", 4, 1);
-            arrayListReport.add(report);
-
-
-        }
+        private void generateTableData(){ db.getReportData(); }
 }

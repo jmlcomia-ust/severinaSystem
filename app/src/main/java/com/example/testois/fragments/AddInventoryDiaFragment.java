@@ -109,9 +109,9 @@ public class AddInventoryDiaFragment extends DialogFragment {
             //imageToStore = severinaDB.decodeUri(getActivity(), selectedImageUri, 400);
             if (!inv_name_txt.getText().toString().isEmpty() && !inv_qty_txt.getText().toString().isEmpty() && !inv_desc_txt.getText().toString().isEmpty() && !inv_thres_txt.getText().toString().isEmpty()) {
                 Log.d(TAG, "onClick: capturing input");
-                String name = inv_name_txt.getText().toString();
+                String name = inv_name_txt.getText().toString().toUpperCase();
                 int qty = Integer.parseInt(inv_qty_txt.getText().toString());
-                String desc = inv_desc_txt.getText().toString();
+                String desc = inv_desc_txt.getText().toString().toUpperCase();
                 int thres = Integer.parseInt(inv_thres_txt.getText().toString());
                 //byte[] imageInByte = severinaDB.getImageBytes(imageToStore);
                 //Bitmap imageInBit = severinaDB.getImage(imageInByte);

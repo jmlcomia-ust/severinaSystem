@@ -130,11 +130,37 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/stat"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
                 android:layout_alignTop="@id/desc"
+                android:layout_marginBottom="10sp"
+                android:layout_toEndOf="@id/ord_desc_txt"
+                android:text="Order Date:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/ord_date_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_alignTop="@id/desc"
+                android:layout_marginStart="10sp"
+                android:layout_toEndOf="@id/date"
+                android:ems="7"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/date"
+                android:layout_marginBottom="10sp"
                 android:layout_toEndOf="@id/ord_desc_txt"
                 android:text="Order Status:"
                 android:textColor="@color/black"
@@ -149,8 +175,8 @@
                 android:layout_alignTop="@id/stat"
                 android:layout_marginStart="10sp"
                 android:layout_toEndOf="@id/stat"
-                android:text=""
                 android:ems="7"
+                android:text=""
                 android:textColor="@color/black"
                 android:textSize="20sp" />
         </RelativeLayout>

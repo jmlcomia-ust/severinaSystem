@@ -364,7 +364,6 @@
             android:layout_below="@+id/report_table"
             android:layout_marginLeft="10dp"
             android:backgroundTint="@color/color2"
-            android:onClick="createPDF"
             android:text="Generate report"
             android:textColor="@color/white"
             android:textSize="22dp" />

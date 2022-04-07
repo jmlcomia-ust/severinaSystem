@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class severinaDB extends SQLiteOpenHelper {
 
@@ -51,14 +52,15 @@ public class severinaDB extends SQLiteOpenHelper {
     public static final String ORD_NAME = "ord_name";
     public static final String ORD_QTY = "ord_quantity";
     public static final String ORD_DESC = "ord_description";
+    public static final String ORD_DATE = "ord_date";
     public static final String ORD_STAT = "ord_status";
 
-    //private static final String TBL_4_NAME="db_joined";
-    //private static final String J_ID ="joined_id";
-   // private static final String J_DATE = "joined_date";
-   // private static final String J_INVNAME = "joined_invname";
-    //private static final String J_IQTY = "joined_iqty";
-    //private static final String J_OQTY = "joined_oqty";
+    private static final String TBL_4_NAME="db_report";
+    private static final String J_ID ="joined_id";
+    private static final String J_DATE = "joined_date";
+    private static final String J_INVNAME = "joined_invname";
+    private static final String J_IQTY = "joined_iqty";
+    private static final String J_OQTY = "joined_oqty";
 
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER=1;
@@ -84,11 +86,12 @@ public class severinaDB extends SQLiteOpenHelper {
         String q1 = "create table " + TBL_1_NAME + " (" + USR_ID + " integer primary key autoincrement, " + USR_NAME + " text, " + USR_PWRD + " text) ";
         String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
         //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) "+INV_IMG+" blob) ";
-        String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_STAT + " text) ";
-        //String q4 = "create table " + TBL_4_NAME + " (" + J_ID + " integer primary key autoincrement, " + J_DATE + " integer, " + J_INVNAME + " text, " + J_IQTY + " integer," + J_OQTY + " integer) ";
+        String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " +ORD_DATE + " text, " +  ORD_STAT + " text) ";
+        String q4 = "create table " + TBL_4_NAME + " (" + J_ID + " integer primary key autoincrement, " + J_DATE + " integer, " + J_INVNAME + " text, " + J_IQTY + " integer," + J_OQTY + " integer) ";
         sql.execSQL(q1);
         sql.execSQL(q2);
         sql.execSQL(q3);
+        sql.execSQL(q4);
 
     }
 
@@ -97,7 +100,7 @@ public class severinaDB extends SQLiteOpenHelper {
         sql.execSQL("drop table if exists " + TBL_1_NAME + "");
         sql.execSQL("drop table if exists " + TBL_2_NAME + "");
         sql.execSQL("drop table if exists " + TBL_3_NAME + "");
-       // sql.execSQL("drop table if exists " + TBL_4_NAME + "");
+        sql.execSQL("drop table if exists " + TBL_4_NAME + "");
             onCreate(sql);
 
     }
@@ -359,9 +362,9 @@ public class severinaDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         long result = db.delete(TBL_2_NAME, " inv_id=?", new String[]{id});
         if(result == -1){
-            Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
-        }else{
             Toast.makeText(context, "Failed to Delete. Please Try Again later.", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(context, "Successfully Deleted.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -372,13 +375,14 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.ORD_NAME, order.getName().trim().toUpperCase());
         cv.put(severinaDB.ORD_QTY, order.getQuantity());
         cv.put(severinaDB.ORD_DESC, order.getDescription().trim().toUpperCase());
+        cv.put(severinaDB.ORD_DATE, order.getDate());
         cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
 
         long result = sql.insert(severinaDB.TBL_3_NAME, null,cv);
         if(result == -1){
-            Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Adding Orders Failed. Please Try again later.", Toast.LENGTH_SHORT).show();
         }else {
-            Toast.makeText(context, "Adding Orders Failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -394,8 +398,9 @@ public class severinaDB extends SQLiteOpenHelper {
                     String name = cursor.getString(1).toUpperCase();
                     int quantity = cursor.getInt(2);
                     String desc = cursor.getString(3).toUpperCase();
-                    String stat = cursor.getString(4);
-                    orders.add(new Orders(id, name, quantity, desc, stat));
+                    String date = cursor.getString(4);
+                    String stat = cursor.getString(5).toUpperCase();
+                    orders.add(new Orders(id, name, quantity, desc, date, stat));
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -412,8 +417,9 @@ public class severinaDB extends SQLiteOpenHelper {
                 String name = cursor.getString(1).toUpperCase();
                 int quantity = cursor.getInt(2);
                 String desc = cursor.getString(3).toUpperCase();
-                String stat = cursor.getString(4).toUpperCase();
-                orders.add(new Orders(id, name, quantity, desc, stat));
+                String date = cursor.getString(4);
+                String stat = cursor.getString(5).toUpperCase();
+                orders.add(new Orders(id, name, quantity, desc, date, stat));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -427,12 +433,13 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.ORD_NAME, order.getName().trim().toUpperCase());
         cv.put(severinaDB.ORD_QTY, order.getQuantity());
         cv.put(severinaDB.ORD_DESC, order.getDescription().trim().toUpperCase());
+        cv.put(severinaDB.ORD_DATE, order.getDate());
         cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
         long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(order.getId())});
         if(result == -1){
-            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
-        }else {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -509,71 +516,28 @@ public class severinaDB extends SQLiteOpenHelper {
         }
     }
 
+    public List<Report> getReportData() {
+        sql = this.getReadableDatabase();
 
-    private void exportDB() {
-        sql = this.getWritableDatabase();
-        File exportDir = new File(Environment.getExternalStorageDirectory(), "");
-        if (!exportDir.exists())
-        {
-            exportDir.mkdirs();
-        }
+        String query = "create table db_report as select db_inventory.inv_id, db_inventory.inv_name," +
+                " db_inventory.inv_quantity, db_order.ord_date, db_order.ord_quantity " +
+                " from db_inventory, db_order where db_inventory.inv_name = db_order.ord_description ";
 
-        File file = new File(exportDir, "csvname.csv");
-        try
-        {
-            file.createNewFile();
-            CSVWriter csvWrite = new CSVWriter(new FileWriter(file));
-            SQLiteDatabase db = this.getReadableDatabase();
-            Cursor curCSV1 = db.rawQuery("SELECT inv_name, inv_description, inv_quantity FROM db_inventory",null);
-            Cursor curCSV2 = db.rawQuery("SELECT ord_description, ord_quantity FROM db_order",null);
-            csvWrite.writeNext(curCSV1.getColumnNames());
-            csvWrite.writeNext(curCSV2.getColumnNames());
-            while(curCSV1.moveToNext() && curCSV2.moveToNext())
-            {
-                //Which column you want to export
-                String[] arrStr ={curCSV1.getString(0),curCSV1.getString(1), curCSV1.getString(2)};
-                String[] arrStr2 = {curCSV2.getString(0), curCSV1.getString(1)};
-                csvWrite.writeNext(arrStr);
-                csvWrite.writeNext(arrStr2);
-            }
-            csvWrite.close();
-            curCSV1.close();curCSV2.close();
-        }
-        catch(Exception sqlEx)
-        {
-            Log.e("MainActivity", sqlEx.getMessage(), sqlEx);
-        }
-    }
-    public List<Report> getReportData(Inventory inventory, Orders orders){
-        sql = this.getWritableDatabase();
-        String rawQuery = "create table db_report as select ord_id, ord_status, inv_quantity, ord_quantity from db_inventory, db_order";
-        sql.execSQL(rawQuery);
-        List<Report> report = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(rawQuery, null);
+        List<Report> reportList = new ArrayList<>();
+
+        Cursor cursor = sql.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(0);
-                String desc = cursor.getString(1).toUpperCase();
-                int inv_qty = cursor.getInt(2);
-                int ord_qty = cursor.getInt(2);
-                report.add(new Report(id, desc, inv_qty, ord_qty));
+                String date = cursor.getString(1).toUpperCase();
+                String name = cursor.getString(2).toUpperCase();
+                int inv_qty = cursor.getInt(3);
+                int ord_qty = cursor.getInt(4);
+                reportList.add(new Report(id, date, name, inv_qty, ord_qty));
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return report;
-    }
-
-    public void notifyPdfGeneration(String path){
-        String message = " Report Generated. Locate on "+path;
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
-        Uri alarmSound = RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION);
-        builder.setSound(alarmSound);
-        builder.setVibrate( new long []{ 1000 , 1000 , 1000 , 1000 , 1000 });
-        builder.setSmallIcon(R.drawable.ic_notifications);
-        builder.setContentTitle("Severina OIS");
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        return reportList;
     }
 }
 

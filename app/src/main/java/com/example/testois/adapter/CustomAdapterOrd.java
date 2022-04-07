@@ -46,6 +46,7 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
             holder.ord_name_txt.setText(order.getName());
             holder.ord_qty_txt.setText(String.valueOf(order.getQuantity()));
             holder.ord_desc_txt.setText(order.getDescription());
+            holder.ord_date_txt.setText(order.getDate());
             holder.ord_stat_txt.setText(order.getStatus());
         } catch (Exception e) {
             Log.e(TAG, "onBindViewHolder: Null Pointer: " + e.getMessage());
@@ -61,7 +62,7 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView ord_id_txt, ord_name_txt, ord_qty_txt,ord_stat_txt, ord_desc_txt;
+        TextView ord_id_txt, ord_name_txt, ord_qty_txt,ord_stat_txt, ord_desc_txt, ord_date_txt;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,6 +70,7 @@ public class CustomAdapterOrd extends RecyclerView.Adapter<CustomAdapterOrd.MyVi
             ord_name_txt = itemView.findViewById(R.id.ord_name_txt);
             ord_qty_txt = itemView.findViewById(R.id.ord_qty_txt);
             ord_desc_txt= itemView.findViewById(R.id.ord_desc_txt);
+            ord_date_txt = itemView.findViewById(R.id.ord_date_txt);
             ord_stat_txt = itemView.findViewById(R.id.ord_stat_txt);
         }
 

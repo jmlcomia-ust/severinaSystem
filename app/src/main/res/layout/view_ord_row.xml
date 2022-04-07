@@ -100,9 +100,9 @@
                 android:layout_below="@id/qty"
                 android:layout_marginStart="10sp"
                 android:layout_marginTop="10sp"
-
+                android:inputType="textMultiLine"
                 android:layout_toEndOf="@id/desc"
-                android:ems="12"
+                android:ems="10"
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="18sp" />
@@ -112,8 +112,8 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/qty"
                 android:layout_alignStart="@id/stat"
+                android:layout_alignTop="@id/qty"
                 android:layout_toEndOf="@id/view_ord_id"
                 android:text="Ordered By:"
                 android:textColor="@color/black"
@@ -132,11 +132,35 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/stat"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/name"
                 android:layout_alignTop="@id/desc"
+                android:layout_marginBottom="10sp"
+                android:layout_toEndOf="@id/view_ord_desc"
+                android:text="Order Date:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/view_ord_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_marginStart="10sp"
+                android:layout_alignTop="@id/desc"
+                android:layout_toEndOf="@id/date"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/stat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/date"
                 android:layout_marginBottom="10sp"
                 android:layout_toEndOf="@id/view_ord_desc"
                 android:text="Order Status:"
@@ -148,9 +172,9 @@
                 android:id="@+id/view_ord_stat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name"
+                android:layout_below="@id/date"
+                android:layout_alignTop="@id/stat"
                 android:layout_marginStart="10sp"
-               android:layout_alignTop="@id/desc"
                 android:layout_toEndOf="@id/stat"
                 android:text=""
                 android:textColor="@color/black"
@@ -159,14 +183,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="550sp"
-                android:layout_marginTop="0sp"
-                >
+                android:layout_marginTop="10sp">
 
                 <Button
                     android:id="@+id/edit_ord"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginEnd="30dp"
+                    android:layout_marginEnd="5dp"
                     android:background="@drawable/edit" />
 
                 <Button

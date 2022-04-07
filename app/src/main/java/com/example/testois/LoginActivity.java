@@ -3,7 +3,9 @@ package com.example.testois;
 // ALT: LOGIN > VPTUTORIAL > TRACK ORD > SHIPSTAT > SETTINGS
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
@@ -20,17 +22,32 @@ public class LoginActivity extends AppCompatActivity {
     int id = 0;
     SQLiteDatabase db;
     User user = new User();
+    private PrefManager prefManager;
+    String prevStarted = "yes";
     @Override
     public void onBackPressed() {
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedpreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+        if (!sharedpreferences.getBoolean(prevStarted, false)) {
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putBoolean(prevStarted, Boolean.TRUE);
+            editor.apply();
+            severinadb = new severinaDB(LoginActivity.this);
+            severinadb.addUser(user.getName(), user.getPassword());
+        } else {
+            severinadb = new severinaDB(LoginActivity.this);
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        severinadb = new severinaDB(LoginActivity.this);
-        severinadb.addUser(user.getName(), user.getPassword());
 
         btn1 = (Button) findViewById(R.id.btn1);
         btn2 = (Button) findViewById(R.id.btn2);

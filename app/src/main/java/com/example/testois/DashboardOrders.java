@@ -27,7 +27,7 @@ public class DashboardOrders extends DrawerBaseActivity implements NavigationVie
     ActivityDashboardOrdersBinding activityDashboardOrdersBinding;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
-    CustomAdapterOrd curr_customAdapterOrd,  customAdapterOrd;
+    CustomAdapterOrd customAdapterOrd;
     List<Orders> all_orders;
 
 

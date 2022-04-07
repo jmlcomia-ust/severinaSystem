@@ -50,9 +50,9 @@
             android:layout_below="@id/ongoing"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90sp"
-            android:text="No Ongoing Orders"
+            android:text="No Ongoing Orders yet"
             android:textColor="@color/white"
-            android:textSize="30sp"
+            android:textSize="40sp"
             android:visibility="visible" />
 
         <TextView

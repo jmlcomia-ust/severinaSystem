@@ -31,6 +31,7 @@ import com.example.testois.fragments.AddInventoryDiaFragment;
 import com.example.testois.fragments.DeleteInventoryDiagFragment;
 import com.example.testois.fragments.UpdateInventoryDiaFragment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 //hello
@@ -187,7 +188,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         */
         db = new severinaDB(this);
         List<Inventory> items = db.getitemsList();
-
         add_item = findViewById(R.id.add_view_inv);
         recyclerView = findViewById(R.id.rv_view_inv);
        customViewAdapInv = new CustomViewAdapInv(items, this, this);

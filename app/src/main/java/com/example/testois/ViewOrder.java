@@ -36,17 +36,12 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     private static final String TAG = "ViewOrders";
     ActivityViewOrderBinding activityViewOrderBinding;
     public severinaDB db, db_inv;
-    SearchView search_ord;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView add_btn;
     CustomViewAdapOrd.OrderRecyclerListener nListener;
     CustomViewAdapOrd customViewAdapOrd;
     List<Orders> all_orders;
-
-
-   // List<Orders> curr_orders;{ try{ curr_orders = db.getCurrOrdList();{curr_orders = db.getCurrOrdList();if (curr_orders.isEmpty()) { curr_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
-  //  List<Orders> recnt_orders;{ try{ recnt_orders = db.getRecntOrdList();{ recnt_orders = db.getRecntOrdList();if (recnt_orders.isEmpty()) { recnt_orders = db.getOrderList(); } } }catch(Exception e){Log.e(TAG, "Error on Null");}}
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -56,7 +51,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,13 +115,9 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         allocatedActivityTitle("View Order");
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
-        //search_ord = findViewById(R.id.search_ord);
         add_btn = findViewById(R.id.add_ord);
         rv_current = findViewById(R.id.rv_current);
         rv_recent = findViewById(R.id.rv_recent);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String date = sdf.format(System.currentTimeMillis());
-
         db = new severinaDB(ViewOrder.this);
         all_orders = db.getOrderList();
         customViewAdapOrd = new CustomViewAdapOrd(all_orders, this, this);
@@ -140,58 +130,31 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             AddOrderDiaFragment dialog = new AddOrderDiaFragment();
             dialog.show(getSupportFragmentManager(), "AddOrderDiaFragment");
         });
-/*
-        search_ord.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                if(rv_current.contains(query)){
-                    adapter.getFilter().filter(query);
-                }else{
-                    Toast.makeText(MainActivity.this, "No Match found",Toast.LENGTH_LONG).show();
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //    adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-    }
- */
 }
 
     @Override
-    public void sendInput(String name, int qty, String desc, String stat) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String date = sdf.format(System.currentTimeMillis());
+    public void sendInput(String name, int qty, String desc, String date, String stat) {
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try{
             db = new severinaDB(ViewOrder.this);
-            Orders orders = new Orders (name, qty, desc, stat);
-            db.addOrder(orders);
-            if(stat.equalsIgnoreCase(date)){}
-           // if(stat.equalsIgnoreCase("TODAY")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty)); }
-            //else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty));}
-            //else{ db.NotifyOnOrder(3, desc, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
-           //db.updateStock(name, qty);
+            Orders orders = new Orders (name, qty, desc, date, stat);
+           if(stat.equalsIgnoreCase("TODAY")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty)); }
+           else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty));}
+           else{ db.NotifyOnOrder(3, desc, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
         }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
 
     @Override
-    public void UpdateInput(int id, String name, int qty, String desc, String stat) {
+    public void UpdateInput(int id, String name, int qty, String desc, String date, String stat) {
         Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try {
             db = new severinaDB(ViewOrder.this);
             //Orders order = new Orders(name,qty, desc, image);
-            Orders orders = new Orders(id, name, qty, desc, stat);
-            /*
+            Orders orders = new Orders(id, name, qty, desc, date, stat);
             if(stat.equalsIgnoreCase("TODAY")){ db.updateOrder(orders); db.NotifyOnOrder(1, name, String.valueOf(qty)); }
             else if(stat.equalsIgnoreCase("DELIVERED")){ db.updateOrder(orders); db.NotifyOnOrder(2,name, String.valueOf(qty));}
             else{ db.NotifyOnOrder(3, name, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
-             */
+
            // db.updateStock(name, qty);
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();

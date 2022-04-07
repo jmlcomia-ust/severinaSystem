@@ -18,22 +18,29 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:id="@+id/frag_name"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/top_menu"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20sp"
-            android:text="Add Inventory"
-            android:textColor="@color/black"
-            android:textSize="30dp" />
+            android:background="@color/green">
+
+            <TextView
+                android:id="@+id/frag_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Add Inventory"
+                android:textColor="@color/black"
+                android:textSize="30dp" />
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/frag_name"
+            android:layout_below="@id/top_menu"
             android:layout_marginStart="180dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="5dp"
@@ -47,8 +54,9 @@
             android:id="@+id/inv_name_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/frag_name"
+            android:layout_below="@id/top_menu"
             android:layout_alignBaseline="@id/item_name"
+            android:layout_marginStart="7dp"
             android:layout_toEndOf="@id/item_name"
             android:layout_weight="1"
             android:ems="9"
@@ -198,8 +206,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40sp"
-            android:layout_below="@id/increment"
-            android:layout_marginTop="80sp"
+            android:layout_below="@id/increment2"
+            android:layout_marginTop="30sp"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -267,3 +275,56 @@
         </LinearLayout>-->
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

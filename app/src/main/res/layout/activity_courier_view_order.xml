@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
-            android:text="View All Orders"
+            android:text="Manage Orders"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="40sp" />
@@ -51,9 +51,9 @@
             android:layout_below="@id/ongoing"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="90sp"
-            android:text="No Ongoing Orders"
+            android:text="No Ongoing Orders yet"
             android:textColor="@color/white"
-            android:textSize="30sp"
+            android:textSize="40sp"
             android:visibility="visible" />
 
         <TextView

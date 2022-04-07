@@ -6,18 +6,21 @@ public class Orders {
     private int quantity;
     private String description;
     private String status;
+    private String date;
 
-    public Orders(String name, int quantity, String description, String status){
+    public Orders(String name, int quantity, String description, String date, String status){
         this.name=name;
         this.quantity=quantity;
         this.description=description;
+        this.date = date;
         this.status=status;
     }
-    public Orders(int id, String name, int quantity, String description, String status){
+    public Orders(int id, String name, int quantity, String description, String date, String status){
         this.id=id;
         this.name=name;
         this.quantity=quantity;
         this.description=description;
+        this.date = date;
         this.status=status;
     }
 
@@ -53,6 +56,12 @@ public class Orders {
     public String getDescription() { return description;}
 
     public void setDescription(String description) {this.description=description;}
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) { this.date = date; }
 
     public String getStatus() {
         return status;

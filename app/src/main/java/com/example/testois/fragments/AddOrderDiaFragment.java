@@ -39,7 +39,7 @@ import java.util.List;
 public class AddOrderDiaFragment extends DialogFragment {
 
     private static final String TAG = "AddOrderDiaFragment";
-    private EditText ord_name_txt, ord_qty_txt;
+    private EditText ord_name_txt, ord_qty_txt, ord_date_txt;
     private TextView ord_stat_txt, ord_desc_txt;
     Spinner ord_desc_drop, ord_stat_drop;
     Button btn_add, btn_back, btn_insert;
@@ -47,12 +47,11 @@ public class AddOrderDiaFragment extends DialogFragment {
     DatePickerDialog picker;
 
 
-
-
     public interface OnInputListener {
 
-        void sendInput(String name, int qty, String desc, String stat);
+        void sendInput(String name, int qty, String desc, String date, String stat);
     }
+
     public OnInputListener fraglisten;
 
     @Nullable
@@ -60,14 +59,16 @@ public class AddOrderDiaFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_order_dia, container, false);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
-            ord_name_txt = view.findViewById(R.id.ord_name_txt);
-            ord_qty_txt = view.findViewById(R.id.ord_qty_txt);
-            ord_desc_drop = view.findViewById(R.id.ord_desc_drop);
-            ord_desc_txt = view.findViewById(R.id.ord_desc_txt);
-            ord_stat_txt = view.findViewById(R.id.ord_stat_txt);
-            btn_add = view.findViewById(R.id.btn_add_ord);
-            btn_back = view.findViewById(R.id.btn_back_ord);
-            db = new severinaDB(getContext());
+        ord_name_txt = view.findViewById(R.id.ord_name_txt);
+        ord_qty_txt = view.findViewById(R.id.ord_qty_txt);
+        ord_desc_drop = view.findViewById(R.id.ord_desc_drop);
+        ord_desc_txt = view.findViewById(R.id.ord_desc_txt);
+        ord_stat_drop = view.findViewById(R.id.ord_stat_drop);
+        ord_date_txt = view.findViewById(R.id.ord_date_txt);
+        ord_stat_txt = view.findViewById(R.id.ord_stat_txt);
+        btn_add = view.findViewById(R.id.btn_add_ord);
+        btn_back = view.findViewById(R.id.btn_back_ord);
+        db = new severinaDB(getContext());
 
             /*
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -76,19 +77,20 @@ public class AddOrderDiaFragment extends DialogFragment {
             String monthToday  = (String) DateFormat.format("MM", Long.parseLong(date)); // 06
             String yearToday   = (String) DateFormat.format("yyyy", Long.parseLong(date)); // 2013
             */
-            loadSpinnerDescData();
+        loadSpinnerDescData();
+        loadSpinnerStatData();
 
+        ord_date_txt.setInputType(InputType.TYPE_NULL);
+        ord_date_txt.setOnClickListener(v -> {
+            final Calendar cldr = Calendar.getInstance();
+            int day = cldr.get(Calendar.DAY_OF_MONTH);
+            int month = cldr.get(Calendar.MONTH);
+            int year = cldr.get(Calendar.YEAR);
+            // date picker dialog
 
-            ord_stat_txt.setOnClickListener(v -> {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-
-                picker = new DatePickerDialog(getActivity(),
-                        (view1, year1, monthOfYear, dayOfMonth) -> ord_stat_txt.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
-                picker.show();
+            picker = new DatePickerDialog(getActivity(),
+                    (view1, year1, monthOfYear, dayOfMonth) -> ord_date_txt.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
+            picker.show();
 
                 /*
                 if(day < Integer.parseInt(dayToday)){
@@ -97,30 +99,40 @@ public class AddOrderDiaFragment extends DialogFragment {
                     ord_stat_txt.setError("Date should be picked from today onwards.");
                 }
                  */
-            });
+        });
 
 
-            btn_back.setOnClickListener(v -> {
-                Log.d(TAG, "onClick: closing dialog");
+        btn_back.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: closing dialog");
+            getDialog().dismiss();
+        });
+
+        btn_add.setOnClickListener(v -> {
+            if (!ord_name_txt.getText().toString().isEmpty() && !ord_qty_txt.getText().toString().isEmpty() && !ord_stat_txt.getText().toString().isEmpty()) {
+                Log.d(TAG, "onClick: capturing input");
+                String name = ord_name_txt.getText().toString().toUpperCase();
+                int qty = Integer.parseInt(ord_qty_txt.getText().toString());
+                String item = ord_desc_txt.getText().toString().toUpperCase();
+                String date = ord_date_txt.getText().toString().toUpperCase();
+                String stat = ord_stat_txt.getText().toString().toUpperCase();
+                fraglisten.sendInput(name, qty, item, date, stat);
                 getDialog().dismiss();
-            });
+                getActivity().recreate();
+            } else if (ord_name_txt.getText().toString().isEmpty()) {
+                ord_name_txt.requestFocus();
+                Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
+            } else if (ord_qty_txt.getText().toString().isEmpty()) {
+                ord_qty_txt.requestFocus();
+                Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
+            } else if (ord_date_txt.getText().toString().isEmpty()) {
+                ord_date_txt.requestFocus();
+                Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
+            } else if (ord_stat_txt.getText().toString().isEmpty()) {
+                ord_stat_txt.requestFocus();
+                Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
+            }
 
-            btn_add.setOnClickListener(v -> {
-                if(!ord_name_txt.getText().toString().isEmpty() && !ord_qty_txt.getText().toString().isEmpty() && !ord_stat_txt.getText().toString().isEmpty()){
-                    Log.d(TAG, "onClick: capturing input");
-                    String name = ord_name_txt.getText().toString().toUpperCase();
-                    int qty = Integer.parseInt(ord_qty_txt.getText().toString());
-                    String item = ord_desc_txt.getText().toString().toUpperCase();
-                    String stat = ord_stat_txt.getText().toString().toUpperCase();
-                    fraglisten.sendInput(name, qty, item, stat);
-                    getDialog().dismiss();
-                    getActivity().recreate();
-                }
-                else if(ord_name_txt.getText().toString().isEmpty()){ ord_name_txt.requestFocus(); Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show(); }
-                else if(ord_qty_txt.getText().toString().isEmpty()){ ord_qty_txt.requestFocus(); Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show(); }
-                else if(ord_stat_txt.getText().toString().isEmpty()){ord_stat_txt.requestFocus(); Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show(); }
-
-            });
+        });
 
         return view;
     }
@@ -138,7 +150,6 @@ public class AddOrderDiaFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
                 ord_desc_txt.setText(item);
-
             }
 
             @Override
@@ -148,6 +159,25 @@ public class AddOrderDiaFragment extends DialogFragment {
         });
     }
 
+    private void loadSpinnerStatData() {
+        String[] choice = new String[]{"TODAY", "DELIVERED"};
+        ArrayAdapter<String> statAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, choice);
+        statAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ord_stat_drop.setAdapter(statAdapter);
+        ord_stat_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                ord_stat_txt.setText(item);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
 
         @Override
         public void onAttach(Context context) {
