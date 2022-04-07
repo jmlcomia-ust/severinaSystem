@@ -53,10 +53,6 @@ import java.util.Calendar;
 
 public class ReportGenerationMenu extends DrawerBaseActivity {
     ActivityReportGenerationMenuBinding activityReportGenerationMenuBinding;
-    private PdfPCell cell;
-    BaseColor headColor = WebColors.getRGBColor("#DEDEDE");
-    BaseColor tableHeadColor = WebColors.getRGBColor("#F5ABAB");
-    severinaDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
