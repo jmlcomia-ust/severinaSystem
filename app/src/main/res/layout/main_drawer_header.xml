@@ -10,7 +10,8 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="left"
-        android:src="@drawable/ic_accnt"
+        android:layout_marginStart="-1sp"
+        android:src="@drawable/severina"
         android:paddingTop="20dp"/>
 
     <TextView
@@ -28,7 +29,7 @@
         android:id="@+id/userRole"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Administrator\"
+        android:text="@string/header_role"
         android:textColor="@color/white"
         android:layout_gravity="left"
         android:textSize="14sp"

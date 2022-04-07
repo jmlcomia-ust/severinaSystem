@@ -2,29 +2,37 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
 
+        <item android:id="@+id/nav_home"
+            android:icon="@drawable/ic_baseline_house_24"
+            android:title="Home"/>
+
         <item android:id="@+id/nav_dinventory"
-            android:icon="@drawable/ic_arrow_right"
+            android:icon="@drawable/ic_baseline_dash_24"
             android:title="Dashboard Inventory"/>
 
         <item android:id="@+id/nav_dorder"
-            android:icon="@drawable/ic_arrow_right"
+            android:icon="@drawable/ic_baseline_dash_24"
             android:title="Dashboard Orders"/>
 
 
         <item android:id="@+id/nav_vinventory"
-            android:icon="@drawable/ic_arrow_right"
+            android:icon="@drawable/ic_baseline_editinv_note_24"
             android:title="Manage Inventory"/>
 
         <item android:id="@+id/nav_vorder"
-            android:icon="@drawable/invtoord"
-            android:title="Manage Order"/>
+            android:icon="@drawable/ic_baseline_editord_calendar_24"
+            android:title="Manage Orders"/>
 
         <item android:id="@+id/nav_gen_report"
-            android:icon="@drawable/ic_arrow_right"
+            android:icon="@drawable/ic_baseline_tablegen_chart_24"
             android:title="Generate Report"/>
 
+        <item android:id="@+id/nav_instruc"
+            android:icon="@drawable/ic_baseline_info_24"
+            android:title="User Tutorial"/>
+
         <item android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_arrow_right"
+            android:icon="@drawable/ic_baseline_logoff_24"
             android:title="Log Out"/>
 
     </group>

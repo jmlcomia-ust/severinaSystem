@@ -1,8 +1,6 @@
 package com.example.testois;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,39 +16,21 @@ import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewPagerActivity extends AppCompatActivity {
+public class UserTutorial extends AppCompatActivity {
 
-   private OnboardingAdapter onboardingAdapter;
-   private LinearLayout layoutOnboardingIndicators;
-   private MaterialButton buttonOnboardingAction;
-   private PrefManager prefManager;
-   String prevStarted = "yes";
+    private OnboardingAdapter onboardingAdapter;
+    private LinearLayout layoutOnboardingIndicators;
+    private MaterialButton buttonOnboardingAction;
+    private PrefManager prefManager;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SharedPreferences sharedpreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
-        if (!sharedpreferences.getBoolean(prevStarted, false)) {
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putBoolean(prevStarted, Boolean.TRUE);
-            editor.apply();
-        } else {
-            moveToSecondary();
-        }
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pager);
 
-/*
-        prefManager = new PrefManager(this);
-        if (!prefManager.isFirstTimeLaunch()) {
-            launchHomeScreen();
-            finish();
-        }
- */
+
         layoutOnboardingIndicators = findViewById(R.id.layoutOnboardingIndicators);
         buttonOnboardingAction = findViewById(R.id.buttonOnboardingAction);
 
@@ -68,15 +48,18 @@ public class ViewPagerActivity extends AppCompatActivity {
             }
         });
 
-        buttonOnboardingAction.setOnClickListener(view -> {
-            if(onboardingViewPager.getCurrentItem() + 1 < onboardingAdapter.getItemCount()){
-                onboardingViewPager.setCurrentItem(onboardingViewPager.getCurrentItem() + 1);
+        buttonOnboardingAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(onboardingViewPager.getCurrentItem() + 1 < onboardingAdapter.getItemCount()){
+                    onboardingViewPager.setCurrentItem(onboardingViewPager.getCurrentItem() + 1);
 
-            }
-            else{
-                startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
-                finish();
+                }
+                else{
+                    startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                    finish();
 
+                }
             }
         });
 
@@ -86,6 +69,7 @@ public class ViewPagerActivity extends AppCompatActivity {
     private void setupOnboardingItems(){
 
         List<OnboardingItem> onboardingItems = new ArrayList<>();
+
         OnboardingItem item1 = new OnboardingItem();
         item1.setTitle("SEVERINA IOS");
         item1.setDescription("Welcome to Severina AOIS your Inventory System Companion, here is a start up guide on how to use the application. ");
@@ -127,15 +111,15 @@ public class ViewPagerActivity extends AppCompatActivity {
                 "the magnifying glass icon.");
         item8.setImage(R.drawable.sortop);
 
+
+
         onboardingItems.add(item1);
         onboardingItems.add(item2);
         onboardingItems.add(item3);
         onboardingItems.add(item4);
         onboardingItems.add(item5);
         onboardingItems.add(item6);
-        onboardingItems.add(item7);
         onboardingItems.add(item8);
-
         onboardingAdapter = new OnboardingAdapter(onboardingItems);
 
 
@@ -187,9 +171,6 @@ public class ViewPagerActivity extends AppCompatActivity {
         }
 
     }
-    public void moveToSecondary(){
-        // use an intent to travel from one activity to another.
-        Intent intent = new Intent(this,DashboardActivity.class);
-        startActivity(intent);
-    }
+
+
 }

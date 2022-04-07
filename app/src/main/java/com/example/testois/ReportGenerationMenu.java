@@ -39,6 +39,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -62,7 +63,12 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
         btn_genreport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GeneraatePDFReport generate = new GeneraatePDFReport();
+               // GeneraatePDFReport generate = new GeneraatePDFReport();
+                try {
+                    createPDF();
+                } catch (DocumentException | FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         severinaDB db = new severinaDB(this);
@@ -105,4 +111,28 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }}
+
+    }
+
+    public void createPDF() throws DocumentException, FileNotFoundException {
+        //getting the full path of the PDF report name
+        String mPath = this.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() +"/test.pdf"; //reportName could be any name
+        //constructing the PDF file
+        File pdfFile = new File(mPath);
+        Document document = new Document();
+        if(pdfFile.mkdir()){
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
+            document.open();
+            document.add(new Paragraph("A Hello World PDF document."));
+            document.close();
+            writer.close();
+        }
+        else{
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
+            document.open();
+            document.add(new Paragraph("A Hello World PDF document."));
+            document.close();
+            writer.close();
+        }
+    }
+}
