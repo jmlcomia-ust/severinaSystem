@@ -1,10 +1,13 @@
 package com.example.testois;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -20,6 +23,7 @@ import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
 import com.example.testois.utilities.GeneraatePDFReport;
+import com.example.testois.utilities.ListAllReport;
 import com.example.testois.utilities.severinaDB;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
@@ -42,6 +46,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -51,6 +56,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
     private PdfPCell cell;
     BaseColor headColor = WebColors.getRGBColor("#DEDEDE");
     BaseColor tableHeadColor = WebColors.getRGBColor("#F5ABAB");
+    severinaDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,21 +66,13 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
         allocatedActivityTitle("Generate Reports");
         ActivityCompat.requestPermissions(ReportGenerationMenu.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
         Button btn_genreport = findViewById(R.id.btn_genreport);
-        btn_genreport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // GeneraatePDFReport generate = new GeneraatePDFReport();
-                try {
-                    createPDF();
-                } catch (DocumentException | FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
         severinaDB db = new severinaDB(this);
-        Inventory inventory;
-        Orders orders;
-
+        btn_genreport.setOnClickListener(v -> {
+            // GeneraatePDFReport generate = new GeneraatePDFReport();
+            ListAllReport report = new ListAllReport();
+            report.createPDF(getApplicationContext(), "ItsYaBoiDennis");
+            showPdf("ItsYaBoiDennis");
+        });
     }
 
     @Override
@@ -113,26 +111,21 @@ public class ReportGenerationMenu extends DrawerBaseActivity {
         return super.onOptionsItemSelected(item);
 
     }
-
-    public void createPDF() throws DocumentException, FileNotFoundException {
-        //getting the full path of the PDF report name
-        String mPath = this.getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() +"/test.pdf"; //reportName could be any name
+    private void showPdf(String reportName) {
+        // TODO Auto-generated method stub
+        String mPath = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/test.pdf"; //reportName could be any name
         //constructing the PDF file
-        File pdfFile = new File(mPath);
-        Document document = new Document();
-        if(pdfFile.mkdir()){
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
-            document.open();
-            document.add(new Paragraph("A Hello World PDF document."));
-            document.close();
-            writer.close();
-        }
-        else{
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
-            document.open();
-            document.add(new Paragraph("A Hello World PDF document."));
-            document.close();
-            writer.close();
+        File pdfFile = new File(mPath, reportName + ".pdf");
+        Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        testIntent.setType("application/pdf");
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(pdfFile);
+        intent.setDataAndType(uri, "application/pdf");
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, "No Application Available to View PDF", Toast.LENGTH_LONG).show();
         }
     }
 }

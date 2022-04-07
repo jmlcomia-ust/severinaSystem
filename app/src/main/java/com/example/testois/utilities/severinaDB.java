@@ -546,7 +546,7 @@ public class severinaDB extends SQLiteOpenHelper {
     }
     public List<Report> getReportData(Inventory inventory, Orders orders){
         sql = this.getWritableDatabase();
-        String rawQuery = "create table db_report as select ord_id, ord_description, inv_quantity, ord_quantity from db_inventory, db_order";
+        String rawQuery = "create table db_report as select ord_id, ord_status, inv_quantity, ord_quantity from db_inventory, db_order";
         sql.execSQL(rawQuery);
         List<Report> report = new ArrayList<>();
         Cursor cursor = sql.rawQuery(rawQuery, null);
@@ -561,6 +561,19 @@ public class severinaDB extends SQLiteOpenHelper {
         }
         cursor.close();
         return report;
+    }
+
+    public void notifyPdfGeneration(String path){
+        String message = " Report Generated. Locate on "+path;
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
+        Uri alarmSound = RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION);
+        builder.setSound(alarmSound);
+        builder.setVibrate( new long []{ 1000 , 1000 , 1000 , 1000 , 1000 });
+        builder.setSmallIcon(R.drawable.ic_notifications);
+        builder.setContentTitle("Severina OIS");
+        builder.setContentText(message);
+        builder.setAutoCancel(true);
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
     }
 }
 

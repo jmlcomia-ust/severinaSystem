@@ -4,13 +4,13 @@ import android.graphics.Bitmap;
 
 public class Report {
     private int ord_id;
-    private String ord_description;
+    private String ord_status;
     private int inv_quantity;
     private int ord_quantity;
 
-    public Report(int ord_id, String ord_description, int inv_quantity, int ord_quantity) {
+    public Report(int ord_id, String ord_status, int inv_quantity, int ord_quantity) {
         this.ord_id = ord_id;
-        this.ord_description = ord_description;
+        this.ord_status = ord_status;
         this.inv_quantity = inv_quantity;
         this.ord_quantity = ord_quantity;
     }
@@ -19,9 +19,9 @@ public class Report {
 
     public void setOrd_id(int ord_id) { this.ord_id = ord_id; }
 
-    public String getOrd_description() { return ord_description; }
+    public String getOrd_status() { return ord_status; }
 
-    public void setOrd_description(String ord_description) { this.ord_description = ord_description; }
+    public void setOrd_status(String ord_status) { this.ord_status = ord_status; }
 
     public int getInv_quantity() { return inv_quantity; }
 

@@ -28,6 +28,7 @@ import com.example.testois.fragments.AddOrderDiaFragment;
 import com.example.testois.fragments.DeleteOrderDiaFragment;
 import com.example.testois.fragments.UpdateOrderDiaFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -124,31 +125,16 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         add_btn = findViewById(R.id.add_ord);
         rv_current = findViewById(R.id.rv_current);
         rv_recent = findViewById(R.id.rv_recent);
-/*
-       recent_customViewAdapterOrd = new CustomViewAdapOrd(recnt_orders, this, nListener);
-            rv_recent.setAdapter(recent_customViewAdapterOrd);
-            rv_recent.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-            //if (recent_customViewAdapterOrd.getItemCount() != 0){emptyfield2.setVisibility(View.GONE);}
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String date = sdf.format(System.currentTimeMillis());
 
-        curr_customViewAdapterOrd = new CustomViewAdapOrd(curr_orders, this, nListener);
-            rv_current.setAdapter(curr_customViewAdapterOrd);
-            rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-            //if (curr_customViewAdapterOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
-
- */
         db = new severinaDB(ViewOrder.this);
         all_orders = db.getOrderList();
         customViewAdapOrd = new CustomViewAdapOrd(all_orders, this, this);
         rv_current.setAdapter(customViewAdapOrd);
         rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
         if (customViewAdapOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
-/*
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            @SuppressLint({"NewApi", "LocalSuppress"}) NotificationChannel channel = new NotificationChannel("NotifOnOrder", "NotifOnOrder", NotificationManager.IMPORTANCE_DEFAULT);
-            @SuppressLint({"NewApi", "LocalSuppress"}) NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
- */
+
         add_btn.setOnClickListener(view ->{
             Log.d(TAG, "onClick: opening dialog.");
             AddOrderDiaFragment dialog = new AddOrderDiaFragment();
@@ -179,13 +165,17 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
 
     @Override
     public void sendInput(String name, int qty, String desc, String stat) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String date = sdf.format(System.currentTimeMillis());
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try{
             db = new severinaDB(ViewOrder.this);
             Orders orders = new Orders (name, qty, desc, stat);
-            if(stat.equalsIgnoreCase("TODAY")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty)); }
-            else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty));}
-            else{ db.NotifyOnOrder(3, desc, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
+            db.addOrder(orders);
+            if(stat.equalsIgnoreCase(date)){}
+           // if(stat.equalsIgnoreCase("TODAY")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty)); }
+            //else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty));}
+            //else{ db.NotifyOnOrder(3, desc, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
            //db.updateStock(name, qty);
         }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
@@ -197,9 +187,11 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             db = new severinaDB(ViewOrder.this);
             //Orders order = new Orders(name,qty, desc, image);
             Orders orders = new Orders(id, name, qty, desc, stat);
+            /*
             if(stat.equalsIgnoreCase("TODAY")){ db.updateOrder(orders); db.NotifyOnOrder(1, name, String.valueOf(qty)); }
             else if(stat.equalsIgnoreCase("DELIVERED")){ db.updateOrder(orders); db.NotifyOnOrder(2,name, String.valueOf(qty));}
             else{ db.NotifyOnOrder(3, name, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
+             */
            // db.updateStock(name, qty);
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();

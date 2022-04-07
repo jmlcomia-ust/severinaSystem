@@ -2,12 +2,17 @@
 
 package com.example.testois.fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 
+import android.text.InputType;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,6 +29,10 @@ import android.widget.Toast;
 import com.example.testois.R;
 import com.example.testois.utilities.severinaDB;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -30,10 +40,11 @@ public class AddOrderDiaFragment extends DialogFragment {
 
     private static final String TAG = "AddOrderDiaFragment";
     private EditText ord_name_txt, ord_qty_txt;
-    private TextView ord_stat_txt ,ord_desc_txt;
+    private TextView ord_stat_txt, ord_desc_txt;
     Spinner ord_desc_drop, ord_stat_drop;
     Button btn_add, btn_back, btn_insert;
     private severinaDB db;
+    DatePickerDialog picker;
 
 
 
@@ -53,13 +64,41 @@ public class AddOrderDiaFragment extends DialogFragment {
             ord_qty_txt = view.findViewById(R.id.ord_qty_txt);
             ord_desc_drop = view.findViewById(R.id.ord_desc_drop);
             ord_desc_txt = view.findViewById(R.id.ord_desc_txt);
-            ord_stat_drop = view.findViewById(R.id.ord_stat_drop);
             ord_stat_txt = view.findViewById(R.id.ord_stat_txt);
             btn_add = view.findViewById(R.id.btn_add_ord);
             btn_back = view.findViewById(R.id.btn_back_ord);
             db = new severinaDB(getContext());
+
+            /*
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            String date = sdf.format(System.currentTimeMillis());
+            String dayToday    = (String) DateFormat.format("dd", Long.parseLong(date)); // 20
+            String monthToday  = (String) DateFormat.format("MM", Long.parseLong(date)); // 06
+            String yearToday   = (String) DateFormat.format("yyyy", Long.parseLong(date)); // 2013
+            */
             loadSpinnerDescData();
-            loadSpinnerStatData();
+
+
+            ord_stat_txt.setOnClickListener(v -> {
+                final Calendar cldr = Calendar.getInstance();
+                int day = cldr.get(Calendar.DAY_OF_MONTH);
+                int month = cldr.get(Calendar.MONTH);
+                int year = cldr.get(Calendar.YEAR);
+                // date picker dialog
+
+                picker = new DatePickerDialog(getActivity(),
+                        (view1, year1, monthOfYear, dayOfMonth) -> ord_stat_txt.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1), year, month, day);
+                picker.show();
+
+                /*
+                if(day < Integer.parseInt(dayToday)){
+                    ord_stat_txt.setText("");
+                    ord_stat_txt.requestFocus();
+                    ord_stat_txt.setError("Date should be picked from today onwards.");
+                }
+                 */
+            });
+
 
             btn_back.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: closing dialog");
@@ -109,26 +148,6 @@ public class AddOrderDiaFragment extends DialogFragment {
         });
     }
 
-    private void loadSpinnerStatData() {
-        String[] choice = new String[]{"TODAY", "DELIVERED"};
-        ArrayAdapter<String> statAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, choice);
-        statAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ord_stat_drop.setAdapter(statAdapter);
-        ord_stat_drop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                ord_stat_txt.setText(item);
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
 
         @Override
         public void onAttach(Context context) {
