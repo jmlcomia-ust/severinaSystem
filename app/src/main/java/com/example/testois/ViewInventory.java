@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.testois.dao.Inventory;
+import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.databinding.ActivityViewInventoryBinding;
@@ -53,7 +54,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        inflater.inflate(R.menu.dash_options, menu);
 
         // Initialise menu item search bar
         // with id and take its object
@@ -67,7 +67,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
 
         MenuItem searchItem = menu.findItem(R.id.nav_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -84,43 +83,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
 
         return super.onCreateOptionsMenu(menu);
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        List<Inventory> items = db.getitemsList();
-        switch (item.getItemId()) {
-            case R.id.nav_profile:
-                //startActivity(new Intent(this, ProfileSettings.class));
-                Toast.makeText(this, "Going to Profile Settings", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.sort_name:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(items, (Inventory o1, Inventory o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
-                Collections.reverse(items);
-                customViewAdapInv = new CustomViewAdapInv(items, ViewInventory.this, mListener);
-                recyclerView.setAdapter(customViewAdapInv);
-                recyclerView.setLayoutManager(new LinearLayoutManager(ViewInventory.this));
-                recyclerView.getAdapter().notifyDataSetChanged();
-                return true;
-
-            case R.id.sort_stocks:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(items, (Inventory o1, Inventory o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
-                Collections.reverse(items);
-                customViewAdapInv = new CustomViewAdapInv(items, ViewInventory.this, mListener);
-                recyclerView.setAdapter(customViewAdapInv);
-                recyclerView.setLayoutManager(new LinearLayoutManager(ViewInventory.this));
-                recyclerView.getAdapter().notifyDataSetChanged();
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-            }
-    }
 
     //public void sendInput(String name, String qty, String desc, int thres, Bitmap image){
      public void sendInput(String name, int qty, String desc, int thres){
@@ -130,10 +92,12 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
              db = new severinaDB(ViewInventory.this);
              //Inventory inventory = new Inventory(name,qty, desc, thres, image);
              Inventory inventory = new Inventory(name,qty, desc, thres);
+             Report report = new Report(name, qty);
              db.addItem(inventory);
-             if(qty == (thres+1) || qty ==(thres+2)){ db.NotifyOnStock(1,name); }
+             db.updateReport(report);
+             if(qty == (thres+1) || qty ==(thres+2)){ db.NotifyOnStock(1,name);}
              else if(qty < thres){ db.NotifyOnStock(2,name); }
-             else if(qty <= thres){db.NotifyOnStock(3,name);}
+             else if(qty <= thres){db.NotifyOnStock(3,name); }
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
          }
@@ -147,6 +111,8 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             //Inventory inventory = new Inventory(name,qty, desc, thres, image);
             Inventory items = new Inventory (id, name, qty, desc, thres);
             db.updateItem(items);
+            Report report = new Report(name, qty);
+            db.updateReport(report);
             if(qty == (thres+1) || qty ==(thres+2)){ db.NotifyOnStock(1,name); }
             else if(qty < thres){ db.NotifyOnStock(2,name); }
             else if(qty <= thres){db.NotifyOnStock(3,name);}

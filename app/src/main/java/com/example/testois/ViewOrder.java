@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
+import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.databinding.ActivityViewOrderBinding;
@@ -58,11 +59,8 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        inflater.inflate(R.menu.dash_options, menu);
 
         db = new severinaDB(this);
-        List<Inventory> items = db.getitemsList();
-        items = new ArrayList<>();
 
         MenuItem searchItem = menu.findItem(R.id.nav_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -82,51 +80,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         });
 
         return super.onCreateOptionsMenu(menu);
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_profile:
-                //Intent i = new Intent(this, ProfileSettings.class);
-                Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.sort_name:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
-                Collections.reverse(all_orders);
-                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
-                rv_current.setAdapter(customViewAdapOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                rv_current.getAdapter().notifyDataSetChanged();
-                return true;
-
-            case R.id.sort_stocks:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
-                Collections.reverse(all_orders);
-                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
-                rv_current.setAdapter(customViewAdapOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                rv_current.getAdapter().notifyDataSetChanged();
-                return true;
-            case R.id.sort_stat:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getStatus().compareToIgnoreCase(o2.getStatus()));
-                Collections.reverse(all_orders);
-                customViewAdapOrd = new CustomViewAdapOrd(all_orders, ViewOrder.this, nListener);
-                rv_current.setAdapter(customViewAdapOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-                rv_current.getAdapter().notifyDataSetChanged();
-                return true;
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @SuppressLint("NewApi")
@@ -162,9 +115,10 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try{
             db = new severinaDB(ViewOrder.this);
             Orders orders = new Orders (name, qty, desc, date, stat);
-           if(stat.equalsIgnoreCase("TODAY")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty)); }
-           else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty));}
-           else{ db.NotifyOnOrder(3, desc, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
+           if(stat.equalsIgnoreCase("TO DELIVER")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty), date);       Report report = new Report(orders.getId(), date, qty); db.addReport(report);}
+           else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty), date);     Report report = new Report(orders.getId(), date, qty); db.addReport(report);}
+           else{ db.NotifyOnOrder(3, desc, String.valueOf(qty), date); Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
+
         }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
 
@@ -175,9 +129,9 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             db = new severinaDB(ViewOrder.this);
             //Orders order = new Orders(name,qty, desc, image);
             Orders orders = new Orders(id, name, qty, desc, date, stat);
-            if(stat.equalsIgnoreCase("TODAY")){ db.updateOrder(orders); db.NotifyOnOrder(1, name, String.valueOf(qty)); }
-            else if(stat.equalsIgnoreCase("DELIVERED")){ db.updateOrder(orders); db.NotifyOnOrder(2,name, String.valueOf(qty));}
-            else{ db.NotifyOnOrder(3, name, String.valueOf(qty)); Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
+            if(stat.equalsIgnoreCase("TO DELIVER")){ db.updateOrder(orders); db.NotifyOnOrder(1, name, String.valueOf(qty), date); }
+            else if(stat.equalsIgnoreCase("DELIVERED")){ db.updateOrder(orders); db.NotifyOnOrder(2,name, String.valueOf(qty), date);}
+            else{ db.NotifyOnOrder(3, name, String.valueOf(qty), date); Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
 
            // db.updateStock(name, qty);
         } catch (Exception ex) {

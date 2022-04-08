@@ -16,15 +16,21 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.testois.dao.Inventory;
+import com.example.testois.dao.Orders;
 import com.example.testois.dao.User;
 import com.google.android.material.navigation.NavigationView;
 
 public class DrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
-    User user;
+    Inventory items;
+    Orders orders;
+
+
 
     @Override
     public void setContentView(View view) {

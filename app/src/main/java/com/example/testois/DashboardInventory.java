@@ -45,7 +45,6 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        inflater.inflate(R.menu.dash_options, menu);
         MenuItem searchViewItem = menu.findItem(R.id.nav_search);
         searchView = (SearchView) searchViewItem.getActionView();
         searchView.clearFocus();
@@ -72,36 +71,7 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
 
         return super.onCreateOptionsMenu(menu);
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        List<Inventory> items = db.getitemsList();
-                switch (item.getItemId()) {
-                    case R.id.nav_profile:
-                        //Intent i = new Intent(this, ProfileSettings.class);
-                        Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
-                        return true;
 
-                    case R.id.sort_name:
-                        //getItemsByName
-                        customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
-                        recyclerView.setAdapter(customAdapterInv);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                        return true;
-
-                    case R.id.sort_stocks:
-                        //getItemsOrderByStocks
-                        customAdapterInv = new CustomAdapterInv(items, DashboardInventory.this);
-                        recyclerView.setAdapter(customAdapterInv);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(DashboardInventory.this));
-                        recyclerView.getAdapter().notifyDataSetChanged();
-                        return true;
-
-                    default:
-                        return super.onOptionsItemSelected(item);
-
-                }
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

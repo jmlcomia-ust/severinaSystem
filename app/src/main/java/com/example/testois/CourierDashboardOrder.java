@@ -44,7 +44,6 @@ public class CourierDashboardOrder  extends CourierDrawerBaseActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        inflater.inflate(R.menu.dash_options, menu);
         MenuItem searchItem = menu.findItem(R.id.nav_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
@@ -62,40 +61,6 @@ public class CourierDashboardOrder  extends CourierDrawerBaseActivity implements
             }
         });
         return super.onCreateOptionsMenu(menu);
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_profile:
-                //Intent i = new Intent(this, ProfileSettings.class);
-                Toast.makeText(this, "Profile Settings is clicked", Toast.LENGTH_SHORT).show();
-                return true;
-
-            case R.id.sort_name:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
-                Collections.reverse(all_orders);
-                customAdapterOrd = new CustomAdapterOrd(all_orders, CourierDashboardOrder.this);
-                rv_current.setAdapter(customAdapterOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(CourierDashboardOrder.this));
-                rv_current.getAdapter().notifyDataSetChanged();
-                return true;
-            case R.id.sort_stocks:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                Collections.sort(all_orders, (Orders o1, Orders o2) -> String.valueOf(o1.getQuantity()).compareToIgnoreCase(String.valueOf(o2.getQuantity())));
-                Collections.reverse(all_orders);
-                customAdapterOrd = new CustomAdapterOrd(all_orders, CourierDashboardOrder.this);
-                rv_current.setAdapter(customAdapterOrd);
-                rv_current.setLayoutManager(new LinearLayoutManager(CourierDashboardOrder.this));
-                rv_current.getAdapter().notifyDataSetChanged();
-                return true;
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override

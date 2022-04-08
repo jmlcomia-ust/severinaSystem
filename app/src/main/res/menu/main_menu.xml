@@ -8,10 +8,6 @@
         app:showAsAction="always"
         android:icon="@drawable/search"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
-    <item
-        android:id="@+id/nav_profile"
-        android:title="profile"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_accnt"/>
+
 
 </menu>

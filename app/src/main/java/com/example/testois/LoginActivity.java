@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         severinadb = new severinaDB(LoginActivity.this); //alternatively put in splash screen
         severinadb.addUser(user.getName(), user.getPassword());     //alternatively put in splash screen
 
+
         btn1.setOnClickListener(v -> {
             String name = edtuname.getText().toString();
             String password = edtpword.getText().toString();

@@ -15,11 +15,7 @@
         android:id="@+id/search"
         android:icon="@drawable/search"
         app:showAsAction="always"/>
-    <item
-        android:title="Profile"
-        android:id="@+id/profile"
-        android:icon="@drawable/ic_accnt"
-        app:showAsAction="always"/>
+
 
 
 </menu>

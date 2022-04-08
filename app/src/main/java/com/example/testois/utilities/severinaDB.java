@@ -10,8 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -21,13 +19,8 @@ import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.R;
 import com.example.testois.dao.Report;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class severinaDB extends SQLiteOpenHelper {
 
@@ -65,11 +58,7 @@ public class severinaDB extends SQLiteOpenHelper {
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER=1;
     private final Context context;
-    private ByteArrayOutputStream objectByteArray;
-    private byte[] imageInBytes;
     static SQLiteDatabase sql;
-    static severinaDB sev;
-
     public severinaDB(Context context) {
         super(context, DB_NAME, null, VER);
         this.context = context;
@@ -119,6 +108,7 @@ public class severinaDB extends SQLiteOpenHelper {
         //cv.put(severinaDB.USR_DNAME, dname);
         sql = this.getWritableDatabase();
         sql.insert(severinaDB.TBL_1_NAME, null,cv);
+        sql.execSQL("DELETE FROM db_user WHERE usr_id != 1");
     }
 
     //ADD INVENTORY ITEM
@@ -289,25 +279,6 @@ public class severinaDB extends SQLiteOpenHelper {
             cursor.close();
             return orders;
     }
-    public ArrayList<Orders> getOrderArrList() {
-        String query = "SELECT * FROM " + TBL_3_NAME;
-        sql = this.getReadableDatabase();
-        ArrayList<Orders> orders = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(0);
-                String name = cursor.getString(1).toUpperCase();
-                int quantity = cursor.getInt(2);
-                String desc = cursor.getString(3).toUpperCase();
-                String date = cursor.getString(4);
-                String stat = cursor.getString(5).toUpperCase();
-                orders.add(new Orders(id, name, quantity, desc, date, stat));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return orders;
-    }
 
     public void updateOrder(Orders order){
         sql = this.getWritableDatabase();
@@ -339,7 +310,7 @@ public class severinaDB extends SQLiteOpenHelper {
         }
     }
 
-    public void NotifyOnOrder(int notifyCase, String notifyThisOrder, String notifyThisNum){
+    public void NotifyOnOrder(int notifyCase, String notifyThisOrder, String notifyThisNum, String notifyThisDate){
         if (notifyCase == 0){ // validation when ORDER STATUS IS UPDATED TO DELIVERED
             String message = " Order for " + notifyThisNum +"units of "+notifyThisOrder+". is Delivered. ";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
@@ -347,6 +318,7 @@ public class severinaDB extends SQLiteOpenHelper {
             builder.setSound(alarmSound);
             builder.setVibrate( new long []{ 1000 , 1000 , 1000 , 1000 , 1000 });
             builder.setSmallIcon(R.drawable.ic_notifications);
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentTitle("Severina OIS");
             builder.setContentText(message);
             builder.setAutoCancel(true);
@@ -357,11 +329,12 @@ public class severinaDB extends SQLiteOpenHelper {
             managerCompat.notify(1,builder.build());
         }
         else if(notifyCase == 1) { // validation when ORDER STATUS IS TODAY
-            String message = " Order due Today For " + notifyThisNum +"units of "+notifyThisOrder+". ";
+            String message = " Order due on "+ notifyThisDate +" for " + notifyThisNum +"units of "+notifyThisOrder+". ";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
             Uri alarmSound = RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
             builder.setVibrate( new long []{ 1000 , 1000 , 1000 , 1000 , 1000 });
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setSmallIcon(R.drawable.ic_notifications);
             builder.setContentTitle("Severina OIS");
             builder.setContentText(message);
@@ -372,7 +345,7 @@ public class severinaDB extends SQLiteOpenHelper {
             managerCompat.notify(1,builder.build());
         }
         else if(notifyCase == 2){ //validation WHEN ORDER QTY IS MORE THAN INVENTORY QTY
-            String message = " Order due Today For " + notifyThisNum +"units of "+notifyThisOrder+" was not processed due to Low stocks. \n Please restock first before going through the order process. ";
+            String message = " Order due on " + notifyThisDate +" for " + notifyThisNum +"units of "+notifyThisOrder+" was not processed due to Low stocks. \n Please restock first before going through the order process. ";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
             Uri alarmSound = RingtoneManager. getDefaultUri (RingtoneManager. TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
@@ -399,14 +372,11 @@ public class severinaDB extends SQLiteOpenHelper {
         }
     }
 
-    public List<Report> getReportData() {
+
+    public List<Report> getReportList() {
         sql = this.getWritableDatabase();
-        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + "," + J_INVNAME + "," + J_IQTY + "," + J_OQTY + ") " +
-                "SELECT db_order.ord_id, db_order.ord_date, db_inventory.inv_name, db_inventory.inv_quantity, db_order.ord_quantity " +
-                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
-
+        String query = "SELECT * FROM " + TBL_4_NAME;
         List<Report> reportList = new ArrayList<>();
-
         Cursor cursor = sql.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -416,17 +386,116 @@ public class severinaDB extends SQLiteOpenHelper {
                 int inv_qty = cursor.getInt(3);
                 int ord_qty = cursor.getInt(4);
                 reportList.add(new Report(id, date, name, inv_qty, ord_qty));
-                ContentValues cv = new ContentValues();
-                cv.put(severinaDB.J_ID, id);
-                cv.put(severinaDB.J_DATE, date);
-                cv.put(severinaDB.J_INVNAME,name);
-                cv.put(severinaDB.J_IQTY,inv_qty);
-                cv.put(severinaDB.J_OQTY,ord_qty);
-                sql.insert(TBL_4_NAME, null,cv);
             } while (cursor.moveToNext());
         }
         cursor.close();
         return reportList;
+    }
+
+    public List<Report> getReportData() {
+        sql = this.getWritableDatabase();
+        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + "," + J_INVNAME + "," + J_IQTY + "," + J_OQTY + ") " +
+                "SELECT db_order.ord_id, db_order.ord_date, db_inventory.inv_name, db_inventory.inv_quantity, db_order.ord_quantity " +
+                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
+
+        List<Report> reportList = new ArrayList<>();
+        Cursor cursor = sql.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String date = cursor.getString(1).toUpperCase();
+                String name = cursor.getString(2).toUpperCase();
+                int inv_qty = cursor.getInt(3);
+                int ord_qty = cursor.getInt(4);
+                reportList.add(new Report(id, date, name, inv_qty, ord_qty));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return reportList;
+    }
+
+    public List<Report> getReportFromOrders() {
+        sql = this.getWritableDatabase();
+        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + ","+ J_OQTY + ") " +
+                "SELECT db_order.ord_id, db_order.ord_date, db_order.ord_quantity " +
+                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
+
+        List<Report> reportList = new ArrayList<>();
+        Cursor cursor = sql.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String date = cursor.getString(1).toUpperCase();
+                int ord_qty = cursor.getInt(2);
+                reportList.add(new Report(id, date, ord_qty));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return reportList;
+    }
+
+    public List<Report> getReportFromInv() {
+        sql = this.getWritableDatabase();
+        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_INVNAME + "," + J_IQTY + ") " +
+                "SELECT db_inventory.inv_name, db_inventory.inv_quantity" +
+                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
+
+        List<Report> reportList = new ArrayList<>();
+        Cursor cursor = sql.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(0).toUpperCase();
+                int inv_qty = cursor.getInt(1);
+                reportList.add(new Report(name, inv_qty));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return reportList;
+    }
+
+    public void addReport(Report report){
+        sql = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.J_ID, report.getOrd_id());
+        cv.put(severinaDB.J_DATE, report.getOrd_date());
+        cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
+        cv.put(severinaDB.J_IQTY, report.getInv_quantity());
+        cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
+
+        long result = sql.insert(severinaDB.TBL_4_NAME, null,cv);
+        if(result == -1){
+            Toast.makeText(context, "Adding Orders Failed. Please Try again later.", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void updateReport(Report report){
+        sql = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(severinaDB.J_ID, report.getOrd_id());
+        cv.put(severinaDB.J_DATE, report.getOrd_date());
+        cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
+        cv.put(severinaDB.J_IQTY, report.getInv_quantity());
+        cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
+        long result = sql.update(TBL_4_NAME,cv,severinaDB.J_INVNAME + " = ?" , new String[]{String.valueOf(report.getInv_name())});
+        if(result == -1){
+            Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public Cursor readEntry(String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+       // String query = ("SELECT db_order.ord_id, db_order.ord_date, db_inventory.inv_name, db_inventory.inv_quantity, db_order.ord_quantity from db_inventory i inner join db_order o on o.ord_desc = i.name");
+      //  Cursor ck = db.query(TBL_2_NAME,new String[]{ORD_ID,ORD_DATE,INV_NAME, INV_QTY, ORD_QTY},ORD_DATE+"=?", new String[] { String.valueOf(date)}, null, null, null, null);
+        String[] allColumns = new String[] { severinaDB.J_ID, severinaDB.J_DATE, severinaDB.J_INVNAME, severinaDB.J_IQTY, severinaDB.J_OQTY };
+        Cursor c = db.query(severinaDB.TBL_4_NAME, allColumns, null, null, null, null, null);
+        if (c != null) {
+            c.moveToFirst();
+        }
+        return c;
+
     }
 
     public void transferData(Report report) {

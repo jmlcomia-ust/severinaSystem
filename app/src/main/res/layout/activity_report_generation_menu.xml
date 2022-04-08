@@ -356,7 +356,6 @@
         </TableRow>
 
         </TableLayout>
-
         <Button
             android:id="@+id/btn_genreport"
             android:layout_width="wrap_content"

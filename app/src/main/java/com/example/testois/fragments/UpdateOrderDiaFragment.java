@@ -76,7 +76,7 @@ public class UpdateOrderDiaFragment extends DialogFragment {
         Bundle args = getArguments();
         ord_id_txt.setText(args.getString("id"));
         ord_name_txt.setText(args.getString("name"));
-        ord_qty_txt.setText(args.getString("qty"));
+        ord_qty_txt.setText(String.valueOf(args.getInt("qty")));
         ord_desc_txt.setText(args.getString("desc"));
         ord_date_txt.setText(args.getString("date"));
         ord_stat_txt .setText(args.getString("stat"));
@@ -139,7 +139,7 @@ public class UpdateOrderDiaFragment extends DialogFragment {
     }
 
     private void loadSpinnerStatData() {
-        String[] choice = new String[]{"TODAY", "DELIVERED"};
+        String[] choice = new String[]{"TO DELIVER", "DELIVERED"};
         ArrayAdapter<String> statAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, choice);
         statAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ord_stat_drop.setAdapter(statAdapter);

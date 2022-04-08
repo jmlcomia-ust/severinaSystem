@@ -160,7 +160,7 @@ public class AddOrderDiaFragment extends DialogFragment {
     }
 
     private void loadSpinnerStatData() {
-        String[] choice = new String[]{"TODAY", "DELIVERED"};
+        String[] choice = new String[]{"TO DELIVER", "DELIVERED"};
         ArrayAdapter<String> statAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, choice);
         statAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ord_stat_drop.setAdapter(statAdapter);

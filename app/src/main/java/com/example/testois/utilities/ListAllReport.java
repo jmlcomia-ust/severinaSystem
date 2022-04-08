@@ -1,10 +1,9 @@
 package com.example.testois.utilities;
 
+import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.Environment;
 
-import com.example.testois.ViewOrder;
 import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.dao.Inventory;
@@ -32,7 +31,8 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListAllReport {
+public class ListAllReport extends Application {
+    static Inventory inventory;
 
         //creating a PdfWriter variable. PdfWriter class is available at com.itextpdf.text.pdf.PdfWriter
         private PdfWriter pdfWriter;
@@ -287,7 +287,8 @@ public class ListAllReport {
          */
 
         private void generateTableData(){
-            List<Report> reportList = db.getReportData();
+            List<Report> reportList = db.getReportList();
+
             //Report report = new Report (id, qty, desc, date, stat);
             //db.transferData(report);
         }

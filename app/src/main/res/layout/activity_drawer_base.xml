@@ -13,6 +13,19 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
 
+    <ListView android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/list_inv"
+                android:visibility="invisible"/>
+    <ListView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/list_ord"
+        android:visibility="invisible"/>
+    <ListView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/list_Report"
+        android:visibility="invisible"/>
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
