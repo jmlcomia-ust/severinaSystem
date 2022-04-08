@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         btn2.setOnClickListener(view -> {
-            Intent i = new Intent(getApplicationContext(), ViewPagerActivity.class);
+            Intent i = new Intent(getApplicationContext(), CourierDashboardActivity.class);
             startActivity(i);
         });
     }
