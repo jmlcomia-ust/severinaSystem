@@ -170,7 +170,7 @@ public class ListAllReport extends Application {
             cell.setFixedHeight(30); //cell height
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase("Date",
+            cell = new PdfPCell(new Phrase("ORDER DATE",
                     new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD)));
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBackgroundColor(new GrayColor(0.75f));
@@ -202,23 +202,23 @@ public class ListAllReport extends Application {
             //End of adding table headers
 
             //This method will generate some static data for the table
-            generateTableData();
+            List<Report> reportList = generateTableData();
 
             //Adding data into table
-            for (int i = 0; i < arrayListReport.size(); i++) { //
-                cell = new PdfPCell(new Phrase(arrayListReport.get(i).getOrd_id()));
+            for (int i = 0; i < reportList.size(); i++) { //
+                cell = new PdfPCell(new Phrase(reportList.get(i).getOrd_id()));
                 cell.setFixedHeight(28);
                 table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(arrayListReport.get(i).getOrd_date()));
+                cell = new PdfPCell(new Phrase(reportList.get(i).getOrd_date()));
                 cell.setFixedHeight(28);
                 table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(arrayListReport.get(i).getInv_quantity()));
+                cell = new PdfPCell(new Phrase(reportList.get(i).getInv_quantity()));
                 cell.setFixedHeight(28);
                 table.addCell(cell);
 
-                cell = new PdfPCell(new Phrase(arrayListReport.get(i).getOrd_quantity()));
+                cell = new PdfPCell(new Phrase(reportList.get(i).getOrd_quantity()));
                 cell.setFixedHeight(28);
                 table.addCell(cell);
             }
@@ -286,10 +286,8 @@ public class ListAllReport extends Application {
          * Generate static data for table
          */
 
-        private void generateTableData(){
+        private List<Report> generateTableData(){
             List<Report> reportList = db.getReportList();
-
-            //Report report = new Report (id, qty, desc, date, stat);
-            //db.transferData(report);
+            return db.getReportData(reportList);
         }
 }

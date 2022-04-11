@@ -24,7 +24,7 @@ public class Orders {
         this.status=status;
     }
 
-    public Orders(int id, String stat) {
+    public Orders(int id, String status) {
         this.id=id;
         this.status=status;
     }

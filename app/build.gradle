@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.4.1'
     implementation 'androidx.navigation:navigation-ui:2.4.1'
     implementation files('libs/itextpdf-5.5.13.3.jar')
-    testImplementation 'junit:junit:'
+    testImplementation 'junit:junit:4.13.1'
     implementation group: 'com.opencsv', name: 'opencsv', version: '4.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

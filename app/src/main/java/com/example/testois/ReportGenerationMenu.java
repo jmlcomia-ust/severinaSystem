@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,13 +30,16 @@ import com.example.testois.dao.Report;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
 import com.example.testois.utilities.ListAllReport;
 import com.example.testois.utilities.severinaDB;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 
-public class ReportGenerationMenu extends DrawerBaseActivity{
+public class ReportGenerationMenu extends DrawerBaseActivity  {
     ActivityReportGenerationMenuBinding activityReportGenerationMenuBinding;
     TableLayout tableLayout;
     severinaDB db;
@@ -46,6 +52,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity{
         allocatedActivityTitle("Generate Reports");
         ActivityCompat.requestPermissions(ReportGenerationMenu.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
         db = new severinaDB(this);
+        tableLayout = findViewById(R.id.report_table);
         Button btn_genreport = findViewById(R.id.btn_genreport);
 
         btn_genreport.setOnClickListener(v -> {
@@ -59,16 +66,12 @@ public class ReportGenerationMenu extends DrawerBaseActivity{
             showPdf("InventoryOrderReport-" + date);
         });
 
-        tableLayout = (TableLayout) findViewById(R.id.report_table);
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_report, menu);
-
         return true;
-
         // Configure the search info and add any event listeners...
     }
 
@@ -119,44 +122,75 @@ public class ReportGenerationMenu extends DrawerBaseActivity{
     }
 
     public void BuildTable() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
-        String date = sdf.format(System.currentTimeMillis());
-            db.open();
-            Cursor c = db.readEntry(date);
+        TableRow rowHeader = new TableRow(this);
 
-            int rows = c.getCount();
-            int cols = c.getColumnCount();
+        rowHeader.setBackgroundColor(Color.parseColor("#c0c0c0"));
 
-            c.moveToFirst();
+        rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
 
-            // outer for loop
-            for (int i = 0; i < rows; i++) {
+                TableLayout.LayoutParams.WRAP_CONTENT));
 
-                TableRow row = new TableRow(this);
-                row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+        String[] headerText = {"ID", "DATE", "ITEM NAME","STOCK LEFT","ORDERS LEFT"};
 
-                // inner for loop
-                for (int j = 0; j < cols; j++) {
+        for (String c : headerText) {
 
-                    TextView tv = new TextView(this);
-                    tv.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                    tv.setBackgroundResource(R.color.color2);
-                    tv.setGravity(Gravity.CENTER);
-                    tv.setTextSize(18);
-                    tv.setPadding(0, 5, 0, 5);
-                    tv.setText(c.getString(j));
+            TextView tv = new TextView(this);
 
-                    row.addView(tv);
+            tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextSize(18);
+            tv.setPadding(5, 5, 5, 5);
+            tv.setText(c);
+            rowHeader.addView(tv);
+        }tableLayout.addView(rowHeader);
 
+        // Get data from sqlite database and add them to the table
+
+        // Open the database for reading
+
+        SQLiteDatabase sql = db. getReadableDatabase();
+
+        try {
+
+            String selectQuery = "select * from db_report";
+
+            Cursor cursor = sql.rawQuery(selectQuery, null);
+
+            if (cursor.getCount() > 0) {
+
+                while (cursor.moveToNext()) {
+
+                    // Read columns data
+                    int i_id = cursor.getColumnIndex("joined_id");
+                    String report_id = cursor.getString(i_id);
+                    int i_date = cursor.getColumnIndex("joined_date");
+                    String report_date = cursor.getString(i_date);
+                    int i_name = cursor.getColumnIndex("joined_invname");
+                    String report_name = cursor.getString(i_name);
+                    int i_iord = cursor.getColumnIndex("joined_iqty");
+                    String report_qty_inv = cursor.getString(i_iord);
+                    int i_qord = cursor.getColumnIndex("joined_oqty");
+                    String report_qty_ord = cursor.getString(i_qord);
+
+                    TableRow row = new TableRow(this);
+
+                    row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+
+                    String[] colText = {report_id + "", report_date, report_name,report_qty_inv,report_qty_ord};
+
+                    for (String text : colText) {
+                        TextView tv = new TextView(this);
+                        tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+                        tv.setGravity(Gravity.CENTER);
+                        tv.setTextSize(16);
+                        tv.setPadding(5, 5, 5, 5);
+                        tv.setText(text);
+                        row.addView(tv);
+                    }
+                    tableLayout.addView(row);
                 }
-
-                c.moveToNext();
-
-                tableLayout.addView(row);
-
             }
-            db.close();
-        }
-
+        } catch (SQLiteException e) { e.printStackTrace(); }
+    }
 
 }

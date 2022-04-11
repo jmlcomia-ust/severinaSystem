@@ -4,6 +4,7 @@ package com.example.testois.utilities;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -155,6 +156,7 @@ public class severinaDB extends SQLiteOpenHelper {
         return items;
 
     }
+
         public List<String> getInvName(){
             List<String> inventory = new ArrayList<>();
 
@@ -241,8 +243,32 @@ public class severinaDB extends SQLiteOpenHelper {
         }
     }
 
+
+
     //Operations for Order Table Database
     public void addOrder(Orders order){
+        sql = this.getReadableDatabase();
+        String query_stocks = "Select * from "+TBL_2_NAME +  " where "+ INV_NAME + " = '" + order.getDescription().toUpperCase() +"'";
+
+
+        List<Inventory> itemsList = new ArrayList<>();
+        Cursor cursor = sql.rawQuery(query_stocks, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String name = cursor.getString(1);
+                int quantity = cursor.getInt(2);
+                String desc = cursor.getString(3);
+                int thres = cursor.getInt(4);
+                itemsList.add(new Inventory(id,name,quantity, desc, thres));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+
+
+        //int in_stock = itemsList.getQuantity();
+
         sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.ORD_NAME, order.getName().trim().toUpperCase());
@@ -251,12 +277,18 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.ORD_DATE, order.getDate());
         cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
 
-        long result = sql.insert(severinaDB.TBL_3_NAME, null,cv);
-        if(result == -1){
-            Toast.makeText(context, "Adding Orders Failed. Please Try again later.", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
-        }
+       // if (order.getQuantity() >= in_stock){
+           //if(order.getQuantity()){
+                long result = sql.insert(severinaDB.TBL_3_NAME, null,cv);
+                if(result == -1){
+                    Toast.makeText(context, "Adding Orders Failed. Please Try again later.", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
+            }
+           // }
+        //else {
+            Toast.makeText(context, "Error on Processing Order. Please check availability of stocks before proceeding.", Toast.LENGTH_LONG).show();
+       // }
     }
 
     //READ INVENTORY ITEMS
@@ -268,11 +300,11 @@ public class severinaDB extends SQLiteOpenHelper {
             if (cursor.moveToFirst()) {
                 do {
                     int id = cursor.getInt(0);
-                    String name = cursor.getString(1).toUpperCase();
+                    String name = cursor.getString(1);
                     int quantity = cursor.getInt(2);
-                    String desc = cursor.getString(3).toUpperCase();
+                    String desc = cursor.getString(3);
                     String date = cursor.getString(4);
-                    String stat = cursor.getString(5).toUpperCase();
+                    String stat = cursor.getString(5);
                     orders.add(new Orders(id, name, quantity, desc, date, stat));
                 } while (cursor.moveToNext());
             }
@@ -284,11 +316,11 @@ public class severinaDB extends SQLiteOpenHelper {
         sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.ORD_ID, order.getId());
-        cv.put(severinaDB.ORD_NAME, order.getName().trim().toUpperCase());
+        cv.put(severinaDB.ORD_NAME, order.getName());
         cv.put(severinaDB.ORD_QTY, order.getQuantity());
-        cv.put(severinaDB.ORD_DESC, order.getDescription().trim().toUpperCase());
+        cv.put(severinaDB.ORD_DESC, order.getDescription());
         cv.put(severinaDB.ORD_DATE, order.getDate());
-        cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
+        cv.put(severinaDB.ORD_STAT, order.getStatus());
         long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(order.getId())});
         if(result == -1){
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
@@ -296,17 +328,16 @@ public class severinaDB extends SQLiteOpenHelper {
             Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
-
-    public void updateOrderfromCour(Orders order){
+    public void updateOrderCour(Orders order){
         sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.ORD_ID, order.getId());
         cv.put(severinaDB.ORD_STAT, order.getStatus());
         long result = sql.update(TBL_3_NAME,cv,ORD_ID + " = ?" , new String[]{String.valueOf(order.getId())});
         if(result == -1){
-            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
-        }else {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -372,6 +403,60 @@ public class severinaDB extends SQLiteOpenHelper {
         }
     }
 
+    //validation on availability of item quantity
+    public boolean checkAvailability(String value, int need) {
+
+        sql = this.getReadableDatabase();
+        //String query = "Select "+ INV_QTY +" from "+TBL_2_NAME+" where "+INV_NAME+" = '"+value.toUpperCase()+"'";
+        String query = "Select * from "+TBL_2_NAME+" where "+INV_NAME+" = "+value;
+        Cursor cursor = sql.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            int id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            int quantity = cursor.getInt(2);
+            String desc = cursor.getString(3);
+            int thres = cursor.getInt(4);
+
+            int qty = quantity - need;
+            updateItem(new Inventory(id,name,qty, desc, thres));
+            return quantity >= need;
+        }
+        cursor.close();
+        return false;
+    }
+
+    //validation on existing inventory items
+    public boolean checkExistingData(String fieldValue) {
+        String Query = "Select * from " + TBL_2_NAME + " where " + INV_NAME + " = " + fieldValue;
+        Cursor cursor = sql.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
+
+    public void GetToPrefs(String name){
+        sql = this.getReadableDatabase();
+        String query = "Select * from "+TBL_2_NAME+" where "+INV_NAME+" = '"+name.toUpperCase()+"'";
+        Cursor cursor = sql.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            int id = cursor.getInt(0);
+            String inv_name = cursor.getString(1);
+            int qty = cursor.getInt(2);
+            String desc = cursor.getString(3);
+            int thres = cursor.getInt(4);
+            Inventory items = new Inventory(id,inv_name,qty, desc, thres);
+            SharedPreferences sharedPref = context.getSharedPreferences("Queue", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("name", items.getName());
+            editor.putInt("qty", items.getQuantity());
+            editor.apply();
+        }
+        else{cursor.close();}
+    }
+
 
     public List<Report> getReportList() {
         sql = this.getWritableDatabase();
@@ -392,13 +477,12 @@ public class severinaDB extends SQLiteOpenHelper {
         return reportList;
     }
 
-    public List<Report> getReportData() {
+    public List<Report> getReportData(List<Report> reportList) {
         sql = this.getWritableDatabase();
         String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + "," + J_INVNAME + "," + J_IQTY + "," + J_OQTY + ") " +
                 "SELECT db_order.ord_id, db_order.ord_date, db_inventory.inv_name, db_inventory.inv_quantity, db_order.ord_quantity " +
                 " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
-
-        List<Report> reportList = new ArrayList<>();
+        reportList = new ArrayList<>();
         Cursor cursor = sql.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -413,46 +497,6 @@ public class severinaDB extends SQLiteOpenHelper {
         cursor.close();
         return reportList;
     }
-
-    public List<Report> getReportFromOrders() {
-        sql = this.getWritableDatabase();
-        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + ","+ J_OQTY + ") " +
-                "SELECT db_order.ord_id, db_order.ord_date, db_order.ord_quantity " +
-                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
-
-        List<Report> reportList = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(0);
-                String date = cursor.getString(1).toUpperCase();
-                int ord_qty = cursor.getInt(2);
-                reportList.add(new Report(id, date, ord_qty));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return reportList;
-    }
-
-    public List<Report> getReportFromInv() {
-        sql = this.getWritableDatabase();
-        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_INVNAME + "," + J_IQTY + ") " +
-                "SELECT db_inventory.inv_name, db_inventory.inv_quantity" +
-                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
-
-        List<Report> reportList = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String name = cursor.getString(0).toUpperCase();
-                int inv_qty = cursor.getInt(1);
-                reportList.add(new Report(name, inv_qty));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return reportList;
-    }
-
     public void addReport(Report report){
         sql = this.getWritableDatabase();
         ContentValues cv = new ContentValues();

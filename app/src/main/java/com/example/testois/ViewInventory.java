@@ -3,7 +3,9 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -17,9 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,8 +38,11 @@ import com.example.testois.databinding.ActivityViewInventoryBinding;
 import com.example.testois.fragments.AddInventoryDiaFragment;
 import com.example.testois.fragments.DeleteInventoryDiagFragment;
 import com.example.testois.fragments.UpdateInventoryDiaFragment;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 //hello
@@ -40,13 +50,11 @@ import java.util.List;
 public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapInv.InventoryRecyclerListener,AddInventoryDiaFragment.OnInputListener, UpdateInventoryDiaFragment.OnInputListener, DeleteInventoryDiagFragment.OnInputListener{
     private static final String TAG = "ViewInventory";
     ActivityViewInventoryBinding activityViewInventoryBinding;
-    Inventory inventory = null;
-    CustomViewAdapInv.InventoryRecyclerListener mListener;
     CustomViewAdapInv customViewAdapInv;
     SearchView searchView;
     SQLiteDatabase sql;
     severinaDB db;
-    TextView emptyfield;
+    TextView emptyfield, view_order;
     RecyclerView recyclerView;
     ImageView add_item;
 
@@ -55,16 +63,11 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
 
-        // Initialise menu item search bar
-        // with id and take its object
         MenuItem searchViewItem = menu.findItem(R.id.nav_search);
         searchView = (SearchView) searchViewItem.getActionView();
         searchView.clearFocus();
 
         db = new severinaDB(this);
-        List<Inventory> items = db.getitemsList();
-        items = new ArrayList<>();
-
         MenuItem searchItem = menu.findItem(R.id.nav_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
@@ -90,33 +93,43 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot thres: "+thres);
          try {
              db = new severinaDB(ViewInventory.this);
-             //Inventory inventory = new Inventory(name,qty, desc, thres, image);
              Inventory inventory = new Inventory(name,qty, desc, thres);
-             Report report = new Report(name, qty);
-             db.addItem(inventory);
-             db.updateReport(report);
-             if(qty == (thres+1) || qty ==(thres+2)){ db.NotifyOnStock(1,name);}
-             else if(qty < thres){ db.NotifyOnStock(2,name); }
-             else if(qty <= thres){db.NotifyOnStock(3,name); }
+             if(db.checkExistingData("'"+name+"'")){
+                Toast.makeText(this, "Sorry there is already an item named "+name+" on the database.Select the existing item to add stocks.",Toast.LENGTH_LONG).show();
+            }
+             else if(qty == (thres+1) || qty ==(thres+2)){   db.addItem(inventory);db.NotifyOnStock(1,name);}
+             else if(qty < thres){   db.addItem(inventory);db.NotifyOnStock(2,name); }
+             else if(qty <= thres){  db.addItem(inventory);db.NotifyOnStock(3,name); }
          } catch (Exception ex) {
-             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
+             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
          }
     }
+
     //public void UpdateInput(String id, String name, int qty, String desc, int thres,Bitmap image) {
     public void UpdateInput(int id, String name, int qty, String desc, int thres) {
         //Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot image@: "+image);
         Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
         try {
+            Inventory items = new Inventory (id, name, qty, desc, thres);
             db = new severinaDB(ViewInventory.this);
             //Inventory inventory = new Inventory(name,qty, desc, thres, image);
-            Inventory items = new Inventory (id, name, qty, desc, thres);
-            db.updateItem(items);
-            Report report = new Report(name, qty);
-            db.updateReport(report);
-            if(qty == (thres+1) || qty ==(thres+2)){ db.NotifyOnStock(1,name); }
-            else if(qty < thres){ db.NotifyOnStock(2,name); }
-            else if(qty <= thres){db.NotifyOnStock(3,name);}
-            db.close();
+            if(db.checkExistingData("'"+name+"'")){
+                Toast.makeText(this, "Sorry there is an existing item on the database. Select the existing item to add stocks.",Toast.LENGTH_LONG).show();
+            }
+
+            else if(qty == (thres+1) || qty ==(thres+2)){
+
+                db.updateItem(items);
+                db.NotifyOnStock(1,name);
+            }
+            else if(qty < thres){
+                db.updateItem(items);
+                db.NotifyOnStock(2,name);
+            }
+            else if(qty <= thres){
+                db.updateItem(items);
+                db.NotifyOnStock(3,name);
+            }
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
         }
@@ -141,13 +154,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         allocatedActivityTitle("Manage Inventory");
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
-       /* if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            NotificationChannel channel = new NotificationChannel("NotifOnStock", "NotifOnStock", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-
-        */
         db = new severinaDB(this);
         List<Inventory> items = db.getitemsList();
         add_item = findViewById(R.id.add_view_inv);
@@ -172,6 +178,8 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         recyclerView.setAdapter(customViewAdapInv);
 
     }
+
+
 
     @Override
     protected void onActivityResult(int requestcode, int resultcode, Intent data) {

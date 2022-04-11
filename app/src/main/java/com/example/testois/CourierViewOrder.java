@@ -28,15 +28,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class CourierViewOrder extends CourierDrawerBaseActivity implements CustomCourViewAdapOrd.OrderRecyclerListener, CourUpdateOrderDiaFragment.OnInputListener{
-    private static final String TAG = "ViewOrders";
+    private static final String TAG = "CourierViewOrders";
     ActivityCourierViewOrderBinding activityCourierViewOrderBinding;
     private severinaDB db;
-    SearchView search_ord;
     RecyclerView rv_current, rv_recent;
     TextView emptyfield1, emptyfield2;
     ImageView add_btn;
     SearchView searchView;
-    CustomCourViewAdapOrd.OrderRecyclerListener nListener;
     CustomCourViewAdapOrd customCourViewAdapOrd;
     List<Orders> all_orders;
     @Override
@@ -58,8 +56,6 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
         searchView = (SearchView) searchViewItem.getActionView();
         searchView.clearFocus();
         db = new severinaDB(this);
-        List<Inventory> items = db.getitemsList();
-        items = new ArrayList<>();
 
         MenuItem searchItem = menu.findItem(R.id.nav_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
@@ -88,7 +84,6 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
         allocatedActivityTitle("View Order");
         emptyfield1 = findViewById(R.id.emptyRv1);
         emptyfield2 = findViewById(R.id.emptyRv2);
-        //search_ord = findViewById(R.id.search_ord);
         add_btn = findViewById(R.id.add_ord);
         rv_current = findViewById(R.id.rv_current);
         rv_recent = findViewById(R.id.rv_recent);
@@ -107,7 +102,7 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
         try {
             db = new severinaDB(CourierViewOrder.this);
             Orders order = new Orders(id, stat);
-            db.updateOrderfromCour(order);
+            db.updateOrderCour(order);
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -118,6 +113,6 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
         androidx.fragment.app.FragmentManager fm = this.getSupportFragmentManager();
         CourUpdateOrderDiaFragment updafrag = new CourUpdateOrderDiaFragment();
         updafrag.setArguments(args);
-        updafrag.show(fm, "UpdateOrdFrag");
+        updafrag.show(fm, "CourUpdateOrdFrag");
     }
 }

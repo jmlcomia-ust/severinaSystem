@@ -22,12 +22,12 @@ import java.util.List;
 public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.MyViewHolder> {
     private static final String TAG = "CustomViewAdapOrd";
     OrderRecyclerListener nListener;
-  // CustomViewAdapInv.InventoryChecker
     Context context;
     List<Orders> orders;
     List<Orders> ordersAll;
     List<Orders> fullOrd;
     severinaDB db;
+
 
     public CustomViewAdapOrd(List<Orders> orders, Context context, OrderRecyclerListener nListener) {
         this.orders = orders;
@@ -56,9 +56,9 @@ public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.My
             holder.ord_id_txt.setText(String.valueOf(ord.getId()));
             holder.ord_name_txt.setText(ord.getName());
             holder.ord_qty_txt.setText(String.valueOf(ord.getQuantity()));
-            holder.ord_desc_txt.setText(ord.getDescription().toUpperCase());
+            holder.ord_desc_txt.setText(ord.getDescription());
             holder.ord_date_txt.setText(ord.getDate());
-            holder.ord_stat_txt.setText(ord.getStatus().toUpperCase());
+            holder.ord_stat_txt.setText(ord.getStatus());
             holder.btn_edit.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: opening Update Dialog Fragment for Orders.");
                 Bundle args = new Bundle();

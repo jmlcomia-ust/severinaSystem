@@ -66,7 +66,7 @@ public class CourUpdateOrderDiaFragment extends DialogFragment {
     }
     //REF: https://www.androidhive.info/2012/06/android-populating-spinner-data-from-sqlite-database/
     private void loadSpinnerStatData() {
-        String[] choice = new String[]{"TODAY", "DELIVERED"};
+        String[] choice = new String[]{"TO DELIVER", "DELIVERED"};
         ArrayAdapter<String> statAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, choice);
         statAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ord_stat_drop.setAdapter(statAdapter);
@@ -81,6 +81,7 @@ public class CourUpdateOrderDiaFragment extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                ord_stat_txt.getText();
             }
         });
     }

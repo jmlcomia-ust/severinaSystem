@@ -22,15 +22,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomCourViewAdapOrd extends RecyclerView.Adapter<CustomCourViewAdapOrd.MyViewHolder> {
-    private static final String TAG = "CustomViewAdapOrd";
-    CustomCourViewAdapOrd.OrderRecyclerListener nListener;
+    private static final String TAG = "CustomCourViewAdapOrd";
+    OrderRecyclerListener nListener;
     Context context;
     List<Orders> orders;
     List<Orders> ordersAll;
     List<Orders> fullOrd;
     severinaDB db;
 
-    public CustomCourViewAdapOrd(List<Orders> orders, Context context, CustomCourViewAdapOrd.OrderRecyclerListener nListener) {
+    public CustomCourViewAdapOrd(List<Orders> orders, Context context, OrderRecyclerListener nListener) {
         this.orders = orders;
         this.context = context;
         this.nListener = nListener;
@@ -43,22 +43,23 @@ public class CustomCourViewAdapOrd extends RecyclerView.Adapter<CustomCourViewAd
 
     @NonNull
     @Override
-    public CustomCourViewAdapOrd.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.cour_view_ord_row, parent, false);
-        return new CustomCourViewAdapOrd.MyViewHolder(view, nListener);
+        return new MyViewHolder(view, nListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomCourViewAdapOrd.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         try {
             Orders ord = orders.get(position);
             holder.position = position;
             holder.ord_id_txt.setText(String.valueOf(ord.getId()));
             holder.ord_name_txt.setText(ord.getName());
             holder.ord_qty_txt.setText(String.valueOf(ord.getQuantity()));
-            holder.ord_desc_txt.setText(ord.getDescription().toUpperCase());
-            holder.ord_stat_txt.setText(ord.getStatus().toUpperCase());
+            holder.ord_desc_txt.setText(ord.getDescription());
+            holder.ord_date_txt.setText(ord.getDate());
+            holder.ord_stat_txt.setText(ord.getStatus());
             holder.btn_edit.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: opening Update Dialog Fragment for Orders.");
                 Bundle args = new Bundle();
@@ -86,7 +87,7 @@ public class CustomCourViewAdapOrd extends RecyclerView.Adapter<CustomCourViewAd
 
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView ord_id_txt, ord_name_txt, ord_qty_txt, ord_stat_txt, ord_desc_txt;
+        TextView ord_id_txt, ord_name_txt, ord_qty_txt, ord_stat_txt, ord_desc_txt, ord_date_txt;
         Button btn_edit, btn_delete;
         int position;
         CustomCourViewAdapOrd.OrderRecyclerListener nListener;
@@ -100,6 +101,7 @@ public class CustomCourViewAdapOrd extends RecyclerView.Adapter<CustomCourViewAd
             ord_name_txt = itemView.findViewById(R.id.view_ord_name);
             ord_qty_txt = itemView.findViewById(R.id.view_ord_qty);
             ord_desc_txt = itemView.findViewById(R.id.view_ord_desc);
+            ord_date_txt = itemView.findViewById(R.id.view_ord_date);
             ord_stat_txt = itemView.findViewById(R.id.view_ord_stat);
             btn_edit = itemView.findViewById(R.id.edit_ord);
             btn_delete = itemView.findViewById(R.id.delete_ord);

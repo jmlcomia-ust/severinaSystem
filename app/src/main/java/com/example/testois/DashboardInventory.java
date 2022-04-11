@@ -78,13 +78,10 @@ public class DashboardInventory extends DrawerBaseActivity implements Filterable
         activityDashboardInventoryBinding = ActivityDashboardInventoryBinding.inflate(getLayoutInflater());
         setContentView(activityDashboardInventoryBinding.getRoot());
         allocatedActivityTitle("Dashboard Inventory");
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
-
 
         db = new severinaDB(this);
         List<Inventory> items = db.getitemsList();
         emptyfield = findViewById(R.id.emptyRv);
-        //searchview = findViewById(R.id.settings);
         //imageview = findViewById(R.id.inv_img);
         recyclerView = findViewById(R.id.recyclerView);
 

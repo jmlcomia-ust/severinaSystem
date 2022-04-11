@@ -49,12 +49,6 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        TextView header_one = navigationView.findViewById(R.id.userName);   //change TextViews in Drawer Header
-        //header_one.setText(R.string.header_name);
-        TextView header_two = navigationView.findViewById(R.id.userRole);
-        //header_two.setText(R.string.header_role);
-        TextView header_three = navigationView.findViewById(R.id.userMail);
-        //header_three.setText(user.getName());
     }
 
     @Override
