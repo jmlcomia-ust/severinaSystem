@@ -419,6 +419,7 @@ public class severinaDB extends SQLiteOpenHelper {
 
             int qty = quantity - need;
             updateItem(new Inventory(id,name,qty, desc, thres));
+            cursor.close();
             return quantity >= need;
         }
         cursor.close();
@@ -433,8 +434,11 @@ public class severinaDB extends SQLiteOpenHelper {
             cursor.close();
             return false;
         }
-        cursor.close();
-        return true;
+        else{
+            cursor.close();
+            return true;
+        }
+
     }
 
     public void GetToPrefs(String name){
