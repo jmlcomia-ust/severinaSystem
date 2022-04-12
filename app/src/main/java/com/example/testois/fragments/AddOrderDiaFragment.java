@@ -4,6 +4,7 @@ package com.example.testois.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.R;
+import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 
 import java.text.SimpleDateFormat;

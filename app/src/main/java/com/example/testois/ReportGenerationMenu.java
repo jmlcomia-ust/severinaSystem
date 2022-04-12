@@ -2,71 +2,51 @@ package com.example.testois;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.core.app.ActivityCompat;
-
-import com.example.testois.dao.Report;
+import androidx.core.content.FileProvider;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
 import com.example.testois.utilities.ListAllReport;
 import com.example.testois.utilities.severinaDB;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
-
+import com.itextpdf.text.pdf.PdfPageEvent;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.List;
+
 
 
 public class ReportGenerationMenu extends DrawerBaseActivity  {
     ActivityReportGenerationMenuBinding activityReportGenerationMenuBinding;
     TableLayout tableLayout;
     severinaDB db;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        activityReportGenerationMenuBinding = ActivityReportGenerationMenuBinding.inflate(getLayoutInflater());
-        setContentView(activityReportGenerationMenuBinding.getRoot());
-        allocatedActivityTitle("Generate Reports");
-        ActivityCompat.requestPermissions(ReportGenerationMenu.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
-        db = new severinaDB(this);
-        tableLayout = findViewById(R.id.report_table);
-        Button btn_genreport = findViewById(R.id.btn_genreport);
-
-        btn_genreport.setOnClickListener(v -> {
-
-            ListAllReport report = new ListAllReport();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
-            String date = sdf.format(System.currentTimeMillis());
-            BuildTable();
-
-            report.createPDF(getApplicationContext(), "InventoryOrderReport-" + date);
-            showPdf("InventoryOrderReport-" + date);
-        });
-
-    }
+    SQLiteDatabase sql;
+    public SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
+    public final String date = sdf.format(System.currentTimeMillis());
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,58 +58,89 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.share) {
-            Toast.makeText(getApplicationContext(), "You clicked share", Toast.LENGTH_SHORT).show();
+        if (id == R.id.refresh) {
+            Intent i = new Intent(ReportGenerationMenu.this, ReportGenerationMenu.class);
+            startActivity(i);
+            finish();
             return true;
-        } else if (id == R.id.about) {
-            Toast.makeText(getApplicationContext(), "You clicked about", Toast.LENGTH_SHORT).show();
-            return true;
-
-        } else if (id == R.id.exit) {
-            Toast.makeText(getApplicationContext(), "You clicked exit", Toast.LENGTH_SHORT).show();
-            return true;
-
-        } else if (id == R.id.search) {
-            Toast.makeText(getApplicationContext(), "You clicked search", Toast.LENGTH_SHORT).show();
-            return true;
-
-        } else if (id == R.id.profile) {
-            Toast.makeText(getApplicationContext(), "You clicked profile", Toast.LENGTH_SHORT).show();
-            return true;
-
         }
-
         return super.onOptionsItemSelected(item);
-
     }
 
-    private void showPdf(String reportName) {
-        // TODO Auto-generated method stub
-        String mPath = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString(); //reportName could be any name
-        //constructing the PDF file
-        File pdfFile = new File(mPath, reportName + ".pdf");
-        Intent testIntent = new Intent(Intent.ACTION_VIEW);
-        testIntent.setType("application/pdf");
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(pdfFile);
-        intent.setDataAndType(uri, "application/pdf");
-        try {
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "No Application Available to View PDF", Toast.LENGTH_LONG).show();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activityReportGenerationMenuBinding = ActivityReportGenerationMenuBinding.inflate(getLayoutInflater());
+        setContentView(activityReportGenerationMenuBinding.getRoot());
+        allocatedActivityTitle("Generate Reports");
+        ActivityCompat.requestPermissions(ReportGenerationMenu.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+        db = new severinaDB(this);
+        tableLayout = findViewById(R.id.report_table);
+        Button btn_genreport = findViewById(R.id.btn_genreport);
+        BuildTable();
+
+        btn_genreport.setOnClickListener(v -> {
+            ListAllReport report = new ListAllReport();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
+            String date = sdf.format(System.currentTimeMillis());
+            try {
+                showPdf( "SeverinaOIS-Report-For" + date);
+            } catch (FileNotFoundException | DocumentException e) {
+                e.printStackTrace();
+            }
+            //report.createPDF(this,"SeverinaOIS-Report-For");
+        });
+    }
+
+    private void showPdf(String reportName) throws FileNotFoundException, DocumentException {
+            String dir = Environment.getExternalStorageDirectory()+File.separator+"Report Logs";
+
+            File file = new File(dir, reportName + "-"+ date +".pdf");
+
+            if (!file.getParentFile().exists()){
+                file.getParentFile().mkdirs();
+            }
+            Cursor c1 = db.getReadableDatabase().rawQuery("SELECT * FROM db_report ", null);
+            Document document = new Document();  // create the document
+            PdfWriter.getInstance(document, new FileOutputStream(file));
+            document.open();
+
+            Paragraph p3 = new Paragraph();
+            p3.add("Your Log History for \n");
+            document.add(p3);
+
+            PdfPTable table = new PdfPTable(5);
+            table.addCell("ID");
+            table.addCell("DATE");
+            table.addCell("INVENTORY NAME");
+            table.addCell("NO. OF STOCKS LEFT");
+            table.addCell("STOCKS ORDERED TODAY");
+
+            while (c1.moveToNext()) {
+                String id = c1.getString(0);
+                String date = c1.getString(1);
+                String name = c1.getString(2);
+                String inv_qty = c1.getString(3);
+                String ord_qty = c1.getString(4);
+
+                table.addCell(id);
+                table.addCell(date);
+                table.addCell(name);
+                table.addCell(inv_qty);
+                table.addCell(ord_qty);
+            }
+            c1.close();
+
+            document.add(table);
+            document.addCreationDate();
+            document.close();
         }
-    }
 
+    //REF: https://github.com/ch0nch0l/AndroPDF
     public void BuildTable() {
         TableRow rowHeader = new TableRow(this);
-
         rowHeader.setBackgroundColor(Color.parseColor("#c0c0c0"));
-
-        rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-
-                TableLayout.LayoutParams.WRAP_CONTENT));
-
+        rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
         String[] headerText = {"ID", "DATE", "ITEM NAME","STOCK LEFT","ORDERS LEFT"};
 
         for (String c : headerText) {
@@ -192,5 +203,4 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             }
         } catch (SQLiteException e) { e.printStackTrace(); }
     }
-
 }

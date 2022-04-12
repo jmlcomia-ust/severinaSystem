@@ -85,8 +85,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         customViewAdapOrd = new CustomViewAdapOrd(all_orders, this, this);
         rv_current.setAdapter(customViewAdapOrd);
         rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
-
-
         if (customViewAdapOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
 
         add_btn.setOnClickListener(view ->{
@@ -104,7 +102,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 Orders orders = new Orders (name, qty, desc, date, stat);
                 db.AddToWorkBook("'"+desc+"'", name, qty, desc, date, stat); //add order data and inv data in SP
                 if (db.CheckWorkBook()){       //check if SP data are existing
-                    SharedPreferences sharedPref = this.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
+                    SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
                     String report_date = sharedPref.getString("date", "");
                     String report_name = sharedPref.getString("name", "");
                     int report_inv_qty = sharedPref.getInt("invqty", 0);
@@ -112,15 +110,12 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                     Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
                     db.addReport(report);           //add report data set from SP data
                 }
-
                 if(stat.equalsIgnoreCase("TO DELIVER")){
                     db.addOrder(orders);
                     db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}
-                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
                 else if(stat.equalsIgnoreCase("DELIVERED")){
                     db.addOrder(orders);
                     db.NotifyOnOrder(2,desc, String.valueOf(qty), date);}
-                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
             }
         }catch (Exception e){  e.printStackTrace(); }
     }
@@ -131,15 +126,22 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try {
             if (db.checkAvailability("'"+desc+"'", qty)){
                 Orders orders = new Orders (name, qty, desc, date, stat);
-
+                db.AddToWorkBook("'"+desc+"'", name, qty, desc, date, stat); //add order data and inv data in SP
+                if (db.CheckWorkBook()){       //check if SP data are existing
+                    SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
+                    String report_date = sharedPref.getString("date", "");
+                    String report_name = sharedPref.getString("name", "");
+                    int report_inv_qty = sharedPref.getInt("invqty", 0);
+                    int report_ord_qty = sharedPref.getInt("ordqty",0);
+                    Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
+                    db.addReport(report);           //add report data set from SP data
+                }
                 if(stat.equalsIgnoreCase("TO DELIVER")){
                     db.updateOrder(orders);
                     db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}
-                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
                 else if(stat.equalsIgnoreCase("DELIVERED")){
                     db.updateOrder(orders);
                     db.NotifyOnOrder(2,desc, String.valueOf(qty), date);}
-                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
             }
             else{ db.NotifyOnOrder(3, desc, String.valueOf(qty), date);
                 Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}

@@ -13,15 +13,19 @@
         android:layout_height="match_parent"
         tools:context=".DashboardOrders">
 
-        <Spinner
+        <TextView
             android:id="@+id/options"
-            android:layout_width="830sp"
-            android:layout_height="50sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10sp"
             android:layout_marginTop="80sp"
             android:layout_marginEnd="10sp"
             android:layout_marginBottom="10sp"
-            android:background="@color/white"
+            android:text="Inventory and Order Report"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="29sp"
+            android:textColor="@color/black"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="28dp"
             tools:layout_editor_absoluteY="59dp" />
@@ -44,7 +48,6 @@
             android:text="Generate report"
             android:textColor="@color/white"
             android:textSize="22dp" />
-
 
     </RelativeLayout>
 

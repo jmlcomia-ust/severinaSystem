@@ -1,9 +1,20 @@
 package com.example.testois.utilities;
 
+//REFERENCE: https://github.com/shohrabuddin/PdfReportInAndroid
 import android.app.Application;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
+import com.example.testois.ReportGenerationMenu;
 import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.dao.Inventory;
@@ -28,18 +39,18 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListAllReport extends Application {
-    static Inventory inventory;
+    public SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
+    public final String date = sdf.format(System.currentTimeMillis());
+    private FileProvider provider = new FileProvider();
 
         //creating a PdfWriter variable. PdfWriter class is available at com.itextpdf.text.pdf.PdfWriter
         private PdfWriter pdfWriter;
         severinaDB db;
-        CustomViewAdapOrd.OrderRecyclerListener nListener;
-        CustomViewAdapInv.InventoryRecyclerListener mListener;
-
 
         //we will add some products to arrayListRProductModel to show in the PDF document
         private static ArrayList<Report> arrayListReport = new ArrayList<Report>();
@@ -48,12 +59,15 @@ public class ListAllReport extends Application {
 
             try {
                 //creating a directory in SD card
-                String mPath = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() +"/test.pdf"; //reportName could be any name
+                String mPath = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/external_files"; //reportName could be any name
                 //constructing the PDF file
-                File pdfFile = new File(mPath, reportName+".pdf");
-                if (!pdfFile.exists()) {
+                File pdfFile = new File(mPath, reportName+ "-"+ date+".pdf");
+                if (!pdfFile.getParentFile().exists()) {
                     pdfFile.getParentFile().mkdirs();
+                    pdfFile.createNewFile();
                 }
+
+
                 FileOutputStream fileOutputStream = new FileOutputStream(pdfFile);
                 //Creating a Document with size A4. Document class is available at  com.itextpdf.text.Document
                 Document document = new Document(PageSize.A4);
@@ -77,7 +91,24 @@ public class ListAllReport extends Application {
                 //Closing the document
                 document.close();
 
+                String authority = context.getApplicationContext().getPackageName() + ".fileprovider";
+                Uri uriToFile = FileProvider.getUriForFile(context, authority, pdfFile);
 
+                Intent shareIntent = new Intent(Intent.ACTION_VIEW);
+                shareIntent.setDataAndType(uriToFile, "application/pdf");
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if (shareIntent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(shareIntent);
+                } else {
+                    Uri uri = Uri.fromFile(pdfFile);
+                    provider.getContext().grantUriPermission("package com.example.testois", uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    shareIntent.setDataAndType(uri, "application/pdf");
+                }
+                try {
+                    startActivity(shareIntent);
+                } catch (Exception e) {
+                    Toast.makeText(this, "No Application Available to View PDF", Toast.LENGTH_LONG).show();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -93,7 +124,7 @@ public class ListAllReport extends Application {
          * @param document
          */
         private static void addMetaData(Document document) {
-            document.addTitle("Severina OIS Report (APRIL 07, 2022)");
+            document.addTitle("Severina OIS Report for "+ document.addCreationDate());
             document.addSubject("none");
             document.addKeywords("Java, PDF, iText");
             document.addAuthor("YABOI DENNIS");
@@ -109,15 +140,15 @@ public class ListAllReport extends Application {
             Paragraph paragraph = new Paragraph();
 
             // Adding several title of the document. Paragraph class is available in  com.itextpdf.text.Paragraph
-            Paragraph childParagraph = new Paragraph("PLUS Electronics Pvt. Ltd."); //public static Font FONT_TITLE = new Font(Font.FontFamily.TIMES_ROMAN, 22,Font.BOLD);
+            Paragraph childParagraph = new Paragraph("Severina LPG Company"); //public static Font FONT_TITLE = new Font(Font.FontFamily.TIMES_ROMAN, 22,Font.BOLD);
             childParagraph.setAlignment(Element.ALIGN_CENTER);
             paragraph.add(childParagraph);
 
-            childParagraph = new Paragraph("Product List"); //public static Font FONT_SUBTITLE = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
+            childParagraph = new Paragraph("Inventory and Order Report"); //public static Font FONT_SUBTITLE = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
             childParagraph.setAlignment(Element.ALIGN_CENTER);
             paragraph.add(childParagraph);
 
-            childParagraph = new Paragraph("Report generated on: 17.12.2015");
+            childParagraph = new Paragraph("Report generated on: " + document.addCreationDate());
             childParagraph.setAlignment(Element.ALIGN_CENTER);
             paragraph.add(childParagraph);
 
@@ -163,7 +194,7 @@ public class ListAllReport extends Application {
 
 
             //Adding table headers
-            PdfPCell cell = new PdfPCell(new Phrase("INVENTORY ID", //Table Header
+            PdfPCell cell = new PdfPCell(new Phrase("ID", //Table Header
                     new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD))); //Public static Font FONT_TABLE_HEADER = new Font(Font.FontFamily.TIMES_ROMAN, 12,Font.BOLD);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER); //alignment
             cell.setBackgroundColor(new GrayColor(0.75f)); //cell background color
@@ -202,7 +233,7 @@ public class ListAllReport extends Application {
             //End of adding table headers
 
             //This method will generate some static data for the table
-            List<Report> reportList = generateTableData();
+            List<Report> reportList = db.getReportList();
 
             //Adding data into table
             for (int i = 0; i < reportList.size(); i++) { //
@@ -211,6 +242,10 @@ public class ListAllReport extends Application {
                 table.addCell(cell);
 
                 cell = new PdfPCell(new Phrase(reportList.get(i).getOrd_date()));
+                cell.setFixedHeight(28);
+                table.addCell(cell);
+
+                cell = new PdfPCell(new Phrase(reportList.get(i).getInv_name()));
                 cell.setFixedHeight(28);
                 table.addCell(cell);
 
@@ -282,12 +317,4 @@ public class ListAllReport extends Application {
             }
         }
 
-        /**
-         * Generate static data for table
-         */
-
-        private List<Report> generateTableData(){
-            List<Report> reportList = db.getReportList();
-            return db.getReportData(reportList);
-        }
 }

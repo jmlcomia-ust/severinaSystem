@@ -59,7 +59,7 @@ public class severinaDB extends SQLiteOpenHelper {
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER = 1;
     private final Context context;
-    static SQLiteDatabase sql;
+    public static SQLiteDatabase sql;
 
     public severinaDB(Context context) {
         super(context, DB_NAME, null, VER);
@@ -390,7 +390,7 @@ public class severinaDB extends SQLiteOpenHelper {
             int thres = cursor.getInt(4);
 
             int qty = quantity - need;
-            if ((0 < qty) && (qty < need)){
+            if ((0 < qty) && (qty < need)) {
                 Toast.makeText(context, "Cannot process order. Please restock first and check if orders can proceed.", Toast.LENGTH_LONG).show();
                 cursor.close();
                 return false;
@@ -413,8 +413,9 @@ public class severinaDB extends SQLiteOpenHelper {
         cursor.close();
         return true;
     }
+
     //check if WorkBook Queue exists
-    public boolean CheckWorkBook(){
+    public boolean CheckWorkBook() {
         SharedPreferences sharedPref = context.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
         return sharedPref.contains("date") && sharedPref.contains("name") && sharedPref.contains("invqty") && sharedPref.contains("ordqty");
     }
@@ -465,81 +466,17 @@ public class severinaDB extends SQLiteOpenHelper {
         return reportList;
     }
 
-    public List<Report> getReportData(List<Report> reportList) {
-        sql = this.getWritableDatabase();
-        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + "," + J_INVNAME + "," + J_IQTY + "," + J_OQTY + ") " +
-                "SELECT db_order.ord_id, db_order.ord_date, db_inventory.inv_name, db_inventory.inv_quantity, db_order.ord_quantity " +
-                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
-        reportList = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(0);
-                String date = cursor.getString(1).toUpperCase();
-                String name = cursor.getString(2).toUpperCase();
-                int inv_qty = cursor.getInt(3);
-                int ord_qty = cursor.getInt(4);
-                reportList.add(new Report(id, date, name, inv_qty, ord_qty));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return reportList;
-    }
-
-    public List<Report> getReportFromOrders() {
-        sql = this.getWritableDatabase();
-        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_ID + "," + J_DATE + "," + J_OQTY + ") " +
-                "SELECT db_order.ord_id, db_order.ord_date, db_order.ord_quantity " +
-                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
-
-        List<Report> reportList = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(0);
-                String date = cursor.getString(1).toUpperCase();
-                int ord_qty = cursor.getInt(2);
-                reportList.add(new Report(id, date, ord_qty));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return reportList;
-    }
-
-    public List<Report> getReportFromInv() {
-        sql = this.getWritableDatabase();
-        String query = "INSERT INTO " + TBL_4_NAME + "( " + J_INVNAME + "," + J_IQTY + ") " +
-                "SELECT db_inventory.inv_name, db_inventory.inv_quantity" +
-                " FROM db_inventory i " + " INNER JOIN db_order o ON o.ord_desc = i.name ";
-
-        List<Report> reportList = new ArrayList<>();
-        Cursor cursor = sql.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String name = cursor.getString(0).toUpperCase();
-                int inv_qty = cursor.getInt(1);
-                reportList.add(new Report(name, inv_qty));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return reportList;
-    }
-
     public void addReport(Report report) {
-        sql = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(severinaDB.J_ID, report.getOrd_id());
-        cv.put(severinaDB.J_DATE, report.getOrd_date());
-        cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
-        cv.put(severinaDB.J_IQTY, report.getInv_quantity());
-        cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
+        try{
+            sql = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(severinaDB.J_DATE, report.getOrd_date());
+            cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
+            cv.put(severinaDB.J_IQTY, report.getInv_quantity());
+            cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
+            sql.insert(severinaDB.TBL_4_NAME, null, cv);
+        }catch(Exception e){e.printStackTrace();}
 
-        long result = sql.insert(severinaDB.TBL_4_NAME, null, cv);
-        if (result == -1) {
-            Toast.makeText(context, "Adding Orders Failed. Please Try again later.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void updateReport(Report report) {
@@ -550,39 +487,11 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
         cv.put(severinaDB.J_IQTY, report.getInv_quantity());
         cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
-        long result = sql.update(TBL_4_NAME, cv, severinaDB.J_INVNAME + " = ?", new String[]{String.valueOf(report.getInv_name())});
+        long result = sql.update(TBL_4_NAME, cv, severinaDB.J_INVNAME + " = ?", new String[]{String.valueOf("'"+report.getInv_name()+"'")});
         if (result == -1) {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public Cursor readEntry(String date) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        // String query = ("SELECT db_order.ord_id, db_order.ord_date, db_inventory.inv_name, db_inventory.inv_quantity, db_order.ord_quantity from db_inventory i inner join db_order o on o.ord_desc = i.name");
-        //  Cursor ck = db.query(TBL_2_NAME,new String[]{ORD_ID,ORD_DATE,INV_NAME, INV_QTY, ORD_QTY},ORD_DATE+"=?", new String[] { String.valueOf(date)}, null, null, null, null);
-        String[] allColumns = new String[]{severinaDB.J_ID, severinaDB.J_DATE, severinaDB.J_INVNAME, severinaDB.J_IQTY, severinaDB.J_OQTY};
-        Cursor c = db.query(severinaDB.TBL_4_NAME, allColumns, null, null, null, null, null);
-        if (c != null) {
-            c.moveToFirst();
-        }
-        return c;
-    }
-
-    public void transferData(Report report) {
-        sql = this.getReadableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(severinaDB.J_ID, report.getOrd_id());
-        cv.put(severinaDB.J_DATE, report.getOrd_date());
-        cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
-        cv.put(severinaDB.J_IQTY, report.getInv_quantity());
-        cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
-        long result = sql.insert(TBL_4_NAME, null, cv);
-        if (result == -1) {
-            Toast.makeText(context, "Failed fetching report data. Please try again later.", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(context, "Fetched Report Data Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 }
