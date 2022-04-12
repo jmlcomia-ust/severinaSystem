@@ -1,10 +1,8 @@
 package com.example.testois;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
-import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.databinding.ActivityViewOrderBinding;
@@ -39,27 +34,21 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     CustomViewAdapOrd customViewAdapOrd;
     List<Orders> all_orders;
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1){
             recreate();
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-
         db = new severinaDB(this);
-
         MenuItem searchItem = menu.findItem(R.id.nav_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
-
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -72,7 +61,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 return false;
             }
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -105,36 +93,28 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     @Override
     public void sendInput(String name, int qty, String desc, String date, String stat) {
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
-
         try{
-            db = new severinaDB(ViewOrder.this);
-            if (db.checkAvailability("'"+desc+"'", qty)){
+            if (db.checkAvailability("'"+desc+"'", qty)){   //check if order qty can be processed to inv_qty
                 Orders orders = new Orders (name, qty, desc, date, stat);
-                if(stat.equalsIgnoreCase("TO DELIVER")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty), date); }
-                else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty), date);    }
-            }
-           else{
-               db.NotifyOnOrder(3, desc, String.valueOf(qty), date);
-               Toast.makeText(getApplicationContext(), "Order not Added. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();
-           }
-        }catch (Exception e){ Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show(); }
 
+                if(stat.equalsIgnoreCase("TO DELIVER")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}  //db.addReport(new Report(date, inv_name, inv_qty, qty));}
+                else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty), date);} //db.addReport(new Report(date, inv_name, inv_qty, qty));}
+            }
+        }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
     }
 
     @Override
     public void UpdateInput(int id, String name, int qty, String desc, String date, String stat) {
         Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try {
-            db = new severinaDB(ViewOrder.this);
             if (db.checkAvailability("'"+desc+"'", qty)){
                 Orders orders = new Orders (name, qty, desc, date, stat);
-                if(stat.equalsIgnoreCase("TO DELIVER")){ db.updateOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty), date); }
-                else if(stat.equalsIgnoreCase("DELIVERED")){ db.updateOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty), date);    }
+
+                if(stat.equalsIgnoreCase("TO DELIVER")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}  //db.addReport(new Report(date, inv_name, inv_qty, qty));}
+                else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty), date);} //db.addReport(new Report(date, inv_name, inv_qty, qty));}
             }
-            else{
-                db.NotifyOnOrder(3, desc, String.valueOf(qty), date);
-                Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();
-            }
+            else{ db.NotifyOnOrder(3, desc, String.valueOf(qty), date);
+                Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
         } catch (Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -164,11 +144,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         DeleteOrderDiaFragment delfrag = new DeleteOrderDiaFragment();
         delfrag.setArguments(args);
         delfrag.show(fm, "DeleteOrdFrag");
-    }
-
-
-
-
+     }
     }
 
 
