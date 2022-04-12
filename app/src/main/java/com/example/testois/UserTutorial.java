@@ -1,5 +1,6 @@
 package com.example.testois;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressLint("all")
 public class UserTutorial extends AppCompatActivity {
 
     private OnboardingAdapter onboardingAdapter;

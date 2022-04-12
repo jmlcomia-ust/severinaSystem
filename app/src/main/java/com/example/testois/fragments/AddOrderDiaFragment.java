@@ -2,6 +2,7 @@
 
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -37,7 +38,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 
-
+@SuppressLint("all")
 public class AddOrderDiaFragment extends DialogFragment {
 
     private static final String TAG = "AddOrderDiaFragment";

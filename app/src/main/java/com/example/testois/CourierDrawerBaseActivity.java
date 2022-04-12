@@ -1,5 +1,6 @@
 package com.example.testois;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +14,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-
+@SuppressLint("all")
 public class CourierDrawerBaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout courierDrawerLayout;

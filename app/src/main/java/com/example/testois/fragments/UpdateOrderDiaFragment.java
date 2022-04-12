@@ -1,5 +1,6 @@
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,7 +28,7 @@ import com.example.testois.utilities.severinaDB;
 
 import java.util.Calendar;
 import java.util.List;
-
+@SuppressLint("all")
 public class UpdateOrderDiaFragment extends DialogFragment {
     private static final String TAG = "UpdateOrdFrag";
     public UpdateOrderDiaFragment.OnInputListener fragupdate;

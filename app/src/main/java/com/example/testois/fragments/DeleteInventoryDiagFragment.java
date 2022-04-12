@@ -1,5 +1,6 @@
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -16,7 +17,7 @@ import android.widget.TextView;
 import com.example.testois.R;
 import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.utilities.severinaDB;
-
+@SuppressLint("all")
 public class DeleteInventoryDiagFragment extends DialogFragment {
     private static final String TAG = "DeleteInvFrag";
     public DeleteInventoryDiagFragment.OnInputListener fragdel;

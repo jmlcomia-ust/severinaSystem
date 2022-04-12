@@ -2,6 +2,7 @@
 
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import android.database.sqlite.SQLiteDatabase;
@@ -24,7 +25,7 @@ import android.widget.Toast;
 
 import com.example.testois.R;
 import com.example.testois.utilities.severinaDB;
-
+@SuppressLint("all")
 public class AddInventoryDiaFragment extends DialogFragment {
 
     private static final String TAG = "AddInventoryDiaFragment";

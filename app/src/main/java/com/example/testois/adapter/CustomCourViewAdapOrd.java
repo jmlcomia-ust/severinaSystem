@@ -20,7 +20,7 @@ import com.example.testois.utilities.severinaDB;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressLint("all")
 public class CustomCourViewAdapOrd extends RecyclerView.Adapter<CustomCourViewAdapOrd.MyViewHolder> {
     private static final String TAG = "CustomCourViewAdapOrd";
     OrderRecyclerListener nListener;

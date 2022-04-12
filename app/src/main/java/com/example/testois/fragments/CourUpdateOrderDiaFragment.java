@@ -1,5 +1,6 @@
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -18,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.testois.R;
 import com.example.testois.utilities.severinaDB;
-
+@SuppressLint("all")
 public class CourUpdateOrderDiaFragment extends DialogFragment {
     private static final String TAG = "CourUpdateOrdFrag";
     public CourUpdateOrderDiaFragment.OnInputListener fragupdate;

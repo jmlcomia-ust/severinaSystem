@@ -5,11 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ViewPagerActivity"
-    android:background="@drawable/ab"
-
-
-
-    >
+    android:background="@drawable/ab">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonOnboardingAction"

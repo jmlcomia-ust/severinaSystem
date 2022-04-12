@@ -1,5 +1,8 @@
 package com.example.testois.dao;
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("all")
 public class Orders {
     private int id;
     private String name;

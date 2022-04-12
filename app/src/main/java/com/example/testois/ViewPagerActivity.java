@@ -1,5 +1,6 @@
 package com.example.testois;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,7 +18,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressLint("all")
 public class ViewPagerActivity extends AppCompatActivity {
 
    private OnboardingAdapter onboardingAdapter;

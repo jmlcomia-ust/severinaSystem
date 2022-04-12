@@ -1,9 +1,10 @@
 package com.example.testois.dao;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 
 import java.io.Serializable;
-
+@SuppressLint("all")
 public class Inventory implements Serializable {
         private int id;
         private String name;

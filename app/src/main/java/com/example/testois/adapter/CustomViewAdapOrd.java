@@ -18,7 +18,7 @@ import com.example.testois.utilities.severinaDB;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressLint("all")
 public class CustomViewAdapOrd extends RecyclerView.Adapter<CustomViewAdapOrd.MyViewHolder> {
     private static final String TAG = "CustomViewAdapOrd";
     OrderRecyclerListener nListener;

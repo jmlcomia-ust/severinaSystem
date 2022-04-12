@@ -1,4 +1,5 @@
 package com.example.testois.adapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -12,7 +13,7 @@ import com.example.testois.R;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@SuppressLint("all")
 public class CustomExListAdapterOwner extends BaseExpandableListAdapter {
 
     private Context context;

@@ -2,6 +2,7 @@ package com.example.testois;
 
 import android.Manifest;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -35,7 +36,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
-
+@SuppressLint("all")
 public class ReportGenerationMenu extends DrawerBaseActivity  {
     ActivityReportGenerationMenuBinding activityReportGenerationMenuBinding;
     TableLayout tableLayout;

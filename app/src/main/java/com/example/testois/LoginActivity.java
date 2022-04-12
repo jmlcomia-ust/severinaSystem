@@ -3,6 +3,7 @@ package com.example.testois;
 // ALT: LOGIN > VPTUTORIAL > TRACK ORD > SHIPSTAT > SETTINGS
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.testois.dao.User;
 import com.example.testois.utilities.severinaDB;
-
+@SuppressLint("all")
 public class LoginActivity extends AppCompatActivity {
     EditText edtuname, edtpword;
     Button btn1, btn2;

@@ -26,7 +26,7 @@ import com.example.testois.utilities.severinaDB;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+@SuppressLint("all")
 public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.MyViewHolder> implements Filterable {
     private static final String TAG = "CustomViewAdapInv";
     InventoryRecyclerListener mListener;
@@ -69,6 +69,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
             holder.txt_desc.setText(inventory.getDescription().toUpperCase());
             holder.txt_qty.setText(String.valueOf(inventory.getQuantity()));
             if (inventory.getQuantity() <= inventory.getThreshold()+1 || inventory.getQuantity() <= (inventory.getThreshold())) { holder.txt_qty.setTextColor(Color.parseColor("#FF0000"));  holder.txt_qty.setTextSize(22); holder.txt_qty.setTypeface(Typeface.DEFAULT_BOLD);}
+            if (inventory.getQuantity() < 0) {holder.txt_qty.setText(0);}
             // holder.img_item.setImageBitmap(inventory.getImage());
 
             holder.btn_edit.setOnClickListener(v -> {

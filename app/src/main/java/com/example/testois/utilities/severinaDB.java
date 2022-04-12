@@ -2,6 +2,7 @@
 
 package com.example.testois.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,7 +23,7 @@ import com.example.testois.R;
 import com.example.testois.dao.Report;
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressLint("all")
 public class severinaDB extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "severinadb";

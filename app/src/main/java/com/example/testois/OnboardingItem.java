@@ -1,5 +1,8 @@
 package com.example.testois;
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("all")
 public class OnboardingItem {
 
     private int image;

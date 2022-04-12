@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ import com.example.testois.databinding.ActivityDashboardInventoryBinding;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressLint("all")
 public class DashboardInventory extends DrawerBaseActivity implements Filterable {
     private static final String TAG = "DashboardInventory";
     ActivityDashboardInventoryBinding activityDashboardInventoryBinding;

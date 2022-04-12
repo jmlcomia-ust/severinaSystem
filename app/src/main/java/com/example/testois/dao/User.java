@@ -1,5 +1,8 @@
 package com.example.testois.dao;
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("all")
 public class User {
         String id;
         String name = "owner.severina@gmail.com";

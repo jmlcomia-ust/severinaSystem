@@ -1,4 +1,6 @@
 package com.example.testois.helper;
+import android.annotation.SuppressLint;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -9,7 +11,7 @@ import com.example.testois.DashboardOrders;
 import com.example.testois.R;
 import com.example.testois.fragments.FragmentContent;
 import com.example.testois.theinterface.NavigationManager;
-
+@SuppressLint("all")
 public class FragmentNavigationManager implements NavigationManager{
     private static FragmentNavigationManager mInstance;
 

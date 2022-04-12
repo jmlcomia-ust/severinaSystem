@@ -1,5 +1,6 @@
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -15,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.testois.R;
 
-
+@SuppressLint("all")
 public class DeleteOrderDiaFragment extends DialogFragment {
     private static final String TAG = "DeleteOrdFrag";
     public DeleteOrderDiaFragment.OnInputListener fragdel;

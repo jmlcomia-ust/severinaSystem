@@ -1,9 +1,10 @@
 package com.example.testois;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import com.example.testois.databinding.ActivityDashboardBinding;
-
+@SuppressLint("all")
 public class DashboardActivity extends DrawerBaseActivity {
 
     ActivityDashboardBinding activityDashboardBinding;

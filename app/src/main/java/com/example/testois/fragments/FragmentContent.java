@@ -1,5 +1,6 @@
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 import com.example.testois.R;
 
 import org.w3c.dom.Text;
-
+@SuppressLint("all")
 public class FragmentContent extends Fragment {
 
     private static final String KEY_TITLE="Content";

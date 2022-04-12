@@ -1,5 +1,6 @@
 package com.example.testois.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -19,7 +20,7 @@ import com.example.testois.R;
 import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.utilities.severinaDB;
 
-
+@SuppressLint("all")
 public class UpdateInventoryDiaFragment extends DialogFragment {
     private static final String TAG = "UpdateInvFrag";
     public UpdateInventoryDiaFragment.OnInputListener fragupdate;

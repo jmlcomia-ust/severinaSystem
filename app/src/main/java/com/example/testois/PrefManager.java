@@ -1,11 +1,13 @@
 package com.example.testois;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
  * Created by Lincoln on 05/05/16.
  */
+@SuppressLint("all")
 public class PrefManager {
     SharedPreferences pref;
     SharedPreferences.Editor editor;

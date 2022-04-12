@@ -27,7 +27,7 @@ import com.example.testois.fragments.DeleteInventoryDiagFragment;
 import com.example.testois.fragments.UpdateInventoryDiaFragment;
 import java.util.List;
 
-@SuppressLint("NewApi")
+@SuppressLint("all")
 public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapInv.InventoryRecyclerListener,AddInventoryDiaFragment.OnInputListener, UpdateInventoryDiaFragment.OnInputListener, DeleteInventoryDiagFragment.OnInputListener{
     private static final String TAG = "ViewInventory";
     ActivityViewInventoryBinding activityViewInventoryBinding;

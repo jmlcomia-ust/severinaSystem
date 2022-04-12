@@ -1,5 +1,8 @@
 package com.example.testois.dao;
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("all")
 public class Report {
     private int ord_id;
     private String ord_date;
