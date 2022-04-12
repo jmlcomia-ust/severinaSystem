@@ -4,8 +4,11 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.testois.dao.Orders;
+import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapOrd;
 import com.example.testois.databinding.ActivityViewOrderBinding;
@@ -81,6 +85,8 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         customViewAdapOrd = new CustomViewAdapOrd(all_orders, this, this);
         rv_current.setAdapter(customViewAdapOrd);
         rv_current.setLayoutManager(new LinearLayoutManager(ViewOrder.this));
+
+
         if (customViewAdapOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
 
         add_btn.setOnClickListener(view ->{
@@ -94,13 +100,29 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     public void sendInput(String name, int qty, String desc, String date, String stat) {
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try{
-            if (db.checkAvailability("'"+desc+"'", qty)){   //check if order qty can be processed to inv_qty
+            if (db.checkAvailability("'"+desc+"'", qty)){             //check if order qty can be processed to inv_qty
                 Orders orders = new Orders (name, qty, desc, date, stat);
+                db.AddToWorkBook("'"+desc+"'", name, qty, desc, date, stat); //add order data and inv data in SP
+                if (db.CheckWorkBook()){       //check if SP data are existing
+                    SharedPreferences sharedPref = this.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
+                    String report_date = sharedPref.getString("date", "");
+                    String report_name = sharedPref.getString("name", "");
+                    int report_inv_qty = sharedPref.getInt("invqty", 0);
+                    int report_ord_qty = sharedPref.getInt("ordqty",0);
+                    Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
+                    db.addReport(report);           //add report data set from SP data
+                }
 
-                if(stat.equalsIgnoreCase("TO DELIVER")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}  //db.addReport(new Report(date, inv_name, inv_qty, qty));}
-                else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty), date);} //db.addReport(new Report(date, inv_name, inv_qty, qty));}
+                if(stat.equalsIgnoreCase("TO DELIVER")){
+                    db.addOrder(orders);
+                    db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}
+                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
+                else if(stat.equalsIgnoreCase("DELIVERED")){
+                    db.addOrder(orders);
+                    db.NotifyOnOrder(2,desc, String.valueOf(qty), date);}
+                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
             }
-        }catch (Exception e){ Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show(); }
+        }catch (Exception e){  e.printStackTrace(); }
     }
 
     @Override
@@ -110,8 +132,14 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             if (db.checkAvailability("'"+desc+"'", qty)){
                 Orders orders = new Orders (name, qty, desc, date, stat);
 
-                if(stat.equalsIgnoreCase("TO DELIVER")){ db.addOrder(orders); db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}  //db.addReport(new Report(date, inv_name, inv_qty, qty));}
-                else if(stat.equalsIgnoreCase("DELIVERED")){ db.addOrder(orders); db.NotifyOnOrder(2,desc, String.valueOf(qty), date);} //db.addReport(new Report(date, inv_name, inv_qty, qty));}
+                if(stat.equalsIgnoreCase("TO DELIVER")){
+                    db.updateOrder(orders);
+                    db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}
+                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
+                else if(stat.equalsIgnoreCase("DELIVERED")){
+                    db.updateOrder(orders);
+                    db.NotifyOnOrder(2,desc, String.valueOf(qty), date);}
+                //db.addReport(new Report(date, inv_name, inv_qty, qty));}
             }
             else{ db.NotifyOnOrder(3, desc, String.valueOf(qty), date);
                 Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}

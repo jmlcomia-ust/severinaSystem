@@ -413,22 +413,33 @@ public class severinaDB extends SQLiteOpenHelper {
         cursor.close();
         return true;
     }
+    //check if WorkBook Queue exists
+    public boolean CheckWorkBook(){
+        SharedPreferences sharedPref = context.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
+        return sharedPref.contains("date") && sharedPref.contains("name") && sharedPref.contains("invqty") && sharedPref.contains("ordqty");
+    }
 
-    public void GetToPrefs(String name) {
+    //transfer inventory data to sharedprefs to combine and update realtime before sending to report menu
+    public void AddToWorkBook(String order_name, String ordname, int ordqty, String orddesc, String orddate, String ordstat) {
+        SharedPreferences sharedPref = context.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+
         sql = this.getReadableDatabase();
-        String query = "Select * from " + TBL_2_NAME + " where " + INV_NAME + " = '" + name.toUpperCase() + "'";
+        String query = "Select * from " + TBL_2_NAME + " where " + INV_NAME + " = " + order_name + "";
         Cursor cursor = sql.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            int id = cursor.getInt(0);
+            int inv_id = cursor.getInt(0);
             String inv_name = cursor.getString(1);
-            int qty = cursor.getInt(2);
-            String desc = cursor.getString(3);
-            int thres = cursor.getInt(4);
-            Inventory items = new Inventory(id, inv_name, qty, desc, thres);
-            SharedPreferences sharedPref = context.getSharedPreferences("Queue", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("name", items.getName());
-            editor.putInt("qty", items.getQuantity());
+            int inv_qty = cursor.getInt(2);
+            String inv_desc = cursor.getString(3);
+            int inv_thres = cursor.getInt(4);
+
+            //write to SP combined data values to report
+            editor.putString("date", orddate);
+            editor.putString("name", inv_name);
+            editor.putInt("invqty", inv_qty);
+            editor.putInt("ordqty", ordqty);
             editor.apply();
         } else {
             cursor.close();
