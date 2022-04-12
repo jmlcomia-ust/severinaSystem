@@ -422,7 +422,7 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     //transfer inventory data to sharedprefs to combine and update realtime before sending to report menu
-    public void AddToWorkBook(String order_name, String ordname, int ordqty, String orddesc, String orddate, String ordstat) {
+    public void AddToWorkBook(String order_name, int ordqty, String orddate) {
         SharedPreferences sharedPref = context.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();

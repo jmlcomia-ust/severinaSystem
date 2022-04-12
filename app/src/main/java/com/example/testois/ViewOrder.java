@@ -100,7 +100,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try{
             if (db.checkAvailability("'"+desc+"'", qty)){             //check if order qty can be processed to inv_qty
                 Orders orders = new Orders (name, qty, desc, date, stat);
-                db.AddToWorkBook("'"+desc+"'", name, qty, desc, date, stat); //add order data and inv data in SP
+                db.AddToWorkBook("'"+desc+"'", qty, date); //add order data and inv data in SP
                 if (db.CheckWorkBook()){       //check if SP data are existing
                     SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
                     String report_date = sharedPref.getString("date", "");
@@ -126,7 +126,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try {
             if (db.checkAvailability("'"+desc+"'", qty)){
                 Orders orders = new Orders (name, qty, desc, date, stat);
-                db.AddToWorkBook("'"+desc+"'", name, qty, desc, date, stat); //add order data and inv data in SP
+                db.AddToWorkBook("'"+desc+"'", qty, date); //add order data and inv data in SP
                 if (db.CheckWorkBook()){       //check if SP data are existing
                     SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
                     String report_date = sharedPref.getString("date", "");
