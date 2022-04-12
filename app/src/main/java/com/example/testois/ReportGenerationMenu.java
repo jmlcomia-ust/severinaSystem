@@ -22,7 +22,6 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
-import com.example.testois.utilities.ListAllReport;
 import com.example.testois.utilities.severinaDB;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
