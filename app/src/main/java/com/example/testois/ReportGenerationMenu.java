@@ -1,8 +1,7 @@
 package com.example.testois;
 
 import android.Manifest;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -10,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Gravity;
@@ -28,23 +26,21 @@ import com.example.testois.utilities.ListAllReport;
 import com.example.testois.utilities.severinaDB;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfPageEvent;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-
+import java.util.Objects;
 
 
 public class ReportGenerationMenu extends DrawerBaseActivity  {
     ActivityReportGenerationMenuBinding activityReportGenerationMenuBinding;
     TableLayout tableLayout;
     severinaDB db;
-    SQLiteDatabase sql;
     public SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
     public final String date = sdf.format(System.currentTimeMillis());
 
@@ -80,7 +76,6 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         BuildTable();
 
         btn_genreport.setOnClickListener(v -> {
-            ListAllReport report = new ListAllReport();
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
             String date = sdf.format(System.currentTimeMillis());
             try {
@@ -88,18 +83,17 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             } catch (FileNotFoundException | DocumentException e) {
                 e.printStackTrace();
             }
-            //report.createPDF(this,"SeverinaOIS-Report-For");
         });
     }
 
     private void showPdf(String reportName) throws FileNotFoundException, DocumentException {
-            String dir = Environment.getExternalStorageDirectory()+File.separator+"Report Logs";
-
+            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+File.separator+"Report Logs";
             File file = new File(dir, reportName + "-"+ date +".pdf");
 
-            if (!file.getParentFile().exists()){
-                file.getParentFile().mkdirs();
-            }
+                if (!file.getParentFile().exists()){
+                    file.getParentFile().mkdirs();
+                }
+
             Cursor c1 = db.getReadableDatabase().rawQuery("SELECT * FROM db_report ", null);
             Document document = new Document();  // create the document
             PdfWriter.getInstance(document, new FileOutputStream(file));
@@ -134,6 +128,20 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             document.add(table);
             document.addCreationDate();
             document.close();
+        //REF: https://localcoder.org/couldnt-find-meta-data-for-provider-with-authority
+        Uri uriToFile = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()), BuildConfig.APPLICATION_ID + ".provider", file);
+
+        Intent shareIntent = new Intent(Intent.ACTION_VIEW);
+        shareIntent.setDataAndType(uriToFile, "application/pdf");
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (shareIntent.resolveActivity(this.getPackageManager()) != null) {
+            this.startActivity(shareIntent);
+        }
+        try {
+            startActivity(shareIntent);
+        } catch (Exception e) {
+            Toast.makeText(this, "No Application Available to View PDF", Toast.LENGTH_LONG).show();
+        }
         }
 
     //REF: https://github.com/ch0nch0l/AndroPDF

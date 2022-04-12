@@ -20,7 +20,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="android.getqardio.com.gmslocationtest"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
