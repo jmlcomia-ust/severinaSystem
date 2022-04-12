@@ -390,7 +390,7 @@ public class severinaDB extends SQLiteOpenHelper {
             int thres = cursor.getInt(4);
 
             int qty = quantity - need;
-            if (qty < need){
+            if ((0 < qty) && (qty < need)){
                 Toast.makeText(context, "Cannot process order. Please restock first and check if orders can proceed.", Toast.LENGTH_LONG).show();
                 cursor.close();
                 return false;
