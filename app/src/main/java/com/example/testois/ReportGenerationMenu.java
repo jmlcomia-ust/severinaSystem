@@ -180,8 +180,20 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             //column text
             PdfPTable table = new PdfPTable(5);
             table.setWidthPercentage(100);
+
+        Paragraph col_id_par = new Paragraph("ID");
+        col_id_par.setAlignment(Element.ALIGN_CENTER);
+        Paragraph col_date_par = new Paragraph("DELIVERY DATE");
+        col_date_par.setAlignment(Element.ALIGN_CENTER);
+        Paragraph col_name_par = new Paragraph("INVENTORY NAME");
+        col_name_par.setAlignment(Element.ALIGN_CENTER);
+        Paragraph col_invqty_par = new Paragraph("STOCK/S LEFT");
+        col_invqty_par.setAlignment(Element.ALIGN_CENTER);
+        Paragraph col_ordqty_par = new Paragraph("STOCK/S ORDERED");
+        col_ordqty_par.setAlignment(Element.ALIGN_CENTER);
+
             cell = new PdfPCell();
-            cell.addElement(new Paragraph("ID"));
+            cell.addElement(col_id_par);
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -190,7 +202,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             table.addCell(cell);
 
             cell = new PdfPCell();
-            cell.addElement(new Paragraph("DELIVERY DATE"));
+            cell.addElement(col_date_par);
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -199,7 +211,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
 
             table.addCell(cell);
             cell = new PdfPCell();
-            cell.addElement(new Paragraph("INVENTORY NAME"));
+            cell.addElement(col_name_par);
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -208,7 +220,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             table.addCell(cell);
 
             cell = new PdfPCell();
-            cell.addElement(new Paragraph("STOCK/S LEFT"));
+            cell.addElement(col_invqty_par);
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -217,7 +229,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             table.addCell(cell);
 
             cell = new PdfPCell();
-            cell.addElement(new Paragraph("STOCK/S ORDERED"));
+            cell.addElement(col_ordqty_par);
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);

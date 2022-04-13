@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -390,14 +391,17 @@ public class severinaDB extends SQLiteOpenHelper {
             String desc = cursor.getString(3);
             int thres = cursor.getInt(4);
 
-            int qty = quantity - need;
-            if ((0 < qty) && (qty < need)) {
+            if ((0 < quantity) && (quantity < need)) {
                 Toast.makeText(context, "Cannot process order. Please restock first and check if orders can proceed.", Toast.LENGTH_LONG).show();
                 cursor.close();
                 return false;
             }
-            updateItem(new Inventory(id, name, qty, desc, thres));
-            return quantity >= need;
+            else{
+                int qty = quantity - need;
+                updateItem(new Inventory(id, name, qty, desc, thres));
+                return quantity >= need;
+            }
+
         }
         cursor.close();
         return false;
