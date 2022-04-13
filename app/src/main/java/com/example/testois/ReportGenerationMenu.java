@@ -8,13 +8,17 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -24,16 +28,27 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
 import com.example.testois.utilities.severinaDB;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Objects;
 
 @SuppressLint("all")
@@ -42,8 +57,9 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
     TableLayout tableLayout;
     severinaDB db;
     public SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
+    public SimpleDateFormat sdflong = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
     public final String date = sdf.format(System.currentTimeMillis());
-
+    public final String datelong = sdflong.format(System.currentTimeMillis());
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_report, menu);
@@ -76,19 +92,17 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         BuildTable();
 
         btn_genreport.setOnClickListener(v -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy");
-            String date = sdf.format(System.currentTimeMillis());
             try {
-                showPdf( "SeverinaOIS-Report-For" + date);
-            } catch (FileNotFoundException | DocumentException e) {
+                showPdf( "SeverinaOIS-Report-For" + datelong);
+            } catch (DocumentException | IOException e) {
                 e.printStackTrace();
             }
         });
     }
 
-    private void showPdf(String reportName) throws FileNotFoundException, DocumentException {
+    private void showPdf(String reportName) throws IOException, DocumentException {
             String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+File.separator+"Report Logs";
-            File file = new File(dir, reportName + "-"+ date +".pdf");
+            File file = new File(dir, reportName + "-"+ datelong +".pdf");
 
                 if (!file.getParentFile().exists()){
                     file.getParentFile().mkdirs();
@@ -99,16 +113,117 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             PdfWriter.getInstance(document, new FileOutputStream(file));
             document.open();
 
-            Paragraph p3 = new Paragraph();
-            p3.add("Your Log History for \n");
-            document.add(p3);
+            //insert severina logo
+            Drawable logo = ReportGenerationMenu.this.getResources().getDrawable(R.drawable.severina);
+            Bitmap bitmap = ((BitmapDrawable) logo).getBitmap();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] bitmapLogo = stream.toByteArray();
 
+            PdfPTable header = new PdfPTable(3);
+            header.setWidthPercentage(100);
+            float[] fl = new float[]{20, 60, 20};
+            header.setWidths(fl);
+            PdfPCell cell = new PdfPCell();
+            cell.setBorder(Rectangle.NO_BORDER);
+
+            Image imgReportLogo = Image.getInstance(bitmapLogo);
+            imgReportLogo.setAbsolutePosition(330f, 642f);
+            imgReportLogo.setScaleToFitHeight(false);
+            cell.addElement(imgReportLogo);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            header.addCell(cell);
+
+            cell = new PdfPCell();
+            // Heading
+            //BaseFont font = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
+            Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 20.0f, Font.BOLD, BaseColor.BLACK);
+
+            //Creating Chunk
+            Chunk titleChunk = new Chunk("Severina Order and Inventory System", titleFont);
+            //Paragraph
+            Paragraph titleParagraph = new Paragraph(titleChunk);
+            titleParagraph.setAlignment(Element.ALIGN_CENTER);
+                Paragraph subtitleParagraph = new Paragraph("Inventory and Order Report");
+                subtitleParagraph.setAlignment(Element.ALIGN_CENTER);
+                    Paragraph subsubtitleParagraph = new Paragraph("Date: "+date);
+                    subsubtitleParagraph.setAlignment(Element.ALIGN_CENTER);
+
+            cell.addElement(titleParagraph);
+            cell.addElement(subtitleParagraph);
+            cell.addElement(subsubtitleParagraph);
+            cell.setBorder(Rectangle.NO_BORDER);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            header.addCell(cell);
+
+            cell = new PdfPCell(new Paragraph(""));
+            cell.setBorder(Rectangle.NO_BORDER);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(2);
+            header.addCell(cell);
+
+            //creates space between header and report table
+            PdfPTable space = new PdfPTable(1);
+            space.setWidthPercentage(100);
+            cell = new PdfPCell();
+            cell.setBorder(Rectangle.NO_BORDER);
+            cell.setColspan(1);
+            cell.addElement(new Paragraph(" "));
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            space.addCell(cell);
+
+            //column text
             PdfPTable table = new PdfPTable(5);
-            table.addCell("ID");
-            table.addCell("DATE");
-            table.addCell("INVENTORY NAME");
-            table.addCell("NO. OF STOCKS LEFT");
-            table.addCell("STOCKS ORDERED TODAY");
+            table.setWidthPercentage(100);
+            cell = new PdfPCell();
+            cell.addElement(new Paragraph("ID"));
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            table.addCell(cell);
+
+            cell = new PdfPCell();
+            cell.addElement(new Paragraph("DELIVERY DATE"));
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+
+            table.addCell(cell);
+            cell = new PdfPCell();
+            cell.addElement(new Paragraph("INVENTORY NAME"));
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            table.addCell(cell);
+
+            cell = new PdfPCell();
+            cell.addElement(new Paragraph("STOCK/S LEFT"));
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            table.addCell(cell);
+
+            cell = new PdfPCell();
+            cell.addElement(new Paragraph("STOCK/S ORDERED"));
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            table.addCell(cell);
 
             while (c1.moveToNext()) {
                 String id = c1.getString(0);
@@ -117,14 +232,74 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
                 String inv_qty = c1.getString(3);
                 String ord_qty = c1.getString(4);
 
-                table.addCell(id);
-                table.addCell(date);
-                table.addCell(name);
-                table.addCell(inv_qty);
-                table.addCell(ord_qty);
+                Paragraph id_par = new Paragraph(id);
+                id_par.setAlignment(Element.ALIGN_CENTER);
+                Paragraph date_par = new Paragraph(date);
+                date_par.setAlignment(Element.ALIGN_CENTER);
+                Paragraph name_par = new Paragraph(name);
+                name_par.setAlignment(Element.ALIGN_CENTER);
+                Paragraph invqty_par = new Paragraph(inv_qty);
+                invqty_par.setAlignment(Element.ALIGN_CENTER);
+                Paragraph ordqty_par = new Paragraph(ord_qty);
+                ordqty_par.setAlignment(Element.ALIGN_CENTER);
+
+
+                cell = new PdfPCell();
+                cell.addElement(id_par);
+                cell.setBorder(Rectangle.BOX);
+                cell.setColspan(1);
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell();
+                cell.addElement(new Paragraph(date_par));
+                cell.setBorder(Rectangle.BOX);
+                cell.setColspan(1);
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell();
+                cell.addElement(new Paragraph(name_par));
+                cell.setBorder(Rectangle.BOX);
+                cell.setColspan(1);
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell();
+                cell.addElement(new Paragraph(invqty_par));
+                cell.setBorder(Rectangle.BOX);
+                cell.setColspan(1);
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+                cell = new PdfPCell();
+                cell.addElement(ordqty_par);
+                cell.setBorder(Rectangle.BOX);
+                cell.setColspan(1);
+                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+                cell.setPadding(5);
+                table.addCell(cell);
+
+               // table.addCell(id);
+               // table.addCell(date);
+               // table.addCell(name);
+               // table.addCell(inv_qty);
+               // table.addCell(ord_qty);
+
             }
             c1.close();
-
+            document.add(header);
+            document.add(space);
+            document.add(space);
             document.add(table);
             document.addCreationDate();
             document.close();
@@ -147,9 +322,13 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
     //REF: https://github.com/ch0nch0l/AndroPDF
     public void BuildTable() {
         TableRow rowHeader = new TableRow(this);
-        rowHeader.setBackgroundColor(Color.parseColor("#c0c0c0"));
-        rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-        String[] headerText = {"ID", "DATE", "ITEM NAME","STOCK LEFT","ORDERS LEFT"};
+        rowHeader.setDividerPadding(View.VISIBLE);
+        rowHeader.setGravity(Gravity.CENTER_VERTICAL);
+        rowHeader.setMinimumHeight(10);
+        rowHeader.setBackgroundColor(Color.parseColor("#598F70"));
+        rowHeader.setBackgroundResource(R.drawable.border);
+        rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
+        String[] headerText = {"ID", "DELIVERY DATE", "ITEM NAME","STOCK/S LEFT","STOCK/S ORDERED"};
 
         for (String c : headerText) {
 
@@ -157,11 +336,18 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
 
             tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
             tv.setGravity(Gravity.CENTER);
-            tv.setTextSize(18);
+            tv.setBackgroundColor(Color.parseColor("#598F70"));
+            tv.setTextSize(20);
+            tv.setMaxWidth(100);
             tv.setPadding(5, 5, 5, 5);
             tv.setText(c);
+
+
             rowHeader.addView(tv);
-        }tableLayout.addView(rowHeader);
+            rowHeader.setBackgroundColor(Color.parseColor("#598F70"));
+        }
+        tableLayout.addView(rowHeader);
+        tableLayout.setStretchAllColumns(true);
 
         // Get data from sqlite database and add them to the table
 
@@ -193,21 +379,27 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
 
                     TableRow row = new TableRow(this);
 
-                    row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                    row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
                     String[] colText = {report_id + "", report_date, report_name,report_qty_inv,report_qty_ord};
 
                     for (String text : colText) {
                         TextView tv = new TextView(this);
                         tv.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
-                        tv.setGravity(Gravity.CENTER);
-                        tv.setTextSize(16);
+                        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                        tv.setTextSize(18);
                         tv.setPadding(5, 5, 5, 5);
                         tv.setText(text);
+                        tv.setMaxWidth(100);
+                        tv.setBackgroundResource(R.drawable.border);
+                        row.setMinimumWidth(10);
                         row.addView(tv);
                     }
                     tableLayout.addView(row);
                 }
+                cursor.close();
+                tableLayout.setStretchAllColumns(true);
+                //tableLayout.setShrinkAllColumns(true);
             }
         } catch (SQLiteException e) { e.printStackTrace(); }
     }

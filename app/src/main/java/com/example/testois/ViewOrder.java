@@ -134,7 +134,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                     int report_inv_qty = sharedPref.getInt("invqty", 0);
                     int report_ord_qty = sharedPref.getInt("ordqty",0);
                     Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
-                    db.addReport(report);           //add report data set from SP data
+                    db.updateReport(report);           //add report data set from SP data
                 }
                 if(stat.equalsIgnoreCase("TO DELIVER")){
                     db.updateOrder(orders);
