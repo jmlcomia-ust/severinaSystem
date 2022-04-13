@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+
+import com.example.testois.dao.Report;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
 import com.example.testois.utilities.severinaDB;
 import com.itextpdf.text.BaseColor;
@@ -48,6 +51,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -71,10 +75,20 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         int id = item.getItemId();
 
         if (id == R.id.refresh) {
-            Intent i = new Intent(ReportGenerationMenu.this, ReportGenerationMenu.class);
-            startActivity(i);
-            finish();
-            return true;
+            if(!db.checkExistingData("db_order", "ord_id", "'1'")){
+                Log.e("Existing Data Check", " no data in ORDERS TABLE. CLEARING REPORTS. ");
+                db.deleteReports();
+                Intent i = new Intent(ReportGenerationMenu.this, ReportGenerationMenu.class);
+                startActivity(i);
+                finish();
+                return true;
+            }
+            else{
+                Intent i = new Intent(ReportGenerationMenu.this, ReportGenerationMenu.class);
+                startActivity(i);
+                finish();
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -89,13 +103,17 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         db = new severinaDB(this);
         tableLayout = findViewById(R.id.report_table);
         Button btn_genreport = findViewById(R.id.btn_genreport);
+        List<Report> reportList = db.getReportList();
         BuildTable();
 
         btn_genreport.setOnClickListener(v -> {
-            try {
-                showPdf( "SeverinaOIS-Report-For" + datelong);
-            } catch (DocumentException | IOException e) {
-                e.printStackTrace();
+            if(reportList.size() == 0){ Toast.makeText(getApplicationContext(), "Sorry. There are no data to report.", Toast.LENGTH_SHORT).show();}
+            else{
+                try {
+                    showPdf( "SeverinaOIS-Report-For" + datelong);
+                } catch (DocumentException | IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -327,7 +345,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         try {
             startActivity(shareIntent);
         } catch (Exception e) {
-            Toast.makeText(this, "No Application Available to View PDF", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "PDF created. Check on "+file+" for more details.", Toast.LENGTH_LONG).show();
         }
         }
 

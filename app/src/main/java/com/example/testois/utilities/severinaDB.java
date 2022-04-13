@@ -107,10 +107,10 @@ public class severinaDB extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.USR_NAME, name);
         cv.put(severinaDB.USR_PWRD, password);
-        //cv.put(severinaDB.USR_DNAME, dname);
         sql = this.getWritableDatabase();
         sql.insert(severinaDB.TBL_1_NAME, null, cv);
         sql.execSQL("DELETE FROM db_user WHERE usr_id != 1");
+        sql.close();
     }
 
     //ADD INVENTORY ITEM
@@ -125,12 +125,14 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.INV_THRES, inventory.getThreshold());
             //cv.put(severinaDB.INV_IMG,severinaDB.getImageBytes(inventory.getImage()));
             long result = sql.insert(severinaDB.TBL_2_NAME, null, cv);
+            sql.close();
             if (result == -1) {
                 Toast.makeText(context, "Adding Items Failed. Please Try again later.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Item Added Successfully!", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
+            sql.close();
             Toast.makeText(context, "Table Addition error.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -155,6 +157,7 @@ public class severinaDB extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        sql.close();
         return items;
     }
 
@@ -163,8 +166,8 @@ public class severinaDB extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery = " select * from " + TBL_2_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        sql = this.getReadableDatabase();
+        Cursor cursor = sql.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -174,7 +177,7 @@ public class severinaDB extends SQLiteOpenHelper {
         }
         // closing connection
         cursor.close();
-        db.close();
+        sql.close();
 
         // returning names
         return inventory;
@@ -226,6 +229,7 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.INV_THRES, inventory.getThreshold());
             // cv.put(severinaDB.INV_IMG, inventory.getImage());
             long result = sql.update(TBL_2_NAME, cv, INV_ID + " = ?", new String[]{String.valueOf(inventory.getId())});
+            sql.close();
             if (result == -1) {
                 Toast.makeText(context, "Failed updating item.Please Try again Later.", Toast.LENGTH_SHORT).show();
             } else {
@@ -237,8 +241,9 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     public void deleteItem(String id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        long result = db.delete(TBL_2_NAME, " inv_id=?", new String[]{id});
+        sql = this.getWritableDatabase();
+        long result = sql.delete(TBL_2_NAME, " inv_id=?", new String[]{id});
+        sql.close();
         if (result == -1) {
             Toast.makeText(context, "Failed to Delete. Please Try Again later.", Toast.LENGTH_SHORT).show();
         } else {
@@ -258,12 +263,14 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
 
             long result = sql.insert(severinaDB.TBL_3_NAME, null, cv);
+            sql.close();
             if (result == -1) {
                 Toast.makeText(context, "Adding Orders Failed. Please Try again later.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Order Added Successfully!", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
+            sql.close();
             Toast.makeText(context, "Table Addition error.Please Try again later.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -286,6 +293,7 @@ public class severinaDB extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        sql.close();
         return orders;
     }
 
@@ -299,6 +307,7 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.ORD_DATE, order.getDate());
         cv.put(severinaDB.ORD_STAT, order.getStatus());
         long result = sql.update(TBL_3_NAME, cv, ORD_ID + " = ?", new String[]{String.valueOf(order.getId())});
+        sql.close();
         if (result == -1) {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
         } else {
@@ -312,6 +321,7 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.ORD_ID, order.getId());
         cv.put(severinaDB.ORD_STAT, order.getStatus());
         long result = sql.update(TBL_3_NAME, cv, ORD_ID + " = ?", new String[]{String.valueOf(order.getId())});
+        sql.close();
         if (result == -1) {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
         } else {
@@ -372,6 +382,7 @@ public class severinaDB extends SQLiteOpenHelper {
     public void deleteOrder(String row_id) {
         sql = this.getWritableDatabase();
         long result = sql.delete(TBL_3_NAME, "ord_id=?", new String[]{row_id});
+        sql.close();
         if (result == -1) {
             Toast.makeText(context, "Failed to Delete.", Toast.LENGTH_SHORT).show();
         } else {
@@ -394,11 +405,13 @@ public class severinaDB extends SQLiteOpenHelper {
             if ((0 < quantity) && (quantity < need)) {
                 Toast.makeText(context, "Cannot process order. Please restock first and check if orders can proceed.", Toast.LENGTH_LONG).show();
                 cursor.close();
+                sql.close();
                 return false;
             }
             else{
                 int qty = quantity - need;
                 updateItem(new Inventory(id, name, qty, desc, thres));
+                sql.close();
                 return quantity >= need;
             }
 
@@ -409,13 +422,16 @@ public class severinaDB extends SQLiteOpenHelper {
 
     //validation on existing inventory items
     public boolean checkExistingData(String table, String column, String fieldValue) {
+        sql = this.getReadableDatabase();
         String Query = "Select * from " + table + " where " + column + " = " + fieldValue;
         Cursor cursor = sql.rawQuery(Query, null);
         if (cursor.getCount() <= 0) {
             cursor.close();
+            sql.close();
             return false;
         }
         cursor.close();
+        sql.close();
         return true;
     }
 
@@ -447,8 +463,10 @@ public class severinaDB extends SQLiteOpenHelper {
             editor.putInt("invqty", inv_qty);
             editor.putInt("ordqty", ordqty);
             editor.apply();
+            sql.close();
         } else {
             cursor.close();
+            sql.close();
         }
     }
 
@@ -468,6 +486,7 @@ public class severinaDB extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+        sql.close();
         return reportList;
     }
 
@@ -480,6 +499,7 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.J_IQTY, report.getInv_quantity());
             cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
             sql.insert(severinaDB.TBL_4_NAME, null, cv);
+            sql.close();
         }catch(Exception e){e.printStackTrace();}
 
     }
@@ -493,11 +513,18 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.J_IQTY, report.getInv_quantity());
         cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
         long result = sql.update(TBL_4_NAME, cv, severinaDB.J_INVNAME + " = ?", new String[]{String.valueOf("'"+report.getInv_name()+"'")});
+        sql.close();
         if (result == -1) {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void deleteReports(){
+        sql = this.getWritableDatabase();
+        sql.delete(TBL_4_NAME,null,null);
+        sql.close();
     }
 }
     //DATABASE OPERATIONS FOR IMAGES IN DATABASE AND ACTIVITIES
