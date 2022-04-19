@@ -119,7 +119,7 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
             String invname = sharedPref.getString("name","");
             int invqty = sharedPref.getInt("invqty", 0);
             int invthres = sharedPref.getInt("invthres",0);
-            int numcase = 3;
+
             if (db.checkExistingData("db_order", "ord_id", "'"+id+"'")){
                 db.CourAddToWorkBook(id, stat);
                 if (db.CheckWorkBook()){       //check if SP data are existing
@@ -132,11 +132,9 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
                 }
                 if(stat.equalsIgnoreCase("TO DELIVER")){
                     db.updateOrder(orders);
-                    db.NotifyOnOrder(1, desc, String.valueOf(qty), date, numcase, invname);
                 }
                 else if(stat.equalsIgnoreCase("DELIVERED")){
                     db.updateOrder(orders);
-                    db.NotifyOnOrder(2,desc, String.valueOf(qty), date, numcase, invname);
                 }
             }
             else{

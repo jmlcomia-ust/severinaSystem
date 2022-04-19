@@ -128,7 +128,14 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                     db.addOrder(orders);
                     db.NotifyOnOrder(2,desc, String.valueOf(qty), date, numcase, report_name);
                 }
-                SharedPreferences sharedPref2 = ViewOrder.this.getSharedPreferences("sevois_coutempdata", Context.MODE_PRIVATE);
+                SharedPreferences sharedPref2 = this.getSharedPreferences("sevois_coutempdata", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref2.edit();
+                editor.putString("ordname", name);
+                editor.putInt("ordqty", qty);
+                editor.putString("orddesc", desc);
+                editor.putString("orddate", date);
+                editor.putString("ordstat", stat);
+                editor.apply();
             }
             else{
                 Toast.makeText(getApplicationContext(), "Cannot process order. Please restock first and check if orders can proceed.", Toast.LENGTH_LONG).show();
