@@ -55,9 +55,8 @@ public class CustomAdapterInv extends RecyclerView.Adapter<CustomAdapterInv.MyVi
         holder.id.setText(String.valueOf(inventory.getId()));
         holder.name.setText(inventory.getName());
         holder.thres.setText(String.valueOf(inventory.getThreshold()));
+        holder.qty.setText(String.valueOf(inventory.getQuantity()));
         if (inventory.getQuantity() <= inventory.getThreshold()+1 || inventory.getQuantity() <= (inventory.getThreshold())) { holder.qty.setTextColor(Color.parseColor("#FF0000"));  holder.qty.setTextSize(22); holder.qty.setTypeface(Typeface.DEFAULT_BOLD);}
-        if (inventory.getQuantity() < 0) {holder.qty.setText(0);}
-        else{ holder.qty.setText(String.valueOf(inventory.getQuantity())); }
         holder.desc.setText(inventory.getDescription());
 
     }

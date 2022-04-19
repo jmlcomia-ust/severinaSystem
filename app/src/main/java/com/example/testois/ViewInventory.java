@@ -77,11 +77,12 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
              db = new severinaDB(ViewInventory.this);
              //Inventory inventory = new Inventory(name,qty, desc, thres, image);
              Inventory inventory = new Inventory(name,qty, desc, thres);
-            if(db.checkExistingData("db_inventory", "inv_name", "'"+name+"'")){
-                Toast.makeText(this, "Sorry there is an existing item on the database. Kindly updated the existing item to add stocks.",Toast.LENGTH_LONG).show();
-            }
-             else if(qty == (thres+1) || qty == thres){   db.addItem(inventory); db.NotifyOnStock(1,name);}
-             else if(qty < thres){  db.addItem(inventory);db.NotifyOnStock(2,name); }
+             int numcase = db.getCase(qty, thres);
+             if(db.checkExistingData("db_inventory", "inv_name", "'"+name+"'")){
+                 Toast.makeText(this, "Sorry there is an existing item on the database. Kindly updated the existing item to add stocks.",Toast.LENGTH_LONG).show();
+             }
+             else if(qty == (thres+1) || qty == thres){   db.addItem(inventory); db.NotifyOnStock(numcase,name);}
+             else if(qty < thres){  db.addItem(inventory);db.NotifyOnStock(numcase,name); }
              else { db.addItem(inventory); }
          } catch (Exception ex) {
              Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
@@ -96,8 +97,9 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
             db = new severinaDB(ViewInventory.this);
             //Inventory inventory = new Inventory(name,qty, desc, thres, image);
             Inventory inventory = new Inventory (id, name, qty, desc, thres);
-            if(qty == (thres+1) || qty == thres){   db.updateItem(inventory); db.NotifyOnStock(1,name);}
-            else if(qty < thres){  db.updateItem(inventory);db.NotifyOnStock(2,name); }
+            int numcase = db.getCase(qty, thres);
+            if(qty == (thres+1) || qty == thres){   db.updateItem(inventory); db.NotifyOnStock(numcase,name);}
+            else if(qty < thres){  db.updateItem(inventory);db.NotifyOnStock(numcase,name); }
             else { db.updateItem(inventory); }
         } catch (Exception ex) {
             Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
@@ -121,7 +123,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         activityViewInventoryBinding = ActivityViewInventoryBinding.inflate(getLayoutInflater());
         setContentView(activityViewInventoryBinding.getRoot());
         allocatedActivityTitle("Manage Inventory");
-        ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
         db = new severinaDB(this);
         List<Inventory> items = db.getitemsList();

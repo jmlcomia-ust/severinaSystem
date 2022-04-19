@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -96,7 +97,11 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
         customCourViewAdapOrd = new CustomCourViewAdapOrd(all_orders, this, this);
         rv_current.setAdapter(customCourViewAdapOrd);
         rv_current.setLayoutManager(new LinearLayoutManager(CourierViewOrder.this));
-        if (customCourViewAdapOrd.getItemCount() != 0){emptyfield1.setVisibility(View.GONE);}
+        if (customCourViewAdapOrd.getItemCount() != 0){
+            emptyfield1.setVisibility(View.GONE);}
+        else{
+            emptyfield1.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -104,36 +109,41 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
         Log.d(TAG, "updateInput: got stat: " + stat);
         try {
             db = new severinaDB(CourierViewOrder.this);
-            Orders order = new Orders(id, stat);
+            SharedPreferences sharedPref = CourierViewOrder.this.getSharedPreferences("sevois_coutempdata", Context.MODE_PRIVATE);
+            String name = sharedPref.getString("ordname", "");
+            int qty = sharedPref.getInt("ordqty", 0);
+            String desc = sharedPref.getString("orddesc", "");
+            String date = sharedPref.getString("orddate", "");
+            Orders orders = new Orders (name, qty, desc, date, stat);
 
-            //INTEGRATE THIS CODE TO COURIER
-            /*
-            if (db.checkAvailability("'"+desc+"'", qty)){
-                Orders orders = new Orders (name, qty, desc, date, stat);
-                db.AddToWorkBook("'"+desc+"'", name, qty, desc, date, stat); //add order data and inv data in SP
+            String invname = sharedPref.getString("name","");
+            int invqty = sharedPref.getInt("invqty", 0);
+            int invthres = sharedPref.getInt("invthres",0);
+            int numcase = 3;
+            if (db.checkExistingData("db_order", "ord_id", "'"+id+"'")){
+                db.CourAddToWorkBook(id, stat);
                 if (db.CheckWorkBook()){       //check if SP data are existing
-                    SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("severinaoistempdata", Context.MODE_PRIVATE);
                     String report_date = sharedPref.getString("date", "");
                     String report_name = sharedPref.getString("name", "");
                     int report_inv_qty = sharedPref.getInt("invqty", 0);
                     int report_ord_qty = sharedPref.getInt("ordqty",0);
                     Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
-                    db.addReport(report);           //add report data set from SP data
+                    db.updateReport(report);           //add report data set from SP data
                 }
                 if(stat.equalsIgnoreCase("TO DELIVER")){
                     db.updateOrder(orders);
-                    db.NotifyOnOrder(1, desc, String.valueOf(qty), date);}
+                    db.NotifyOnOrder(1, desc, String.valueOf(qty), date, numcase, invname);
+                }
                 else if(stat.equalsIgnoreCase("DELIVERED")){
                     db.updateOrder(orders);
-                    db.NotifyOnOrder(2,desc, String.valueOf(qty), date);}
+                    db.NotifyOnOrder(2,desc, String.valueOf(qty), date, numcase, invname);
+                }
             }
-            else{ db.NotifyOnOrder(3, desc, String.valueOf(qty), date);
+            else{
                 Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
         } catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+           ex.printStackTrace();
         }
-             */
-        }catch(Exception e){e.printStackTrace();}
     }
 
     @Override

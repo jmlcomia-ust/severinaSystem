@@ -122,16 +122,16 @@ public class AddOrderDiaFragment extends DialogFragment {
                 getDialog().dismiss();
                 getActivity().recreate();
             } else if (ord_name_txt.getText().toString().isEmpty()) {
-                ord_name_txt.requestFocus();
+                ord_name_txt.requestFocus();ord_name_txt.setError("This input is required");
                 Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
             } else if (ord_qty_txt.getText().toString().isEmpty()) {
-                ord_qty_txt.requestFocus();
+                ord_qty_txt.requestFocus();ord_qty_txt.setError("This input is required");
                 Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
             } else if (ord_date_txt.getText().toString().isEmpty()) {
-                ord_date_txt.requestFocus();
+                ord_date_txt.requestFocus();ord_date_txt.setError("This input is required");
                 Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
             } else if (ord_stat_txt.getText().toString().isEmpty()) {
-                ord_stat_txt.requestFocus();
+                ord_stat_txt.requestFocus();ord_stat_txt.setError("This input is required");
                 Toast.makeText(getContext(), "Error! Please fill out all the needed inputs.", Toast.LENGTH_SHORT).show();
             }
 

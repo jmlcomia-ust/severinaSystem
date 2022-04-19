@@ -3,6 +3,7 @@ package com.example.testois;
 import android.Manifest;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import com.example.testois.dao.Orders;
 import com.example.testois.dao.Report;
 import com.example.testois.databinding.ActivityReportGenerationMenuBinding;
 import com.example.testois.utilities.severinaDB;
@@ -73,9 +75,10 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        List<Orders> orders = db.getOrderList();
 
         if (id == R.id.refresh) {
-            if(!db.checkExistingData("db_order", "ord_id", "'1'")){
+            if(orders.isEmpty()){
                 Log.e("Existing Data Check", " no data in ORDERS TABLE. CLEARING REPORTS. ");
                 db.deleteReports();
                 Intent i = new Intent(ReportGenerationMenu.this, ReportGenerationMenu.class);
@@ -110,7 +113,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             if(reportList.size() == 0){ Toast.makeText(getApplicationContext(), "Sorry. There are no data to report.", Toast.LENGTH_SHORT).show();}
             else{
                 try {
-                    showPdf( "SeverinaOIS-Report-For" + datelong);
+                    showPdf( "SeverinaOIS-Report-For-" + datelong);
                 } catch (DocumentException | IOException e) {
                     e.printStackTrace();
                 }
@@ -119,85 +122,127 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
     }
 
     private void showPdf(String reportName) throws IOException, DocumentException {
-            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+File.separator+"Report Logs";
-            File file = new File(dir, reportName + "-"+ datelong +".pdf");
+        String dir;
+        File file;
+        Uri uriToFile;
+        if (db.isSDpresent()){
+             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+File.separator+"Report Logs";
+             file = new File(dir, reportName + ".pdf");
+             if (!file.getParentFile().exists()){
+                 file.getParentFile().mkdirs();
+             }
 
-                if (!file.getParentFile().exists()){
-                    file.getParentFile().mkdirs();
-                }
+           designPDF(file);
 
-            Cursor c1 = db.getReadableDatabase().rawQuery("SELECT * FROM db_report ", null);
-            Document document = new Document();  // create the document
-            PdfWriter.getInstance(document, new FileOutputStream(file));
-            document.open();
+            //REF: https://localcoder.org/couldnt-find-meta-data-for-provider-with-authority
+            uriToFile = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()), BuildConfig.APPLICATION_ID + ".provider", file);
 
-            //insert severina logo
-            Drawable logo = ReportGenerationMenu.this.getResources().getDrawable(R.drawable.severina);
-            Bitmap bitmap = ((BitmapDrawable) logo).getBitmap();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] bitmapLogo = stream.toByteArray();
+            Intent shareIntent = new Intent(Intent.ACTION_VIEW);
+            shareIntent.setDataAndType(uriToFile, "application/pdf");
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            if (shareIntent.resolveActivity(this.getPackageManager()) != null) {
+                this.startActivity(shareIntent);
+            }
+            try {
+                startActivity(shareIntent);
+            } catch (Exception e) {
+                Toast.makeText(this, "PDF created. Check on "+file+" for more details.", Toast.LENGTH_LONG).show();
+            }
+        }
+        else{
+            file = new File(getFilesDir(), reportName + ".pdf");
+            if (!file.getParentFile().exists()){
+                file.getParentFile().mkdirs();
+            }
+            designPDF(file);
+            uriToFile = Uri.fromFile(file);
+            Intent shareIntent = new Intent(Intent.ACTION_VIEW);
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            shareIntent.setDataAndType(uriToFile, "application/pdf");
+            try {
+                this.startActivity(shareIntent);
+            }
+            catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "PDF created. Check on "+file+" for more details.", Toast.LENGTH_LONG).show();
+            }
+        }
+        }
+    private void designPDF(File file) throws IOException, DocumentException {
+        Cursor c1;
+        Document document;
+        c1 = db.getReadableDatabase().rawQuery("SELECT * FROM db_report ", null);
+        document = new Document();  // create the document
+        PdfWriter.getInstance(document, new FileOutputStream(file));
+        document.open();
 
-            PdfPTable header = new PdfPTable(3);
-            header.setWidthPercentage(100);
-            float[] fl = new float[]{20, 60, 20};
-            header.setWidths(fl);
-            PdfPCell cell = new PdfPCell();
-            cell.setBorder(Rectangle.NO_BORDER);
+        //insert severina logo
+        Drawable logo = ReportGenerationMenu.this.getResources().getDrawable(R.drawable.severina);
+        Bitmap bitmap = ((BitmapDrawable) logo).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] bitmapLogo = stream.toByteArray();
 
-            Image imgReportLogo = Image.getInstance(bitmapLogo);
-            imgReportLogo.setAbsolutePosition(330f, 642f);
-            imgReportLogo.setScaleToFitHeight(false);
-            cell.addElement(imgReportLogo);
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            header.addCell(cell);
+        PdfPTable header = new PdfPTable(3);
+        header.setWidthPercentage(100);
+        float[] fl = new float[]{20, 60, 20};
+        header.setWidths(fl);
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder(Rectangle.NO_BORDER);
 
-            cell = new PdfPCell();
-            // Heading
-            //BaseFont font = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
-            Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 20.0f, Font.BOLD, BaseColor.BLACK);
+        Image imgReportLogo = Image.getInstance(bitmapLogo);
+        imgReportLogo.setAbsolutePosition(330f, 642f);
+        imgReportLogo.setScaleToFitHeight(false);
+        cell.addElement(imgReportLogo);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        header.addCell(cell);
 
-            //Creating Chunk
-            Chunk titleChunk = new Chunk("Severina Order and Inventory System", titleFont);
-            //Paragraph
-            Paragraph titleParagraph = new Paragraph(titleChunk);
-            titleParagraph.setAlignment(Element.ALIGN_CENTER);
-                Paragraph subtitleParagraph = new Paragraph("Inventory and Order Report");
-                subtitleParagraph.setAlignment(Element.ALIGN_CENTER);
-                    Paragraph subsubtitleParagraph = new Paragraph("Date: "+date);
-                    subsubtitleParagraph.setAlignment(Element.ALIGN_CENTER);
+        cell = new PdfPCell();
+        // Heading
+        //BaseFont font = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
+        Font titleFont = new Font(Font.FontFamily.TIMES_ROMAN, 20.0f, Font.BOLD, BaseColor.BLACK);
 
-            cell.addElement(titleParagraph);
-            cell.addElement(subtitleParagraph);
-            cell.addElement(subsubtitleParagraph);
-            cell.setBorder(Rectangle.NO_BORDER);
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setPadding(5);
-            header.addCell(cell);
+        //Creating Chunk
+        Chunk titleChunk = new Chunk("Severina Order and Inventory System", titleFont);
+        //Paragraph
+        Paragraph titleParagraph = new Paragraph(titleChunk);
+        titleParagraph.setAlignment(Element.ALIGN_CENTER);
+        Paragraph subtitleParagraph = new Paragraph("Inventory and Order Report");
+        subtitleParagraph.setAlignment(Element.ALIGN_CENTER);
+        Paragraph subsubtitleParagraph = new Paragraph("Date: "+date);
+        subsubtitleParagraph.setAlignment(Element.ALIGN_CENTER);
 
-            cell = new PdfPCell(new Paragraph(""));
-            cell.setBorder(Rectangle.NO_BORDER);
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setPadding(2);
-            header.addCell(cell);
+        cell.addElement(titleParagraph);
+        cell.addElement(subtitleParagraph);
+        cell.addElement(subsubtitleParagraph);
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        header.addCell(cell);
 
-            //creates space between header and report table
-            PdfPTable space = new PdfPTable(1);
-            space.setWidthPercentage(100);
-            cell = new PdfPCell();
-            cell.setBorder(Rectangle.NO_BORDER);
-            cell.setColspan(1);
-            cell.addElement(new Paragraph(" "));
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setPadding(5);
-            space.addCell(cell);
+        cell = new PdfPCell(new Paragraph(""));
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(2);
+        header.addCell(cell);
 
-            //column text
-            PdfPTable table = new PdfPTable(5);
-            table.setWidthPercentage(100);
+        //creates space between header and report table
+        PdfPTable space = new PdfPTable(1);
+        space.setWidthPercentage(100);
+        cell = new PdfPCell();
+        cell.setBorder(Rectangle.NO_BORDER);
+        cell.setColspan(1);
+        cell.addElement(new Paragraph(" "));
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        space.addCell(cell);
+
+        //column text
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
 
         Paragraph col_id_par = new Paragraph("ID");
         col_id_par.setAlignment(Element.ALIGN_CENTER);
@@ -210,8 +255,72 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         Paragraph col_ordqty_par = new Paragraph("STOCK/S ORDERED");
         col_ordqty_par.setAlignment(Element.ALIGN_CENTER);
 
+        cell = new PdfPCell();
+        cell.addElement(col_id_par);
+        cell.setBorder(Rectangle.BOX);
+        cell.setColspan(1);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        table.addCell(cell);
+
+        cell = new PdfPCell();
+        cell.addElement(col_date_par);
+        cell.setBorder(Rectangle.BOX);
+        cell.setColspan(1);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+
+        table.addCell(cell);
+        cell = new PdfPCell();
+        cell.addElement(col_name_par);
+        cell.setBorder(Rectangle.BOX);
+        cell.setColspan(1);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        table.addCell(cell);
+
+        cell = new PdfPCell();
+        cell.addElement(col_invqty_par);
+        cell.setBorder(Rectangle.BOX);
+        cell.setColspan(1);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        table.addCell(cell);
+
+        cell = new PdfPCell();
+        cell.addElement(col_ordqty_par);
+        cell.setBorder(Rectangle.BOX);
+        cell.setColspan(1);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        table.addCell(cell);
+
+        while (c1.moveToNext()) {
+            String id = c1.getString(0);
+            String date = c1.getString(1);
+            String name = c1.getString(2);
+            String inv_qty = c1.getString(3);
+            String ord_qty = c1.getString(4);
+
+            Paragraph id_par = new Paragraph(id);
+            id_par.setAlignment(Element.ALIGN_CENTER);
+            Paragraph date_par = new Paragraph(date);
+            date_par.setAlignment(Element.ALIGN_CENTER);
+            Paragraph name_par = new Paragraph(name);
+            name_par.setAlignment(Element.ALIGN_CENTER);
+            Paragraph invqty_par = new Paragraph(inv_qty);
+            invqty_par.setAlignment(Element.ALIGN_CENTER);
+            Paragraph ordqty_par = new Paragraph(ord_qty);
+            ordqty_par.setAlignment(Element.ALIGN_CENTER);
+
+
             cell = new PdfPCell();
-            cell.addElement(col_id_par);
+            cell.addElement(id_par);
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -220,16 +329,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             table.addCell(cell);
 
             cell = new PdfPCell();
-            cell.addElement(col_date_par);
-            cell.setBorder(Rectangle.BOX);
-            cell.setColspan(1);
-            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-            cell.setPadding(5);
-
-            table.addCell(cell);
-            cell = new PdfPCell();
-            cell.addElement(col_name_par);
+            cell.addElement(new Paragraph(date_par));
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -238,7 +338,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             table.addCell(cell);
 
             cell = new PdfPCell();
-            cell.addElement(col_invqty_par);
+            cell.addElement(new Paragraph(name_par));
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -247,7 +347,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             table.addCell(cell);
 
             cell = new PdfPCell();
-            cell.addElement(col_ordqty_par);
+            cell.addElement(new Paragraph(invqty_par));
             cell.setBorder(Rectangle.BOX);
             cell.setColspan(1);
             cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
@@ -255,102 +355,27 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             cell.setPadding(5);
             table.addCell(cell);
 
-            while (c1.moveToNext()) {
-                String id = c1.getString(0);
-                String date = c1.getString(1);
-                String name = c1.getString(2);
-                String inv_qty = c1.getString(3);
-                String ord_qty = c1.getString(4);
+            cell = new PdfPCell();
+            cell.addElement(ordqty_par);
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            table.addCell(cell);
 
-                Paragraph id_par = new Paragraph(id);
-                id_par.setAlignment(Element.ALIGN_CENTER);
-                Paragraph date_par = new Paragraph(date);
-                date_par.setAlignment(Element.ALIGN_CENTER);
-                Paragraph name_par = new Paragraph(name);
-                name_par.setAlignment(Element.ALIGN_CENTER);
-                Paragraph invqty_par = new Paragraph(inv_qty);
-                invqty_par.setAlignment(Element.ALIGN_CENTER);
-                Paragraph ordqty_par = new Paragraph(ord_qty);
-                ordqty_par.setAlignment(Element.ALIGN_CENTER);
-
-
-                cell = new PdfPCell();
-                cell.addElement(id_par);
-                cell.setBorder(Rectangle.BOX);
-                cell.setColspan(1);
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setPadding(5);
-                table.addCell(cell);
-
-                cell = new PdfPCell();
-                cell.addElement(new Paragraph(date_par));
-                cell.setBorder(Rectangle.BOX);
-                cell.setColspan(1);
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setPadding(5);
-                table.addCell(cell);
-
-                cell = new PdfPCell();
-                cell.addElement(new Paragraph(name_par));
-                cell.setBorder(Rectangle.BOX);
-                cell.setColspan(1);
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setPadding(5);
-                table.addCell(cell);
-
-                cell = new PdfPCell();
-                cell.addElement(new Paragraph(invqty_par));
-                cell.setBorder(Rectangle.BOX);
-                cell.setColspan(1);
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setPadding(5);
-                table.addCell(cell);
-
-                cell = new PdfPCell();
-                cell.addElement(ordqty_par);
-                cell.setBorder(Rectangle.BOX);
-                cell.setColspan(1);
-                cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
-                cell.setPadding(5);
-                table.addCell(cell);
-
-               // table.addCell(id);
-               // table.addCell(date);
-               // table.addCell(name);
-               // table.addCell(inv_qty);
-               // table.addCell(ord_qty);
-
-            }
-            c1.close();
-            document.add(header);
-            document.add(space);
-            document.add(space);
-            document.add(table);
-            document.addCreationDate();
-            document.close();
-        //REF: https://localcoder.org/couldnt-find-meta-data-for-provider-with-authority
-        Uri uriToFile = FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()), BuildConfig.APPLICATION_ID + ".provider", file);
-
-        Intent shareIntent = new Intent(Intent.ACTION_VIEW);
-        shareIntent.setDataAndType(uriToFile, "application/pdf");
-        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        if (shareIntent.resolveActivity(this.getPackageManager()) != null) {
-            this.startActivity(shareIntent);
         }
-        try {
-            startActivity(shareIntent);
-        } catch (Exception e) {
-            Toast.makeText(this, "PDF created. Check on "+file+" for more details.", Toast.LENGTH_LONG).show();
-        }
-        }
+        c1.close();
+        document.add(header);
+        document.add(space);
+        document.add(space);
+        document.add(table);
+        document.addCreationDate();
+        document.close();
+    }
 
     //REF: https://github.com/ch0nch0l/AndroPDF
-    public void BuildTable() {
+    private void BuildTable() {
         TableRow rowHeader = new TableRow(this);
         rowHeader.setDividerPadding(View.VISIBLE);
         rowHeader.setGravity(Gravity.CENTER_VERTICAL);
