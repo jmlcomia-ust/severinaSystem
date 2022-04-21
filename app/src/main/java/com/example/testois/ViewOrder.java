@@ -103,7 +103,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             db = new severinaDB(ViewOrder.this);
             SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("sevois_owntempdata", Context.MODE_PRIVATE);
 
-
             if (db.checkAvailability("'"+desc+"'", qty)){             //check if order qty can be processed to inv_qty
                 Orders orders = new Orders (name, qty, desc, date, stat);
                 db.AddToWorkBook("'"+desc+"'", qty, date); //add order data and inv data in SP
@@ -141,6 +140,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
         try {
             db = new severinaDB(ViewOrder.this);
             if (db.checkAvailability("'"+desc+"'", qty)){
+
 
                 db.AddToWorkBook("'"+desc+"'", qty, date); //add order data and inv data in SP
                 int invthres = sharedPref.getInt("invthres",0);

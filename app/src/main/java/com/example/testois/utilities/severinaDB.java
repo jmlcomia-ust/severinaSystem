@@ -497,6 +497,31 @@ public class severinaDB extends SQLiteOpenHelper {
         return false;
     }
 
+    public void addBackQty(String invname,int invqty) {
+        sql = this.getReadableDatabase();
+        //String query = "Select "+ INV_QTY +" from "+TBL_2_NAME+" where "+INV_NAME+" = '"+value.toUpperCase()+"'";
+        String query = "Select * from " + TBL_2_NAME + " where " + INV_NAME + " = '" + invname+"'";
+        Cursor cursor = sql.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            int quantity = cursor.getInt(2);
+            String desc = cursor.getString(3);
+            int thres = cursor.getInt(4);
+
+                int qty = quantity + invqty;
+                ContentValues cv = new ContentValues();
+                cv.put(severinaDB.INV_ID, id);
+                cv.put(severinaDB.INV_NAME, name);
+                cv.put(severinaDB.INV_QTY, qty);
+                cv.put(severinaDB.INV_DESC, desc);
+                cv.put(severinaDB.INV_THRES, thres);
+                sql.update(TBL_2_NAME,cv, INV_ID + " = ?", new String[]{String.valueOf(id)});
+            }
+        cursor.close();
+        sql.close();
+        }
+
     //validation on existing inventory items
     public boolean checkExistingData(String table, String column, String fieldValue) {
         sql = this.getReadableDatabase();
