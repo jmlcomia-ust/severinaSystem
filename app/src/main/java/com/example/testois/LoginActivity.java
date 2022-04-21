@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         btn1.setOnClickListener(v -> {
             String name = edtuname.getText().toString();
             String password = edtpword.getText().toString();
+
             if (name.equals(user.getName()) && password.equals(user.getPassword())) {
                 Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, ViewPagerActivity.class);

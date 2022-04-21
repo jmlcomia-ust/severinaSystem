@@ -1,15 +1,15 @@
 package com.example.testois;
+import static com.example.testois.utilities.severinaDB.sql;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +28,6 @@ import com.example.testois.fragments.DeleteOrderDiaFragment;
 import com.example.testois.fragments.UpdateOrderDiaFragment;
 
 import java.util.List;
-import java.util.Set;
 
 @SuppressLint("all")
 public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.OrderRecyclerListener, AddOrderDiaFragment.OnInputListener, UpdateOrderDiaFragment.OnInputListener, DeleteOrderDiaFragment.OnInputListener{
@@ -128,14 +127,6 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                     db.addOrder(orders);
                     db.NotifyOnOrder(2,desc, String.valueOf(qty), date, numcase, report_name);
                 }
-                SharedPreferences sharedPref2 = this.getSharedPreferences("sevois_coutempdata", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref2.edit();
-                editor.putString("ordname", name);
-                editor.putInt("ordqty", qty);
-                editor.putString("orddesc", desc);
-                editor.putString("orddate", date);
-                editor.putString("ordstat", stat);
-                editor.apply();
             }
             else{
                 Toast.makeText(getApplicationContext(), "Cannot process order. Please restock first and check if orders can proceed.", Toast.LENGTH_LONG).show();
@@ -146,44 +137,35 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
     @Override
     public void UpdateInput(int id, String name, int qty, String desc, String date, String stat) {
         Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
+        SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("sevois_owntempdata", Context.MODE_PRIVATE);
         try {
             db = new severinaDB(ViewOrder.this);
-            SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("sevois_owntempdata", Context.MODE_PRIVATE);
-
             if (db.checkAvailability("'"+desc+"'", qty)){
-                Orders orders = new Orders (name, qty, desc, date, stat);
+
                 db.AddToWorkBook("'"+desc+"'", qty, date); //add order data and inv data in SP
                 int invthres = sharedPref.getInt("invthres",0);
                 String report_date = sharedPref.getString("date", "");
                 String report_name = sharedPref.getString("name", "");
                 int report_inv_qty = sharedPref.getInt("invqty", 0);
                 int report_ord_qty = sharedPref.getInt("ordqty",0);
-                if (db.CheckWorkBook()){       //check if SP data are existing
+                if (db.CheckWorkBook()) {       //check if SP data are existing
 
                     Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
                     db.updateReport(report);           //add report data set from SP data
                 }
 
-                if(stat.equalsIgnoreCase("TO DELIVER")){
-                    db.updateOrder(orders);
-                    int numcase = db.getCase(report_inv_qty, invthres);
-                    Log.e("numcase", "got case: "+numcase);
-                    db.NotifyOnOrder(1, desc, String.valueOf(qty), date, numcase, report_name);
-                }
-                else if(stat.equalsIgnoreCase("DELIVERED")){
-                    db.updateOrder(orders);
-                    int numcase = db.getCase(report_inv_qty, invthres);
-                    Log.e("numcase", "got case: "+numcase);
-                    db.NotifyOnOrder(2,desc, String.valueOf(qty), date, numcase, report_name);
-                }
-                SharedPreferences sharedPref2 = this.getSharedPreferences("sevois_coutempdata", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref2.edit();
-                editor.putString("ordname", name);
-                editor.putInt("ordqty", qty);
-                editor.putString("orddesc", desc);
-                editor.putString("orddate", date);
-                editor.putString("ordstat", stat);
-                editor.apply();
+
+                    Log.d("update query","updating : " + qty);
+                    if(stat.equalsIgnoreCase("TO DELIVER")){
+                        db.updateOrder(new Orders(id,name, qty, desc, date, stat));
+                        int numcase = db.getCase(report_inv_qty, invthres);
+                        db.NotifyOnOrder(1, desc, String.valueOf(qty), date, numcase, report_name);
+                    }
+                    else if(stat.equalsIgnoreCase("DELIVERED")){
+                        db.updateOrder(new Orders(id,name, qty, desc, date, stat));
+                        int numcase = db.getCase(report_inv_qty, invthres);
+                        db.NotifyOnOrder(2,desc, String.valueOf(qty), date, numcase, report_name);
+                    }
             }
             else{
                 Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}

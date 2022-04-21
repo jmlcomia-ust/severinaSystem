@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.R;
-import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 
 import java.util.Calendar;
@@ -89,7 +88,6 @@ public class UpdateOrderDiaFragment extends DialogFragment {
             getDialog().dismiss();
         });
         btn_add_vord.setOnClickListener(v ->{
-            Log.d(TAG, "onClick: capturing updates");
             if (!ord_name_txt.getText().toString().isEmpty() && !ord_qty_txt.getText().toString().isEmpty() && !ord_stat_txt.getText().toString().isEmpty()) {
                 id = Integer.parseInt(ord_id_txt.getText().toString());
                 name_updated = ord_name_txt.getText().toString();
@@ -121,7 +119,7 @@ public class UpdateOrderDiaFragment extends DialogFragment {
     //REF: https://www.androidhive.info/2012/06/android-populating-spinner-data-from-sqlite-database/
     private void loadSpinnerDescData() {
         db = new severinaDB(getActivity());
-        List<String> inventory_dropdown = db.getInvName();
+        List<String> inventory_dropdown = db.getInvName(ord_desc_txt.getText().toString());
         ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, inventory_dropdown);
         itemAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ord_desc_drop.setAdapter(itemAdapter);

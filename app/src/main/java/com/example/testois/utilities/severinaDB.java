@@ -24,6 +24,10 @@ import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.R;
 import com.example.testois.dao.Report;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 @SuppressLint("all")
@@ -111,12 +115,39 @@ public class severinaDB extends SQLiteOpenHelper {
     public void addUser(String name, String password) {
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.USR_NAME, name);
-        cv.put(severinaDB.USR_PWRD, password);
+        cv.put(severinaDB.USR_PWRD,  password);
+
         sql = this.getWritableDatabase();
         sql.insert(severinaDB.TBL_1_NAME, null, cv);
         sql.execSQL("DELETE FROM db_user WHERE usr_id != 1");
         sql.close();
     }
+
+    //no need as of the moment
+        public static String encrypt(final String s) {
+            final String MD5 = "MD5";
+            try {
+                // Create MD5 Hash
+                MessageDigest digest = java.security.MessageDigest
+                        .getInstance(MD5);
+                digest.update(s.getBytes());
+                byte messageDigest[] = digest.digest();
+
+                // Create Hex String
+                StringBuilder hexString = new StringBuilder();
+                for (byte aMessageDigest : messageDigest) {
+                    String h = Integer.toHexString(0xFF & aMessageDigest);
+                    while (h.length() < 2)
+                        h = "0" + h;
+                    hexString.append(h);
+                }
+                return hexString.toString();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+
 
     //ADD INVENTORY ITEM
     public void addItem(Inventory inventory) {
@@ -166,11 +197,12 @@ public class severinaDB extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<String> getInvName() {
+    public List<String> getInvName(String data) {
         List<String> inventory = new ArrayList<>();
 
         // Select All Query
-        String selectQuery = " select * from " + TBL_2_NAME;
+        //String selectQuery = " select * from " + TBL_2_NAME;
+        String selectQuery = " select * from " + TBL_2_NAME + " order by '"+data+"'";
         sql = this.getReadableDatabase();
         Cursor cursor = sql.rawQuery(selectQuery, null);
 
@@ -189,21 +221,28 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
     public int getCase(int qty, int thres){
-        if(qty == (thres+1) || qty == thres){ return 1; }
-        else if (qty < thres){ return 2; }
+         if(qty == 0) {
+            return 0;
+        }
+        else if(qty == (thres+1) || qty == thres){
+            return 1;
+        }
+        else if (qty < thres){
+            return 2;
+        }
         else{
             return 3;
         }
     }
 
     public void NotifyOnStock(int notifyCase, String notifyThisItem) {
-        if (notifyCase == 1) { //validation WHEN INVENTORY QTY IS ONE MORE THAN THRES
-            String message = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please Restock now to ensure Successful Order Processing.";
+        if (notifyCase == 0) { //validation WHEN INVENTORY QTY IS 0
+            String message = " Reminder: The stocks for " + notifyThisItem + " is now Out of Stock. Please Restock now to ensure Successful Order Processing.";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnStock");
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
             builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            builder.setSmallIcon(R.drawable.ic_notifications);
+            builder.setSmallIcon(R.drawable.severina);
             builder.setContentTitle("Severina OIS");
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
@@ -212,12 +251,27 @@ public class severinaDB extends SQLiteOpenHelper {
 
            managerCompat = NotificationManagerCompat.from(context.getApplicationContext());
             managerCompat.notify(1, builder.build());
-        } else if (notifyCase == 2) { //validation WHEN INVENTORY QTY EQUALS 0
-            String message = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number.\n Please Restock now to begin processing orders.";
+        }if (notifyCase == 1) { //validation WHEN INVENTORY QTY IS ONE MORE THAN THRES
+            String message = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please Restock now to ensure Successful Order Processing.";
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnStock");
+            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            builder.setSound(alarmSound);
+            builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+            builder.setSmallIcon(R.drawable.severina);
+            builder.setContentTitle("Severina OIS");
+            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            builder.setContentText(message);
+            builder.setAutoCancel(true);
+            builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+
+            managerCompat = NotificationManagerCompat.from(context.getApplicationContext());
+            managerCompat.notify(1, builder.build());
+        } else if (notifyCase == 2) { //validation WHEN INVENTORY QTY IS ONE LESS THAN THRES
+            String message = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please Restock now to begin processing orders.";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnStock");
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-            builder.setSmallIcon(R.drawable.ic_notifications);
+            builder.setSmallIcon(R.drawable.severina);
             builder.setContentTitle("Severina OIS");
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
@@ -332,8 +386,9 @@ public class severinaDB extends SQLiteOpenHelper {
     public void NotifyOnOrder(int notifyCase, String notifyThisOrder, String notifyThisNum, String notifyThisDate, int numCase, String notifyThisItem) {
 
         if (notifyCase == 0) { // validation when ORDER STATUS IS UPDATED TO DELIVERED
-            if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level,\n Please Restock now to ensure Successful Order Processing."; }
-            else if (numCase == 2){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number.\n Please Restock now to begin processing orders."; }
+            if (numCase == 0){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to ensure Successful Order Processing."; }
+            else if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
+            else if (numCase == 2){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
             else{inv_notif = "";}
 
             String message = " Order for " + notifyThisNum + " units of " + notifyThisOrder + ". is Delivered. ";
@@ -354,7 +409,8 @@ public class severinaDB extends SQLiteOpenHelper {
             managerCompat.notify(1, builder.build());
         }
         else if (notifyCase == 1) { // validation when ORDER STATUS IS TODAY
-            if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
+            if (numCase == 0){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to ensure Successful Order Processing."; }
+            else if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
             else if (numCase == 2){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
             else{inv_notif = "";}
 
@@ -373,11 +429,12 @@ public class severinaDB extends SQLiteOpenHelper {
             managerCompat = NotificationManagerCompat.from(context.getApplicationContext());
             managerCompat.notify(1, builder.build());
         } else if (notifyCase == 2) { //validation WHEN ORDER QTY IS MORE THAN INVENTORY QTY
-            if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
+            if (numCase == 0){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to ensure Successful Order Processing."; }
+            else if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
             else if (numCase == 2){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
             else{inv_notif = "";}
 
-            String message = " Order for" + notifyThisOrder + " was not processed due to Low stocks. \n Please restock first before going through the order process. ";
+            String message = " Order for" + notifyThisOrder + " was not processed due to Low stocks. Please restock first before going through the order process. ";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);

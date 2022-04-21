@@ -74,7 +74,7 @@ public class CustomViewAdapInv extends RecyclerView.Adapter<CustomViewAdapInv.My
             holder.btn_edit.setOnClickListener(v -> {
                 Log.d(TAG, "onClick: opening Update Dialog Fragment for Inventory.");
                 Bundle args = new Bundle();
-                args.putInt("ids", inventory.getId());
+                args.putInt("id", inventory.getId());
                 args.putString("name", inventory.getName());
                 args.putInt("qty", inventory.getQuantity());
                 args.putString("desc", inventory.getDescription());
