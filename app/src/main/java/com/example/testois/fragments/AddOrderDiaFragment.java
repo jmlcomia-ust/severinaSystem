@@ -143,7 +143,7 @@ public class AddOrderDiaFragment extends DialogFragment {
     //REF: https://www.androidhive.info/2012/06/android-populating-spinner-data-from-sqlite-database/
     private void loadSpinnerDescData() {
         db = new severinaDB(getActivity());
-        List<String> inventory_dropdown = db.getInvName(ord_desc_txt.getText().toString());
+        List<String> inventory_dropdown = db.getInvName();
         ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, inventory_dropdown);
         itemAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ord_desc_drop.setAdapter(itemAdapter);

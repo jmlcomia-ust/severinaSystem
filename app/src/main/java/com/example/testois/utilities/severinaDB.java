@@ -24,10 +24,6 @@ import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.R;
 import com.example.testois.dao.Report;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 @SuppressLint("all")
@@ -52,6 +48,7 @@ public class severinaDB extends SQLiteOpenHelper {
     private static final String TBL_3_NAME = "db_order";
     public static final String ORD_ID = "ord_id";
     public static final String ORD_NAME = "ord_name";
+    public static final String ITMID = "inv_id";
     public static final String ORD_QTY = "ord_quantity";
     public static final String ORD_DESC = "ord_description";
     public static final String ORD_DATE = "ord_date";
@@ -86,10 +83,10 @@ public class severinaDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sql) {
         String q1 = "create table " + TBL_1_NAME + " (" + USR_ID + " integer primary key autoincrement, " + USR_NAME + " text, " + USR_PWRD + " text) ";
         String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
-        //String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) "+INV_IMG+" blob) ";
-        String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_DATE + " text, " + ORD_STAT + " text) ";
+        String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_DATE + " text, " + ORD_STAT + " text ) ";
+        //String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_DATE + " text, " + ORD_STAT + " text, "+ ITMID + " integer, foreign key (inv_id) references \" + TBL_2_NAME + \" ( \" + INV_ID + \" )) ";
         String q4 = "create table " + TBL_4_NAME + " (" + J_ID + " integer primary key autoincrement, " + J_DATE + " integer, " + J_INVNAME + " text, " + J_IQTY + " integer," + J_OQTY + " integer) ";
-        //String q4 = "create table " + TBL_4_NAME + " (" + J_ID + " integer primary key autoincrement, " + J_DATE + " datetime default current_timestamp, " + J_INVNAME + " text, " + J_IQTY + " integer," + J_OQTY + " integer) ";
+
         sql.execSQL(q1);
         sql.execSQL(q2);
         sql.execSQL(q3);
@@ -115,39 +112,12 @@ public class severinaDB extends SQLiteOpenHelper {
     public void addUser(String name, String password) {
         ContentValues cv = new ContentValues();
         cv.put(severinaDB.USR_NAME, name);
-        cv.put(severinaDB.USR_PWRD,  password);
-
+        cv.put(severinaDB.USR_PWRD, password);
         sql = this.getWritableDatabase();
         sql.insert(severinaDB.TBL_1_NAME, null, cv);
         sql.execSQL("DELETE FROM db_user WHERE usr_id != 1");
         sql.close();
     }
-
-    //no need as of the moment
-        public static String encrypt(final String s) {
-            final String MD5 = "MD5";
-            try {
-                // Create MD5 Hash
-                MessageDigest digest = java.security.MessageDigest
-                        .getInstance(MD5);
-                digest.update(s.getBytes());
-                byte messageDigest[] = digest.digest();
-
-                // Create Hex String
-                StringBuilder hexString = new StringBuilder();
-                for (byte aMessageDigest : messageDigest) {
-                    String h = Integer.toHexString(0xFF & aMessageDigest);
-                    while (h.length() < 2)
-                        h = "0" + h;
-                    hexString.append(h);
-                }
-                return hexString.toString();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-            return "";
-        }
-
 
     //ADD INVENTORY ITEM
     public void addItem(Inventory inventory) {
@@ -197,12 +167,11 @@ public class severinaDB extends SQLiteOpenHelper {
         return items;
     }
 
-    public List<String> getInvName(String data) {
+    public List<String> getInvName() {
         List<String> inventory = new ArrayList<>();
 
         // Select All Query
-        //String selectQuery = " select * from " + TBL_2_NAME;
-        String selectQuery = " select * from " + TBL_2_NAME + " order by '"+data+"'";
+        String selectQuery = " select * from " + TBL_2_NAME;
         sql = this.getReadableDatabase();
         Cursor cursor = sql.rawQuery(selectQuery, null);
 
@@ -220,29 +189,15 @@ public class severinaDB extends SQLiteOpenHelper {
         return inventory;
     }
 
-    public int getCase(int qty, int thres){
-         if(qty == 0) {
-            return 0;
-        }
-        else if(qty == (thres+1) || qty == thres){
-            return 1;
-        }
-        else if (qty < thres){
-            return 2;
-        }
-        else{
-            return 3;
-        }
-    }
 
     public void NotifyOnStock(int notifyCase, String notifyThisItem) {
-        if (notifyCase == 0) { //validation WHEN INVENTORY QTY IS 0
-            String message = " Reminder: The stocks for " + notifyThisItem + " is now Out of Stock. Please Restock now to ensure Successful Order Processing.";
+        if (notifyCase == 1) { //validation WHEN INVENTORY QTY IS ONE MORE THAN THRES
+            String message = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please Restock now to ensure Successful Order Processing.";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnStock");
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
             builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            builder.setSmallIcon(R.drawable.severina);
+            builder.setSmallIcon(R.drawable.ic_notifications);
             builder.setContentTitle("Severina OIS");
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
@@ -251,27 +206,12 @@ public class severinaDB extends SQLiteOpenHelper {
 
            managerCompat = NotificationManagerCompat.from(context.getApplicationContext());
             managerCompat.notify(1, builder.build());
-        }if (notifyCase == 1) { //validation WHEN INVENTORY QTY IS ONE MORE THAN THRES
-            String message = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please Restock now to ensure Successful Order Processing.";
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnStock");
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            builder.setSound(alarmSound);
-            builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            builder.setSmallIcon(R.drawable.severina);
-            builder.setContentTitle("Severina OIS");
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            builder.setContentText(message);
-            builder.setAutoCancel(true);
-            builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-
-            managerCompat = NotificationManagerCompat.from(context.getApplicationContext());
-            managerCompat.notify(1, builder.build());
-        } else if (notifyCase == 2) { //validation WHEN INVENTORY QTY IS ONE LESS THAN THRES
-            String message = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please Restock now to begin processing orders.";
+        } else if (notifyCase == 2) { //validation WHEN INVENTORY QTY EQUALS 0
+            String message = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number.\n Please Restock now to begin processing orders.";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnStock");
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-            builder.setSmallIcon(R.drawable.severina);
+            builder.setSmallIcon(R.drawable.ic_notifications);
             builder.setContentTitle("Severina OIS");
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
@@ -329,6 +269,7 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.ORD_DESC, order.getDescription().trim().toUpperCase());
             cv.put(severinaDB.ORD_DATE, order.getDate());
             cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
+           // cv.put(severinaDB.ITMID, order.getStatus().trim().toUpperCase());
 
             long result = sql.insert(severinaDB.TBL_3_NAME, null, cv);
             sql.close();
@@ -382,16 +323,37 @@ public class severinaDB extends SQLiteOpenHelper {
             Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
         }
     }
+    //for numcase
+    public int getCase(int qty, int thres){
+        if(qty == 0) {
+            return 1;
+        }
+        else if(qty == (thres+1) || qty == thres){
+            return 2;
+        }
+        else if (qty < thres && qty > 0){
+            return 3;
+        }
+        else {
+            return 4;
+        }
+    }
 
-    public void NotifyOnOrder(int notifyCase, String notifyThisOrder, String notifyThisNum, String notifyThisDate, int numCase, String notifyThisItem) {
+    public void NotifyOnOrder(int notifyCase, String notifyThisOrder, String notifyThisNum, String notifyThisDate, int numCase, String notifyThisItem, String stat) {
+        String message;
+        if (notifyCase == 0) { // validation of acknowledged order
+            if (numCase == 1){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to begin processing orders."; }
+            if (numCase == 2){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
+            else if (numCase == 3){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
+            else {inv_notif = "";}
 
-        if (notifyCase == 0) { // validation when ORDER STATUS IS UPDATED TO DELIVERED
-            if (numCase == 0){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to ensure Successful Order Processing."; }
-            else if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
-            else if (numCase == 2){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
-            else{inv_notif = "";}
+            if(stat.equalsIgnoreCase("To Deliver")){
+                message =  " Order due on " + notifyThisDate + " for " + notifyThisNum + " units of " + notifyThisOrder + ". ";
+            }
+            else{
+                message = " Order for " + notifyThisNum + " units of " + notifyThisOrder + ". is Delivered. ";
+            }
 
-            String message = " Order for " + notifyThisNum + " units of " + notifyThisOrder + ". is Delivered. ";
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
@@ -408,39 +370,24 @@ public class severinaDB extends SQLiteOpenHelper {
             managerCompat = NotificationManagerCompat.from(context.getApplicationContext());
             managerCompat.notify(1, builder.build());
         }
-        else if (notifyCase == 1) { // validation when ORDER STATUS IS TODAY
-            if (numCase == 0){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to ensure Successful Order Processing."; }
-            else if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
-            else if (numCase == 2){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
-            else{inv_notif = "";}
+        else if (notifyCase == 1) { // validation of critical level
+            if (numCase == 1){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to begin processing orders."; }
+            if (numCase == 2){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
+            else if (numCase == 3){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
+            else {inv_notif = "";}
 
-            String message = " Order due on " + notifyThisDate + " for " + notifyThisNum + " units of " + notifyThisOrder + ". ";
+            if(stat.equalsIgnoreCase("To Deliver")){
+                message =  " Order due on " + notifyThisDate + " for " + notifyThisNum + " units of " + notifyThisOrder + ". ";
+            }
+            else{
+                message = " Order for " + notifyThisNum + " units of " + notifyThisOrder + ". is Delivered. ";
+            }
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
             Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             builder.setSound(alarmSound);
             builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message + "\n\n" + inv_notif));
             builder.setSmallIcon(R.drawable.ic_notifications);
-            builder.setContentTitle("Severina OIS");
-            builder.setContentText(message);
-            builder.setAutoCancel(true);
-            builder.setPriority(NotificationCompat.PRIORITY_HIGH);
-
-            managerCompat = NotificationManagerCompat.from(context.getApplicationContext());
-            managerCompat.notify(1, builder.build());
-        } else if (notifyCase == 2) { //validation WHEN ORDER QTY IS MORE THAN INVENTORY QTY
-            if (numCase == 0){ inv_notif = " Reminder: OH NO! There are no more stocks for " + notifyThisItem + ". Please restock now to ensure Successful Order Processing."; }
-            else if (numCase == 1){ inv_notif = " Reminder: The stocks for " + notifyThisItem + " is in critical level. Please restock now to ensure Successful Order Processing."; }
-            else if (numCase == 2){ inv_notif = " Reminder: OH NO! Stocks for " + notifyThisItem + " are less than the critical number. Please restock now to begin processing orders."; }
-            else{inv_notif = "";}
-
-            String message = " Order for" + notifyThisOrder + " was not processed due to Low stocks. Please restock first before going through the order process. ";
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), "NotifOnOrder");
-            Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            builder.setSound(alarmSound);
-            builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-            builder.setSmallIcon(R.drawable.ic_notifications);
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message + "\n\n" + inv_notif));
             builder.setContentTitle("Severina OIS");
             builder.setContentText(message);
             builder.setAutoCancel(true);
@@ -497,31 +444,6 @@ public class severinaDB extends SQLiteOpenHelper {
         return false;
     }
 
-    public void addBackQty(String invname,int invqty) {
-        sql = this.getReadableDatabase();
-        //String query = "Select "+ INV_QTY +" from "+TBL_2_NAME+" where "+INV_NAME+" = '"+value.toUpperCase()+"'";
-        String query = "Select * from " + TBL_2_NAME + " where " + INV_NAME + " = '" + invname+"'";
-        Cursor cursor = sql.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            int id = cursor.getInt(0);
-            String name = cursor.getString(1);
-            int quantity = cursor.getInt(2);
-            String desc = cursor.getString(3);
-            int thres = cursor.getInt(4);
-
-                int qty = quantity + invqty;
-                ContentValues cv = new ContentValues();
-                cv.put(severinaDB.INV_ID, id);
-                cv.put(severinaDB.INV_NAME, name);
-                cv.put(severinaDB.INV_QTY, qty);
-                cv.put(severinaDB.INV_DESC, desc);
-                cv.put(severinaDB.INV_THRES, thres);
-                sql.update(TBL_2_NAME,cv, INV_ID + " = ?", new String[]{String.valueOf(id)});
-            }
-        cursor.close();
-        sql.close();
-        }
-
     //validation on existing inventory items
     public boolean checkExistingData(String table, String column, String fieldValue) {
         sql = this.getReadableDatabase();
@@ -542,6 +464,36 @@ public class severinaDB extends SQLiteOpenHelper {
         SharedPreferences sharedPref = context.getSharedPreferences("sevois_owntempdata", Context.MODE_PRIVATE);
         return sharedPref.contains("date") && sharedPref.contains("name") && sharedPref.contains("invqty") && sharedPref.contains("ordqty");
     }
+
+   /* //transfer inventory data to sharedprefs to combine and update realtime before sending to report menu
+    public void dataJoined() {
+        sql = this.getReadableDatabase();
+        String query = "Select " + " o. " + ORD_DATE + " ,o. " + ORD_DESC + " ,o. " + ORD_QTY + " ,i.  " + INV_QTY + " from " + TBL_3_NAME + " o " + " join " + TBL_2_NAME + " i " + " on i." + ITMID + " = o." + ITMID;
+
+        Cursor cursor = sql.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            String orddate = cursor.getString(0);
+            String orddesc = cursor.getString(1);
+            int inv_qty = cursor.getInt(2);
+            //String inv_desc = cursor.getString(3);
+            int inv_thres = cursor.getInt(4);
+
+            //write to SP combined data values to report
+            editor.putString("date", orddate);
+            editor.putString("name", inv_name);
+            editor.putInt("invqty", inv_qty);
+            editor.putInt("ordqty", ordqty);
+            //add inventory data specifics for notifs
+            editor.putInt("invthres", inv_thres);
+            editor.apply();
+            sql.close();
+        } else {
+            cursor.close();
+            sql.close();
+        }
+    }
+    
+    */
 
     //transfer inventory data to sharedprefs to combine and update realtime before sending to report menu
     public void AddToWorkBook(String order_name, int ordqty, String orddate) {
@@ -691,7 +643,7 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
         cv.put(severinaDB.J_IQTY, report.getInv_quantity());
         cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
-        long result = sql.update(TBL_4_NAME, cv, severinaDB.J_INVNAME + " = ?", new String[]{String.valueOf("'"+report.getInv_name()+"'")});
+        long result = sql.update(TBL_4_NAME, cv, severinaDB.J_ID + " = ?" + " AND "+ severinaDB.J_INVNAME + " = ?", new String[]{"'"+report.getOrd_id()+"'", "'"+report.getInv_name()+"'"});
         sql.close();
         if (result == -1) {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.testois.R;
+import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 
 import java.util.Calendar;
@@ -83,27 +84,19 @@ public class UpdateOrderDiaFragment extends DialogFragment {
         ord_date_txt.setText(args.getString("date"));
         ord_stat_txt .setText(args.getString("stat"));
 
-        int prev_qty = Integer.parseInt(ord_qty_txt.getText().toString());
-
         btn_back_vord.setOnClickListener(v -> {
             Log.d(TAG, "onClick: closing dialog");
             getDialog().dismiss();
         });
         btn_add_vord.setOnClickListener(v ->{
+            Log.d(TAG, "onClick: capturing updates");
             if (!ord_name_txt.getText().toString().isEmpty() && !ord_qty_txt.getText().toString().isEmpty() && !ord_stat_txt.getText().toString().isEmpty()) {
-
                 id = Integer.parseInt(ord_id_txt.getText().toString());
                 name_updated = ord_name_txt.getText().toString();
                 qty_updated =  Integer.parseInt(ord_qty_txt .getText().toString());
                 desc_updated = ord_desc_txt.getText().toString();
                 date_updated = ord_date_txt.getText().toString();
                 stat_updated = ord_stat_txt .getText().toString();
-
-                if(!(qty_updated == prev_qty)){
-                    // addback previous qty
-                    db.addBackQty(desc_updated, prev_qty);
-                }
-
                 fragupdate.UpdateInput(id,name_updated, qty_updated,desc_updated, date_updated, stat_updated);
                 getDialog().dismiss();
                 getActivity().recreate();
@@ -124,10 +117,11 @@ public class UpdateOrderDiaFragment extends DialogFragment {
         return view;
     }
 
+
     //REF: https://www.androidhive.info/2012/06/android-populating-spinner-data-from-sqlite-database/
     private void loadSpinnerDescData() {
         db = new severinaDB(getActivity());
-        List<String> inventory_dropdown = db.getInvName(ord_desc_txt.getText().toString());
+        List<String> inventory_dropdown = db.getInvName();
         ArrayAdapter<String> itemAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, inventory_dropdown);
         itemAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ord_desc_drop.setAdapter(itemAdapter);

@@ -85,7 +85,7 @@ public class UpdateInventoryDiaFragment extends DialogFragment {
         decrement2 = view.findViewById(R.id.decrement2);
 
         Bundle args = getArguments();
-            inv_id_txt.setText(String.valueOf(args.getInt("id")));
+            inv_id_txt.setText(String.valueOf(args.getInt("ids")));
             inv_name_txt.setText(args.getString("name"));
             inv_qty_txt.setText(String.valueOf(args.getInt("qty")));
             inv_desc_txt.setText(args.getString("desc"));
