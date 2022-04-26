@@ -19,13 +19,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.testois.dao.Inventory;
+import com.example.testois.dao.Report;
 import com.example.testois.utilities.severinaDB;
 import com.example.testois.adapter.CustomViewAdapInv;
 import com.example.testois.databinding.ActivityViewInventoryBinding;
 import com.example.testois.fragments.AddInventoryDiaFragment;
 import com.example.testois.fragments.DeleteInventoryDiagFragment;
 import com.example.testois.fragments.UpdateInventoryDiaFragment;
+
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressLint("all")
 public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapInv.InventoryRecyclerListener,AddInventoryDiaFragment.OnInputListener, UpdateInventoryDiaFragment.OnInputListener, DeleteInventoryDiagFragment.OnInputListener{
@@ -71,7 +75,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
 
     //public void sendInput(String name, String qty, String desc, int thres, Bitmap image){
      public void sendInput(String name, int qty, String desc, int thres){
-        //Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot thres: "+thres+"\ngot image@:"+image);
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot thres: "+thres);
          try {
              db = new severinaDB(ViewInventory.this);
@@ -91,18 +94,22 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
 
     //public void UpdateInput(String id, String name, int qty, String desc, int thres,Bitmap image) {
     public void UpdateInput(int id, String name, int qty, String desc, int thres) {
-        //Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc + "\ngot image@: "+image);
+        SimpleDateFormat sdflong = new SimpleDateFormat("MM-dd-yy HH:mm:ss", Locale.getDefault());
+        String datelong = sdflong.format(System.currentTimeMillis());
         Log.d(TAG, "updateInput: got id: " + id+ "\n got name: " + name + "\n got qty: " + qty + "\ngot desc:" + desc);
         try {
             db = new severinaDB(ViewInventory.this);
-            //Inventory inventory = new Inventory(name,qty, desc, thres, image);
+
             Inventory inventory = new Inventory (id, name, qty, desc, thres);
             int numcase = db.getCase(qty, thres);
             if(qty == (thres+1) || qty == thres){   db.updateItem(inventory); db.NotifyOnStock(numcase,name);}
             else if(qty < thres){  db.updateItem(inventory);db.NotifyOnStock(numcase,name); }
             else { db.updateItem(inventory); }
+
+            Report report = new Report("N/A", name, qty, 0, datelong, " INVENTORY UPDATED BY OWNER");
+            db.addReport(report);           //add report data set from SP data
         } catch (Exception ex) {
-            Toast.makeText(this, "Record Fail", Toast.LENGTH_LONG).show();
+            Log.e("Error on Update Stock report",ex.getMessage());
         }
     }
 
@@ -134,7 +141,6 @@ public class ViewInventory extends DrawerBaseActivity implements CustomViewAdapI
         emptyfield = findViewById(R.id.emptyRv);
 
         if (customViewAdapInv.getItemCount() != 0){emptyfield.setVisibility(View.GONE);}
-
         add_item.setOnClickListener(view -> {
         Log.d(TAG, "onClick: opening Add Dialog Fragment for Inventory.");
         AddInventoryDiaFragment dialog = new AddInventoryDiaFragment();

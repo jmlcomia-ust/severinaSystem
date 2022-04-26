@@ -28,9 +28,12 @@ import com.example.testois.databinding.ActivityCourierViewOrderBinding;
 import com.example.testois.fragments.CourUpdateOrderDiaFragment;
 import com.example.testois.utilities.severinaDB;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+
 @SuppressLint("all")
 public class CourierViewOrder extends CourierDrawerBaseActivity implements CustomCourViewAdapOrd.OrderRecyclerListener, CourUpdateOrderDiaFragment.OnInputListener{
     private static final String TAG = "CourierViewOrders";
@@ -106,6 +109,8 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
 
     @Override
     public void CourUpdateInput(int id, String stat) {
+        SimpleDateFormat sdflong = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String datelong = sdflong.format(System.currentTimeMillis());
         Log.d(TAG, "updateInput: got stat: " + stat);
         try {
             db = new severinaDB(CourierViewOrder.this);
@@ -127,7 +132,7 @@ public class CourierViewOrder extends CourierDrawerBaseActivity implements Custo
                     String report_name = sharedPref.getString("name", "");
                     int report_inv_qty = sharedPref.getInt("invqty", 0);
                     int report_ord_qty = sharedPref.getInt("ordqty",0);
-                    Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
+                    Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty, datelong, "OWNER");
                     db.updateReport(report);           //add report data set from SP data
                 }
                 if(stat.equalsIgnoreCase("TO DELIVER")){

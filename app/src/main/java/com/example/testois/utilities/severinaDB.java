@@ -24,8 +24,12 @@ import com.example.testois.dao.Inventory;
 import com.example.testois.dao.Orders;
 import com.example.testois.R;
 import com.example.testois.dao.Report;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 @SuppressLint("all")
 public class severinaDB extends SQLiteOpenHelper {
 
@@ -60,6 +64,8 @@ public class severinaDB extends SQLiteOpenHelper {
     private static final String J_INVNAME = "joined_invname";
     private static final String J_IQTY = "joined_iqty";
     private static final String J_OQTY = "joined_oqty";
+    private static final String J_MNGDATE = "joined_mngdate";
+    private static final String J_MNGBY = "joined_mngby";
 
     private static final String DB_PATH = "/data/data/com.example.testois/databases/";
     private static final int VER = 1;
@@ -84,8 +90,8 @@ public class severinaDB extends SQLiteOpenHelper {
         String q1 = "create table " + TBL_1_NAME + " (" + USR_ID + " integer primary key autoincrement, " + USR_NAME + " text, " + USR_PWRD + " text) ";
         String q2 = "create table " + TBL_2_NAME + " (" + INV_ID + " integer primary key autoincrement, " + INV_NAME + " text, " + INV_QTY + " integer, " + INV_DESC + " text, " + INV_THRES + " integer) ";
         String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_DATE + " text, " + ORD_STAT + " text ) ";
-        //String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_DATE + " text, " + ORD_STAT + " text, "+ ITMID + " integer, foreign key (inv_id) references \" + TBL_2_NAME + \" ( \" + INV_ID + \" )) ";
-        String q4 = "create table " + TBL_4_NAME + " (" + J_ID + " integer primary key autoincrement, " + J_DATE + " integer, " + J_INVNAME + " text, " + J_IQTY + " integer," + J_OQTY + " integer) ";
+        //String q3 = "create table " + TBL_3_NAME + " (" + ORD_ID + " integer primary key autoincrement, " + ORD_NAME + " text, " + ORD_QTY + " integer, " + ORD_DESC + " text, " + ORD_DATE + " text, " + ORD_STAT + " text, "+ ITMID + " integer, foreign key (inv_id) references " + TBL_2_NAME + " ( " + INV_ID + " )) ";
+        String q4 = "create table " + TBL_4_NAME + " (" + J_ID + " integer primary key autoincrement, " + J_DATE + " integer, " + J_INVNAME + " text, " + J_IQTY + " integer," + J_OQTY + " integer, " + J_MNGDATE + " date default current_timestamp,  " + J_MNGBY + " text) ";
 
         sql.execSQL(q1);
         sql.execSQL(q2);
@@ -269,7 +275,6 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.ORD_DESC, order.getDescription().trim().toUpperCase());
             cv.put(severinaDB.ORD_DATE, order.getDate());
             cv.put(severinaDB.ORD_STAT, order.getStatus().trim().toUpperCase());
-           // cv.put(severinaDB.ITMID, order.getStatus().trim().toUpperCase());
 
             long result = sql.insert(severinaDB.TBL_3_NAME, null, cv);
             sql.close();
@@ -465,35 +470,25 @@ public class severinaDB extends SQLiteOpenHelper {
         return sharedPref.contains("date") && sharedPref.contains("name") && sharedPref.contains("invqty") && sharedPref.contains("ordqty");
     }
 
-   /* //transfer inventory data to sharedprefs to combine and update realtime before sending to report menu
+    //transfer inventory data to sharedprefs to combine and update realtime before sending to report menu
     public void dataJoined() {
+        SharedPreferences sharedPref = context.getSharedPreferences("sevois_owntempdata", Context.MODE_PRIVATE);
         sql = this.getReadableDatabase();
-        String query = "Select " + " o. " + ORD_DATE + " ,o. " + ORD_DESC + " ,o. " + ORD_QTY + " ,i.  " + INV_QTY + " from " + TBL_3_NAME + " o " + " join " + TBL_2_NAME + " i " + " on i." + ITMID + " = o." + ITMID;
+        String query = "Select " + " o. " + ORD_DATE + " ,o. " + ORD_DESC + " ,o. " + ORD_QTY + " ,i.  " + INV_QTY + " from " + TBL_3_NAME + " o " + " join " + TBL_2_NAME + " i " + " on i." + INV_ID + " = o." + ITMID;
 
         Cursor cursor = sql.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             String orddate = cursor.getString(0);
             String orddesc = cursor.getString(1);
             int inv_qty = cursor.getInt(2);
-            //String inv_desc = cursor.getString(3);
             int inv_thres = cursor.getInt(4);
 
-            //write to SP combined data values to report
-            editor.putString("date", orddate);
-            editor.putString("name", inv_name);
-            editor.putInt("invqty", inv_qty);
-            editor.putInt("ordqty", ordqty);
-            //add inventory data specifics for notifs
-            editor.putInt("invthres", inv_thres);
-            editor.apply();
-            sql.close();
+
         } else {
             cursor.close();
             sql.close();
         }
     }
-    
-    */
 
     //transfer inventory data to sharedprefs to combine and update realtime before sending to report menu
     public void AddToWorkBook(String order_name, int ordqty, String orddate) {
@@ -505,10 +500,8 @@ public class severinaDB extends SQLiteOpenHelper {
         String query = "Select * from " + TBL_2_NAME + " where " + INV_NAME + " = " + order_name + "";
         Cursor cursor = sql.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            //int inv_id = cursor.getInt(0);
             String inv_name = cursor.getString(1);
             int inv_qty = cursor.getInt(2);
-            //String inv_desc = cursor.getString(3);
             int inv_thres = cursor.getInt(4);
 
             //write to SP combined data values to report
@@ -516,6 +509,7 @@ public class severinaDB extends SQLiteOpenHelper {
             editor.putString("name", inv_name);
             editor.putInt("invqty", inv_qty);
             editor.putInt("ordqty", ordqty);
+
             //add inventory data specifics for notifs
             editor.putInt("invthres", inv_thres);
             editor.apply();
@@ -525,8 +519,6 @@ public class severinaDB extends SQLiteOpenHelper {
             sql.close();
         }
     }
-
-    // String query = "Select * from " + TBL_3_NAME + " where " + ORD_ID + " = '" + ord_id + "' AND ORD_STAT = 'TO DELIVER'"  ;
 
     public void CourAddToWorkBook(int ord_id, String ord_stat) {
         SharedPreferences sharedPref = context.getSharedPreferences("sevois_coutempdata", Context.MODE_PRIVATE);
@@ -539,12 +531,10 @@ public class severinaDB extends SQLiteOpenHelper {
         Log.e("Start Query1","Starting query 1");
         Cursor cursor = sql.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            //int ord_id = cursor.getInt(0);
             String ord_name = cursor.getString(1);
             int ord_qty = cursor.getInt(2);
             String ord_desc = cursor.getString(3);
             String ord_date = cursor.getString(4);
-            //String ord_stat = cursor.getString(5);
 
             ContentValues cv = new ContentValues();
             cv.put(severinaDB.ORD_ID, ord_id);
@@ -613,7 +603,9 @@ public class severinaDB extends SQLiteOpenHelper {
                 String name = cursor.getString(2).toUpperCase();
                 int inv_qty = cursor.getInt(3);
                 int ord_qty = cursor.getInt(4);
-                reportList.add(new Report(id, date, name, inv_qty, ord_qty));
+                String mngdate = cursor.getString(5);
+                String mngby = cursor.getString(6).toUpperCase();
+                reportList.add(new Report(id, date, name, inv_qty, ord_qty, mngdate, mngby));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -629,6 +621,8 @@ public class severinaDB extends SQLiteOpenHelper {
             cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
             cv.put(severinaDB.J_IQTY, report.getInv_quantity());
             cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
+            cv.put(severinaDB.J_MNGDATE, report.getMngdate());
+            cv.put(severinaDB.J_MNGBY, report.getMngby());
             sql.insert(severinaDB.TBL_4_NAME, null, cv);
             sql.close();
         }catch(Exception e){e.printStackTrace();}
@@ -643,7 +637,9 @@ public class severinaDB extends SQLiteOpenHelper {
         cv.put(severinaDB.J_INVNAME, report.getInv_name().trim().toUpperCase());
         cv.put(severinaDB.J_IQTY, report.getInv_quantity());
         cv.put(severinaDB.J_OQTY, report.getOrd_quantity());
-        long result = sql.update(TBL_4_NAME, cv, severinaDB.J_ID + " = ?" + " AND "+ severinaDB.J_INVNAME + " = ?", new String[]{"'"+report.getOrd_id()+"'", "'"+report.getInv_name()+"'"});
+        cv.put(severinaDB.J_MNGDATE, report.getMngdate());
+        cv.put(severinaDB.J_MNGBY, report.getMngby());
+        long result = sql.update(TBL_4_NAME, cv, severinaDB.J_ID + " = ?", new String[]{"'"+report.getOrd_id()+"'"});
         sql.close();
         if (result == -1) {
             Toast.makeText(context, "Failed updating order. Please try again later.", Toast.LENGTH_SHORT).show();
@@ -668,94 +664,3 @@ public class severinaDB extends SQLiteOpenHelper {
     }
 
 }
-    //DATABASE OPERATIONS FOR IMAGES IN DATABASE AND ACTIVITIES
-/*
-    //convert bitmap to byte[]
-    public static byte[] getImageBytes(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
-    }
-    //convert byte[] to Bitmap
-    public static Bitmap getImage(byte[] image) {
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
-    }
-
-    //convert Bitmap to URI
-    public static Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
-    //to resize image for faster uploading to db
-    public static Bitmap decodeUri(Context c, Uri selectedImage, int REQUIRED_SIZE) {
-
-        try {
-
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o);
-
-            // The new size we want to scale to
-            // final int REQUIRED_SIZE =  size;
-
-            // Find the correct scale value. It should be the power of 2.
-            int width_tmp = o.outWidth, height_tmp = o.outHeight;
-            int scale = 1;
-            while (true) {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE) {
-                    break;
-                }
-                width_tmp /= 2;
-                height_tmp /= 2;
-                scale *= 2;
-            }
-
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(selectedImage), null, o2);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    //convert ImageView to byte[]
-    public byte[] ImageViewToByte(ImageView image){
-        Bitmap bmp = ((BitmapDrawable) image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG,80,stream);
-        return stream.toByteArray();
-    }
-
-    void loadImageFromDB(AppCompatImageView imgLoaded) {
-        severinaDB db = new severinaDB(context.getApplicationContext());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    db.open();
-                   // final byte[] bytes = db.retreiveImageFromDB();
-                    db.close();
-                    // Show Image from DB in ImageView
-                    imgLoaded.post(new Runnable() {
-                        @Override
-                        public void run() {
-                     //       imgLoaded.setImageBitmap(severinaDB.getImage(bytes));
-
-                        }
-                    });
-                } catch (Exception e) {
-                    Log.e("Database", "<loadImageFromDB> Error : " + e.getLocalizedMessage());
-                    db.close();
-                }
-            }
-        }).start();
-    }
- */

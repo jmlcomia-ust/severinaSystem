@@ -27,7 +27,9 @@ import com.example.testois.fragments.AddOrderDiaFragment;
 import com.example.testois.fragments.DeleteOrderDiaFragment;
 import com.example.testois.fragments.UpdateOrderDiaFragment;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 @SuppressLint("all")
@@ -99,6 +101,8 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
 
     @Override
     public void sendInput(String name, int qty, String desc, String date, String stat) {
+        SimpleDateFormat sdflong = new SimpleDateFormat("MM-dd-yy HH:mm:ss", Locale.getDefault());
+        String datelong = sdflong.format(System.currentTimeMillis());
         Log.d(TAG, "sendInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try{
             db = new severinaDB(ViewOrder.this);
@@ -111,8 +115,9 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
                 String report_name = sharedPref.getString("name", "");
                 int report_inv_qty = sharedPref.getInt("invqty", 0);
                 int report_ord_qty = sharedPref.getInt("ordqty",0);
+
                 if (db.CheckWorkBook()){       //check if SP data are existing\
-                    Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty);
+                    Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty, datelong,"ADDED BY OWNER");
                     db.addReport(report);           //add report data set from SP data
                 }
                 int numcase = db.getCase(report_inv_qty, invthres);
@@ -130,6 +135,8 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
 
     @Override
     public void UpdateInput(int id, String name, int qty, String desc, String date, String stat) {
+        SimpleDateFormat sdflong = new SimpleDateFormat("MM-dd-yy HH:mm:ss", Locale.getDefault());
+        String datelong = sdflong.format(System.currentTimeMillis());
         Log.d(TAG, "updateInput: got name: " + name + "\n got qty: " + qty + "\ngot desc: " + desc + "\ngot stat: " + stat);
         try {
             db = new severinaDB(ViewOrder.this);
@@ -137,15 +144,14 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
 
                 db.AddToWorkBook("'"+desc+"'", qty, date); //add order data and inv data in SP
                 SharedPreferences sharedPref = ViewOrder.this.getSharedPreferences("sevois_owntempdata", Context.MODE_PRIVATE);
-                int invthres = sharedPref.getInt("invthres",0);
                 String report_date = sharedPref.getString("date", "");
                 String report_name = sharedPref.getString("name", "");
                 int report_inv_qty = sharedPref.getInt("invqty", 0);
                 int report_ord_qty = sharedPref.getInt("ordqty",0);
                 if (db.CheckWorkBook()){       //check if SP data are existing
 
-                    Report report = new Report(id,report_date, report_name, report_inv_qty, report_ord_qty);
-                      db.updateReport(report);           //add report data set from SP data
+                    Report report = new Report(report_date, report_name, report_inv_qty, report_ord_qty, datelong, "UPDATED BY OWNER");
+                      db.addReport(report);           //add report data set from SP data
                 }
                 db.updateOrder(new Orders (id,name, qty, desc, date, stat));
                 int numcase = db.getCase(sharedPref.getInt("invqty", 0), sharedPref.getInt("invthres",0));
@@ -164,7 +170,7 @@ public class ViewOrder extends DrawerBaseActivity implements CustomViewAdapOrd.O
             else{
                 Toast.makeText(getApplicationContext(), "Order not Updated. Check inventory Stocks if there is enough to make an Order", Toast.LENGTH_LONG).show();}
         } catch (Exception ex) {
-            Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
+           Log.e("Error on update Order", ex.getMessage());
         }
     }
 

@@ -87,6 +87,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
                 return true;
             }
             else{
+                orders.clear();
                 Intent i = new Intent(ReportGenerationMenu.this, ReportGenerationMenu.class);
                 startActivity(i);
                 finish();
@@ -241,7 +242,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         space.addCell(cell);
 
         //column text
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
 
         Paragraph col_id_par = new Paragraph("ID");
@@ -254,6 +255,10 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         col_invqty_par.setAlignment(Element.ALIGN_CENTER);
         Paragraph col_ordqty_par = new Paragraph("STOCK/S ORDERED");
         col_ordqty_par.setAlignment(Element.ALIGN_CENTER);
+        Paragraph col_mngdate_par = new Paragraph("MANAGED ON");
+        col_mngdate_par.setAlignment(Element.ALIGN_CENTER);
+        Paragraph col_mngby_par = new Paragraph("MANAGED BY");
+        col_mngby_par.setAlignment(Element.ALIGN_CENTER);
 
         cell = new PdfPCell();
         cell.addElement(col_id_par);
@@ -300,12 +305,32 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         cell.setPadding(5);
         table.addCell(cell);
 
+        cell = new PdfPCell();
+        cell.addElement(col_mngdate_par);
+        cell.setBorder(Rectangle.BOX);
+        cell.setColspan(1);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        table.addCell(cell);
+
+        cell = new PdfPCell();
+        cell.addElement(col_mngby_par);
+        cell.setBorder(Rectangle.BOX);
+        cell.setColspan(1);
+        cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+        cell.setPadding(5);
+        table.addCell(cell);
+
         while (c1.moveToNext()) {
             String id = c1.getString(0);
             String date = c1.getString(1);
             String name = c1.getString(2);
             String inv_qty = c1.getString(3);
             String ord_qty = c1.getString(4);
+            String mngdate = c1.getString(5);
+            String mngby = c1.getString(6);
 
             Paragraph id_par = new Paragraph(id);
             id_par.setAlignment(Element.ALIGN_CENTER);
@@ -316,6 +341,10 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             Paragraph invqty_par = new Paragraph(inv_qty);
             invqty_par.setAlignment(Element.ALIGN_CENTER);
             Paragraph ordqty_par = new Paragraph(ord_qty);
+            ordqty_par.setAlignment(Element.ALIGN_CENTER);
+            Paragraph mngdate_par = new Paragraph(mngdate);
+            invqty_par.setAlignment(Element.ALIGN_CENTER);
+            Paragraph mngby_par = new Paragraph(mngby);
             ordqty_par.setAlignment(Element.ALIGN_CENTER);
 
 
@@ -364,6 +393,24 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             cell.setPadding(5);
             table.addCell(cell);
 
+            cell = new PdfPCell();
+            cell.addElement(mngdate_par);
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            table.addCell(cell);
+
+            cell = new PdfPCell();
+            cell.addElement(mngby_par);
+            cell.setBorder(Rectangle.BOX);
+            cell.setColspan(1);
+            cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setVerticalAlignment(PdfPCell.ALIGN_CENTER);
+            cell.setPadding(5);
+            table.addCell(cell);
+
         }
         c1.close();
         document.add(header);
@@ -383,7 +430,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
         rowHeader.setBackgroundColor(Color.parseColor("#598F70"));
         rowHeader.setBackgroundResource(R.drawable.border);
         rowHeader.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
-        String[] headerText = {"ID", "DELIVERY DATE", "ITEM NAME","STOCK/S LEFT","STOCK/S ORDERED"};
+        String[] headerText = {"ID", "DELIVERY DATE", "ITEM NAME","STOCK/S LEFT","STOCK/S ORDERED", "MANAGED ON", "MANAGED BY"};
 
         for (String c : headerText) {
 
@@ -402,7 +449,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
             rowHeader.setBackgroundColor(Color.parseColor("#598F70"));
         }
         tableLayout.addView(rowHeader);
-        tableLayout.setStretchAllColumns(true);
+        tableLayout.setStretchAllColumns(false);
 
         // Get data from sqlite database and add them to the table
 
@@ -431,12 +478,19 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
                     String report_qty_inv = cursor.getString(i_iord);
                     int i_qord = cursor.getColumnIndex("joined_oqty");
                     String report_qty_ord = cursor.getString(i_qord);
+                    int i_mngdate = cursor.getColumnIndex("joined_mngdate");
+                    String report_mngdate = cursor.getString(i_mngdate);
+                    int i_mngby = cursor.getColumnIndex("joined_mngby");
+                    String report_qmngby = cursor.getString(i_mngby);
+
+
+
 
                     TableRow row = new TableRow(this);
 
                     row.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
-                    String[] colText = {report_id + "", report_date, report_name,report_qty_inv,report_qty_ord};
+                    String[] colText = {report_id + "", report_date, report_name,report_qty_inv,report_qty_ord, report_mngdate, report_qmngby};
 
                     for (String text : colText) {
                         TextView tv = new TextView(this);
@@ -447,7 +501,7 @@ public class ReportGenerationMenu extends DrawerBaseActivity  {
                         tv.setText(text);
                         tv.setMaxWidth(100);
                         tv.setBackgroundResource(R.drawable.border);
-                        row.setMinimumWidth(10);
+                        row.setMinimumWidth(5);
                         row.addView(tv);
                     }
                     tableLayout.addView(row);
